@@ -5,8 +5,12 @@ import org.fullcycle.admin.catalog.domain.validation.handler.ThrowsValidationHan
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CategoryTest {
@@ -21,11 +25,11 @@ class CategoryTest {
 
         assertNotNull(actual);
         assertNotNull(actual.getId());
-        Assertions.assertEquals(expectedName, actual.getName());
-        Assertions.assertEquals(expectedIsActive, actual.isActive());
+        assertEquals(expectedName, actual.getName());
+        assertEquals(expectedIsActive, actual.isActive());
         assertNotNull(actual.getCreatedAt());
         assertNotNull(actual.getUpdatedAt());
-        Assertions.assertNull(actual.getDeletedAt());
+        assertNull(actual.getDeletedAt());
     }
 
     @Test
@@ -42,6 +46,114 @@ class CategoryTest {
         );
         assertEquals("'name' should not be null", actualException.getErrors().get(0).message());
         assertEquals(1, actualException.getErrors().size());
+    }
+
+    @Test
+    void givenAInvalidEmptyName_whenCallNewCategoryAndValidate_thenShouldReceiveError() {
+        final String expectedName = " ";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+
+        final var actual = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        final var actualException = assertThrows(
+            DomainException.class,
+            () -> actual.validate(new ThrowsValidationHandler())
+        );
+        assertEquals("'name' should not be empty", actualException.getErrors().get(0).message());
+        assertEquals(1, actualException.getErrors().size());
+    }
+
+    @Test
+    void givenAInvalidNameLengthLessThan3Characters_whenCallNewCategoryAndValidate_thenShouldReceiveError() {
+        final String expectedName = "Fi ";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+
+        final var actual = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        final var actualException = assertThrows(
+            DomainException.class,
+            () -> actual.validate(new ThrowsValidationHandler())
+        );
+        assertEquals("'name' must be between 3 and 255 characters", actualException.getErrors().get(0).message());
+        assertEquals(1, actualException.getErrors().size());
+    }
+
+    @Test
+    void givenAInvalidNameLengthMoreThan255Characters_whenCallNewCategoryAndValidate_thenShouldReceiveError() {
+        final var leftLimit = 97;
+        final var limitRight = 122;
+        final var targetStringLength = 256;
+        final String expectedName = new Random().ints(leftLimit, limitRight + 1)
+            .limit(targetStringLength)
+            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .toString();
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+
+        final var actual = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        final var actualException = assertThrows(
+            DomainException.class,
+            () -> actual.validate(new ThrowsValidationHandler())
+        );
+        assertEquals("'name' must be between 3 and 255 characters", actualException.getErrors().get(0).message());
+        assertEquals(1, actualException.getErrors().size());
+    }
+
+    @Test
+    void givenAValidNullDescription_whenCallNewCategoryAndValidate_thenInstantiateACategory() {
+        final var expectedName = "Filmes";
+        final String expectedDescription = null;
+        final var expectedIsActive = true;
+
+        final var actual = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        assertDoesNotThrow(() -> actual.validate(new ThrowsValidationHandler()));
+        assertNotNull(actual);
+        assertNotNull(actual.getId());
+        assertEquals(expectedName, actual.getName());
+        assertEquals(expectedIsActive, actual.isActive());
+        assertNotNull(actual.getCreatedAt());
+        assertNotNull(actual.getUpdatedAt());
+        assertNull(actual.getDeletedAt());
+    }
+
+    @Test
+    void givenAValidEmptyDescription_whenCallNewCategoryAndValidate_thenInstantiateACategory() {
+        final var expectedName = "Filmes";
+        final var expectedDescription = " ";
+        final var expectedIsActive = true;
+
+        final var actual = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        assertDoesNotThrow(() -> actual.validate(new ThrowsValidationHandler()));
+        assertNotNull(actual);
+        assertNotNull(actual.getId());
+        assertEquals(expectedName, actual.getName());
+        assertEquals(expectedIsActive, actual.isActive());
+        assertNotNull(actual.getCreatedAt());
+        assertNotNull(actual.getUpdatedAt());
+        assertNull(actual.getDeletedAt());
+    }
+
+    @Test
+    void givenAValidFalseIsActive_whenCallNewCategoryAndValidate_thenInstantiateACategory() {
+        final var expectedName = "Filmes";
+        final var expectedDescription = " ";
+        final var expectedIsActive = false;
+
+        final var actual = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        assertDoesNotThrow(() -> actual.validate(new ThrowsValidationHandler()));
+        assertNotNull(actual);
+        assertNotNull(actual.getId());
+        assertEquals(expectedName, actual.getName());
+        assertEquals(expectedIsActive, actual.isActive());
+        assertNotNull(actual.getCreatedAt());
+        assertNotNull(actual.getUpdatedAt());
+        assertNotNull(actual.getDeletedAt());
     }
 
 }
