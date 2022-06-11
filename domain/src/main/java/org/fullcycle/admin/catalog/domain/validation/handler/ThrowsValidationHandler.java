@@ -4,6 +4,7 @@ import org.fullcycle.admin.catalog.domain.exception.DomainException;
 import org.fullcycle.admin.catalog.domain.validation.Error;
 import org.fullcycle.admin.catalog.domain.validation.ValidationHandler;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ThrowsValidationHandler implements ValidationHandler {
@@ -31,7 +32,7 @@ public class ThrowsValidationHandler implements ValidationHandler {
 
     @Override
     public List<Error> getErrors() {
-        return null;
+        return Collections.emptyList();
     }
 
 }
