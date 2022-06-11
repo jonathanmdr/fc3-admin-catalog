@@ -8,6 +8,9 @@ import java.util.Objects;
 
 public class CategoryValidator extends Validator {
 
+    public static final int NAME_MIN_LENGTH = 3;
+    public static final int NAME_MAX_LENGTH = 255;
+
     private final Category category;
 
     public CategoryValidator(final Category category, final ValidationHandler validationHandler) {
@@ -34,7 +37,7 @@ public class CategoryValidator extends Validator {
         }
 
         final var nameLength = name.trim().length();
-        if (nameLength < 3 || nameLength > 255) {
+        if (nameLength < NAME_MIN_LENGTH || nameLength > NAME_MAX_LENGTH) {
             this.validationHandler().append(new Error("'name' must be between 3 and 255 characters"));
         }
     }
