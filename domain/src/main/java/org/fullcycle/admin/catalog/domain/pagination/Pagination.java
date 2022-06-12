@@ -16,7 +16,7 @@ public record Pagination<T>(
             .map(mapper)
             .toList();
 
-        return new Pagination(currentPage(), perPage(), total(), result);
+        return new Pagination<>(currentPage(), perPage(), total(), result);
     }
 
 }

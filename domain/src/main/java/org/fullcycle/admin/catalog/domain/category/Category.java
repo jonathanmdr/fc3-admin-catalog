@@ -10,7 +10,7 @@ public class Category extends AggregateRoot<CategoryID> {
     private String name;
     private String description;
     private boolean active;
-    private Instant createdAt;
+    private final Instant createdAt;
     private Instant updatedAt;
     private Instant deletedAt;
 
@@ -40,7 +40,7 @@ public class Category extends AggregateRoot<CategoryID> {
     }
 
     public static Category with(final Category category) {
-        return new Category(
+        return with(
             category.getId(),
             category.getName(),
             category.getDescription(),
@@ -49,6 +49,18 @@ public class Category extends AggregateRoot<CategoryID> {
             category.getUpdatedAt(),
             category.getDeletedAt()
         );
+    }
+
+    public static Category with(
+        final CategoryID id,
+        final String name,
+        final String description,
+        final boolean isActive,
+        final Instant createdAt,
+        final Instant updatedAt,
+        final Instant deletedAt
+    ) {
+        return new Category(id, name, description, isActive, createdAt, updatedAt, deletedAt);
     }
 
     @Override
@@ -88,6 +100,7 @@ public class Category extends AggregateRoot<CategoryID> {
         return this;
     }
 
+    @Override
     public CategoryID getId() {
         return id;
     }
@@ -114,6 +127,16 @@ public class Category extends AggregateRoot<CategoryID> {
 
     public Instant getDeletedAt() {
         return deletedAt;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
 }
