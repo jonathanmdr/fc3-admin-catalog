@@ -1,0 +1,12 @@
+server:
+    port: 8080
+    undertow:
+        threads:
+            worker: 10
+            io: 2
+
+mariadb:
+    url: localhost:3306
+    schema: admin_catalog_videos
+    username: root
+    password: 123456
