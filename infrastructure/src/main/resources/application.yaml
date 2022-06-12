@@ -18,7 +18,7 @@ server:
 
 spring:
     datasource:
-        url: jdbc:mariadb://${mariadb.url}/${mariadb.schema}?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+        url: jdbc:mysql://${mariadb.url}/${mariadb.schema}?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
         username: ${mariadb.username}
         password: ${mariadb.password}
         hikari:
