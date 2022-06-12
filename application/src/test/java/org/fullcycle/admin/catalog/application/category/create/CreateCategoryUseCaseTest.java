@@ -1,7 +1,6 @@
 package org.fullcycle.admin.catalog.application.category.create;
 
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
-import org.fullcycle.admin.catalog.domain.exception.DomainException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,7 +11,6 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -40,7 +38,7 @@ class CreateCategoryUseCaseTest {
         when(categoryGateway.create(any()))
             .thenAnswer(returnsFirstArg());
 
-        final var actual = useCase.execute(command);
+        final var actual = useCase.execute(command).get();
 
         assertNotNull(actual);
         assertNotNull(actual.id());
@@ -67,13 +65,11 @@ class CreateCategoryUseCaseTest {
 
         final var command = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
 
-        final var actual = assertThrows(
-            DomainException.class,
-            () -> useCase.execute(command)
-        );
+        final var actual = useCase.execute(command).getLeft();
 
         assertEquals(expectedErrorCount, actual.getErrors().size());
-        assertEquals(expectedErrorMessage, actual.getMessage());
+        actual.firstError()
+            .ifPresent(error -> assertEquals(expectedErrorMessage, error.message()));
 
         verify(categoryGateway, times(0)).create(any());
     }
@@ -89,20 +85,20 @@ class CreateCategoryUseCaseTest {
         when(categoryGateway.create(any()))
             .thenAnswer(returnsFirstArg());
 
-        final var actual = useCase.execute(command);
+        final var actual = useCase.execute(command).get();
 
         assertNotNull(actual);
         assertNotNull(actual.id());
 
         verify(categoryGateway, times(1))
             .create(argThat(category ->
-                    Objects.nonNull(category.getId())
-                        && Objects.equals(expectedName, category.getName())
-                        && Objects.equals(expectedDescription, category.getDescription())
-                        && Objects.equals(expectedIsActive, category.isActive())
-                        && Objects.nonNull(category.getCreatedAt())
-                        && Objects.nonNull(category.getUpdatedAt())
-                        && Objects.nonNull(category.getDeletedAt())
+                Objects.nonNull(category.getId())
+                    && Objects.equals(expectedName, category.getName())
+                    && Objects.equals(expectedDescription, category.getDescription())
+                    && Objects.equals(expectedIsActive, category.isActive())
+                    && Objects.nonNull(category.getCreatedAt())
+                    && Objects.nonNull(category.getUpdatedAt())
+                    && Objects.nonNull(category.getDeletedAt())
             ));
     }
 
@@ -112,28 +108,28 @@ class CreateCategoryUseCaseTest {
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
         final var expectedErrorMessage = "Gateway unexpected error";
+        final var expectedErrorCount = 1;
 
         final var command = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
 
         when(categoryGateway.create(any()))
             .thenThrow(new IllegalStateException("Gateway unexpected error"));
 
-        final var actual = assertThrows(
-            IllegalStateException.class,
-            () -> useCase.execute(command)
-        );
+        final var actual = useCase.execute(command).getLeft();
 
-        assertEquals(expectedErrorMessage, actual.getMessage());
+        assertEquals(expectedErrorCount, actual.getErrors().size());
+        actual.firstError()
+            .ifPresent(error -> assertEquals(expectedErrorMessage, error.message()));
 
         verify(categoryGateway, times(1))
             .create(argThat(category ->
-                    Objects.nonNull(category.getId())
-                        && Objects.equals(expectedName, category.getName())
-                        && Objects.equals(expectedDescription, category.getDescription())
-                        && Objects.equals(expectedIsActive, category.isActive())
-                        && Objects.nonNull(category.getCreatedAt())
-                        && Objects.nonNull(category.getUpdatedAt())
-                        && Objects.isNull(category.getDeletedAt())
+                Objects.nonNull(category.getId())
+                    && Objects.equals(expectedName, category.getName())
+                    && Objects.equals(expectedDescription, category.getDescription())
+                    && Objects.equals(expectedIsActive, category.isActive())
+                    && Objects.nonNull(category.getCreatedAt())
+                    && Objects.nonNull(category.getUpdatedAt())
+                    && Objects.isNull(category.getDeletedAt())
             ));
     }
 

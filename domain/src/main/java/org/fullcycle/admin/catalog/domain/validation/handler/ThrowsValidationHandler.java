@@ -10,17 +10,17 @@ import java.util.List;
 public class ThrowsValidationHandler implements ValidationHandler {
 
     @Override
-    public ValidationHandler append(final Error error) {
+    public ThrowsValidationHandler append(final Error error) {
         throw DomainException.with(error);
     }
 
     @Override
-    public ValidationHandler append(final ValidationHandler handler) {
+    public ThrowsValidationHandler append(final ValidationHandler handler) {
         throw DomainException.with(handler.getErrors());
     }
 
     @Override
-    public ValidationHandler validate(final Validation validation) {
+    public ThrowsValidationHandler validate(final Validation validation) {
         try {
             validation.validate();
         } catch (final Exception ex) {
