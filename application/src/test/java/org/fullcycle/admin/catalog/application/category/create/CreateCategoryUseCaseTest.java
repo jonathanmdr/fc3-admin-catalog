@@ -103,7 +103,7 @@ class CreateCategoryUseCaseTest {
     }
 
     @Test
-    void givenAInvalidName_whenGatewayThrowsUnexpectedException_thenShouldReturnAException() {
+    void givenAValidCommand_whenGatewayThrowsUnexpectedException_thenShouldReturnAException() {
         final var expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
