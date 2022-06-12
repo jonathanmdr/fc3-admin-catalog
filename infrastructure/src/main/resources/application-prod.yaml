@@ -1,0 +1,5 @@
+mariadb:
+    url: ${DATABASE_MARIADB_URL:localhost:3306}
+    schema: admin_catalog_videos
+    username: ${DATABASE_MARIADB_USERNAME:root}
+    password: ${DATABASE_MARIADB_PASSWORD:123456}
