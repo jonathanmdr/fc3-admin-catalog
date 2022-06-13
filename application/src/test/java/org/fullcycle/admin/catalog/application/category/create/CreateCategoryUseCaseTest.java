@@ -120,7 +120,7 @@ class CreateCategoryUseCaseTest {
         final var command = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
 
         when(categoryGateway.create(any()))
-            .thenThrow(new IllegalStateException("Gateway unexpected error"));
+            .thenThrow(new IllegalStateException(expectedErrorMessage));
 
         final var actual = useCase.execute(command).getLeft();
 
