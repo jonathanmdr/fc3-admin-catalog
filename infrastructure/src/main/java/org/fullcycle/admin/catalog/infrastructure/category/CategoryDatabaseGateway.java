@@ -42,7 +42,10 @@ public class CategoryDatabaseGateway implements CategoryGateway {
 
     @Override
     public void deleteById(final CategoryID categoryID) {
-
+        final var id = categoryID.getValue();
+        if (this.categoryRepository.existsById(id)) {
+            this.categoryRepository.deleteById(id);
+        }
     }
 
     private Category save(final Category category) {
