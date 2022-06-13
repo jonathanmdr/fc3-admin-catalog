@@ -32,17 +32,21 @@ public class CategoryDatabaseGateway implements CategoryGateway {
 
     @Override
     public Category create(final Category category) {
-        return this.categoryRepository.save(CategoryJpaEntity.from(category)).toAggregate();
+        return save(category);
     }
 
     @Override
     public Category update(final Category category) {
-        return null;
+        return save(category);
     }
 
     @Override
     public void deleteById(final CategoryID categoryID) {
 
+    }
+
+    private Category save(final Category category) {
+        return this.categoryRepository.save(CategoryJpaEntity.from(category)).toAggregate();
     }
 
 }
