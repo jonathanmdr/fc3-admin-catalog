@@ -5,6 +5,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan("org.fullcycle.admin.catalog")
-public class WebServerConfig {
+public class WebServerConfiguration {
 
 }
