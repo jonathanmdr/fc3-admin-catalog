@@ -1,7 +1,7 @@
 package org.fullcycle.admin.catalog.infrastructure.category.persistence;
 
 import org.fullcycle.admin.catalog.domain.category.Category;
-import org.fullcycle.admin.catalog.infrastructure.DatabaseRepositoryIntegrationTest;
+import org.fullcycle.admin.catalog.DatabaseRepositoryIntegrationTest;
 import org.hibernate.PropertyValueException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

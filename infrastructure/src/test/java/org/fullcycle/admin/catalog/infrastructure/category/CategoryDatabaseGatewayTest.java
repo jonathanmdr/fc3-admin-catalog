@@ -3,7 +3,7 @@ package org.fullcycle.admin.catalog.infrastructure.category;
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.category.CategorySearchQuery;
-import org.fullcycle.admin.catalog.infrastructure.DatabaseGatewayIntegrationTest;
+import org.fullcycle.admin.catalog.DatabaseGatewayIntegrationTest;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Test;
