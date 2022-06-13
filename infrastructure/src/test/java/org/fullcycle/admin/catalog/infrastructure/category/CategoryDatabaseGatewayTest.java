@@ -117,4 +117,46 @@ class CategoryDatabaseGatewayTest {
         assertEquals(0, categoryRepository.count());
     }
 
+    @Test
+    void givenAValidCategoryId_whenCallFindById_shouldReturnCategory() {
+        final var expectedName = "Filmes";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+
+        final var category = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        assertEquals(0, categoryRepository.count());
+
+        categoryRepository.saveAndFlush(CategoryJpaEntity.from(category));
+
+        assertEquals(1, categoryRepository.count());
+
+        final var actual = categoryDatabaseGateway.findById(category.getId()).get();
+
+        assertEquals(1, categoryRepository.count());
+        assertEquals(category.getId(), actual.getId());
+        assertEquals(expectedName, actual.getName());
+        assertEquals(expectedDescription, actual.getDescription());
+        assertEquals(expectedIsActive, actual.isActive());
+        assertEquals(category.getCreatedAt(), actual.getCreatedAt());
+        assertEquals(category.getUpdatedAt(), actual.getUpdatedAt());
+        assertNull(actual.getDeletedAt());
+    }
+
+    @Test
+    void givenAInvalidCategoryId_whenCallFindById_shouldReturnEmpty() {
+        final var category = Category.newCategory("Bla", null, true);
+
+        assertEquals(0, categoryRepository.count());
+
+        categoryRepository.saveAndFlush(CategoryJpaEntity.from(category));
+
+        assertEquals(1, categoryRepository.count());
+
+        final var actual = categoryDatabaseGateway.findById(CategoryID.unique());
+
+        assertEquals(1, categoryRepository.count());
+        assertTrue(actual.isEmpty());
+    }
+
 }

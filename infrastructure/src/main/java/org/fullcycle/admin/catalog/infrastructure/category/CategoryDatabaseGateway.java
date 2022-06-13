@@ -27,7 +27,8 @@ public class CategoryDatabaseGateway implements CategoryGateway {
 
     @Override
     public Optional<Category> findById(final CategoryID categoryID) {
-        return Optional.empty();
+        return this.categoryRepository.findById(categoryID.getValue())
+            .map(CategoryJpaEntity::toAggregate);
     }
 
     @Override
