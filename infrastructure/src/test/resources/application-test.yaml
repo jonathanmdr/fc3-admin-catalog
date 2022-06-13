@@ -6,7 +6,6 @@ spring:
         password: 123456
     jpa:
         open-in-view: false
-        defer-datasource-initialization: true
     h2:
         console:
             enabled: true
