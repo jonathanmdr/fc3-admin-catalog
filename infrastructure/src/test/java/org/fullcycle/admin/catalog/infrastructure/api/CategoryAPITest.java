@@ -5,6 +5,9 @@ import org.fullcycle.admin.catalog.ApiTest;
 import org.fullcycle.admin.catalog.application.category.create.CreateCategoryOutput;
 import org.fullcycle.admin.catalog.application.category.create.CreateCategoryUseCase;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
+import org.fullcycle.admin.catalog.domain.exception.DomainException;
+import org.fullcycle.admin.catalog.domain.validation.Error;
+import org.fullcycle.admin.catalog.domain.validation.handler.NotificationValidationHandler;
 import org.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +19,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Objects;
 
+import static io.vavr.control.Either.left;
 import static io.vavr.control.Either.right;
 import static java.lang.String.format;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -70,7 +76,72 @@ class CategoryAPITest {
                 Objects.equals(expectedName, cmd.name())
                     && Objects.equals(expectedDescription, cmd.description())
                     && Objects.equals(expectedIsActive, cmd.isActive())
-        ));
+            ));
+    }
+
+    @Test
+    void givenAInvalidCommand_whenCallsCreateCategory_thenShouldThrowNotificationWithDomainException() throws Exception {
+        final String expectedName = null;
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+        final var expectedErrorMessage = "'name' should not be null";
+
+        final var input = new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+
+        when(createCategoryUseCase.execute(any()))
+            .thenReturn(left(NotificationValidationHandler.create(new Error(expectedErrorMessage))));
+
+        final var request = MockMvcRequestBuilders.post("/categories")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(this.objectMapper.writeValueAsString(input));
+
+        this.mvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(header().string(HttpHeaders.LOCATION, nullValue()))
+            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.errors", hasSize(1)))
+            .andExpect(jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        verify(createCategoryUseCase, times(1))
+            .execute(argThat(cmd ->
+                Objects.equals(expectedName, cmd.name())
+                    && Objects.equals(expectedDescription, cmd.description())
+                    && Objects.equals(expectedIsActive, cmd.isActive())
+            ));
+    }
+
+    @Test
+    void givenAInvalidCommand_whenCallsCreateCategory_thenShouldThrowDomainException() throws Exception {
+        final String expectedName = null;
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+        final var expectedErrorMessage = "'name' should not be null";
+
+        final var input = new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+
+        when(createCategoryUseCase.execute(any()))
+            .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+
+        final var request = MockMvcRequestBuilders.post("/categories")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(this.objectMapper.writeValueAsString(input));
+
+        this.mvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(header().string(HttpHeaders.LOCATION, nullValue()))
+            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.errors", hasSize(1)))
+            .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)))
+            .andExpect(jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        verify(createCategoryUseCase, times(1))
+            .execute(argThat(cmd ->
+                Objects.equals(expectedName, cmd.name())
+                    && Objects.equals(expectedDescription, cmd.description())
+                    && Objects.equals(expectedIsActive, cmd.isActive())
+            ));
     }
 
 }
