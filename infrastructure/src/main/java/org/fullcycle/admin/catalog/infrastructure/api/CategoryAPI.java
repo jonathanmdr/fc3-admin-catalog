@@ -5,9 +5,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fullcycle.admin.catalog.domain.pagination.Pagination;
-import org.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
-import org.fullcycle.admin.catalog.infrastructure.category.models.GetCategoryApiOutput;
-import org.fullcycle.admin.catalog.infrastructure.category.models.UpdateCategoryApiInput;
+import org.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
+import org.fullcycle.admin.catalog.infrastructure.category.models.GetCategoryResponse;
+import org.fullcycle.admin.catalog.infrastructure.category.models.ListCategoryResponse;
+import org.fullcycle.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,13 +37,13 @@ public interface CategoryAPI {
         @ApiResponse(responseCode = "500", description = "An unexpected internal server error")
     })
     @GetMapping
-    Pagination<?> listCategories(
+    Pagination<ListCategoryResponse> listCategories(
         @RequestParam(name = "search", required = false, defaultValue = "") final String search,
         @RequestParam(name = "page", required = false, defaultValue = "0") final int page,
         @RequestParam(name = "perPage", required = false, defaultValue = "10") final int perPage,
         @RequestParam(name = "sort", required = false, defaultValue = "name") final String sort,
-        @RequestParam(name = "dir", required = false, defaultValue = "asc") final String direction
-    );
+        @RequestParam(name = "direction", required = false, defaultValue = "asc") final String direction
+                                                   );
 
     @Operation(summary = "Get a category by it's identifier")
     @ApiResponses({
@@ -51,7 +52,7 @@ public interface CategoryAPI {
         @ApiResponse(responseCode = "500", description = "An unexpected internal server error")
     })
     @GetMapping("/{id}")
-    GetCategoryApiOutput getCategoryById(@PathVariable(name = "id") final String id);
+    GetCategoryResponse getCategoryById(@PathVariable(name = "id") final String id);
 
     @Operation(summary = "Create a new category")
     @ApiResponses({
@@ -60,7 +61,7 @@ public interface CategoryAPI {
         @ApiResponse(responseCode = "500", description = "An unexpected internal server error")
     })
     @PostMapping
-    ResponseEntity<?> createCategory(@RequestBody CreateCategoryApiInput input);
+    ResponseEntity<Object> createCategory(@RequestBody CreateCategoryRequest input);
 
     @Operation(summary = "Update a category")
     @ApiResponses({
@@ -70,7 +71,7 @@ public interface CategoryAPI {
         @ApiResponse(responseCode = "500", description = "An unexpected internal server error")
     })
     @PutMapping("/{id}")
-    ResponseEntity<?> updateCategory(@PathVariable(name = "id") final String id, @RequestBody UpdateCategoryApiInput input);
+    ResponseEntity<Object> updateCategory(@PathVariable(name = "id") final String id, @RequestBody UpdateCategoryRequest input);
 
     @Operation(summary = "Delete a category by it's identifier")
     @ApiResponses({

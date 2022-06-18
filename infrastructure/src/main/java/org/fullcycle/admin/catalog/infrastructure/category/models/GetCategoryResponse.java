@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.Instant;
 
-public record GetCategoryApiOutput(
+public record GetCategoryResponse(
     @JsonProperty("id") String id,
     @JsonProperty("name") String name,
     @JsonProperty("description") String description,

@@ -43,6 +43,8 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-webmvc-core:1.6.9")
     implementation("org.springdoc:springdoc-openapi-ui:1.6.9")
 
+    implementation("com.fasterxml.jackson.module:jackson-module-afterburner")
+
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("mysql:mysql-connector-java")
 
