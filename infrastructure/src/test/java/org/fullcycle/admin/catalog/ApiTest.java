@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-@ActiveProfiles("test")
+@ActiveProfiles("integration-test")
 @WebMvcTest
 @Import(ObjectMapperConfiguration.class)
 public @interface ApiTest {

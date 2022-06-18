@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @DataJpaTest
-@ActiveProfiles("test")
+@ActiveProfiles("integration-test")
 @ComponentScan(includeFilters = {
     @ComponentScan.Filter(
         type = FilterType.REGEX,

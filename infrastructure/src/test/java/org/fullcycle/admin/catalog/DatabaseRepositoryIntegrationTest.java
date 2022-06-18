@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @DataJpaTest
-@ActiveProfiles("test")
+@ActiveProfiles("integration-test")
 @ExtendWith(CleanupDatabaseExtension.class)
 public @interface DatabaseRepositoryIntegrationTest {
 
