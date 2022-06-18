@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
 @ComponentScan(includeFilters = {
     @ComponentScan.Filter(
         type = FilterType.REGEX,
-        pattern = ".*[DatabaseGateway]"
+        pattern = ".[DatabaseGateway]"
     )
 })
 @ExtendWith(CleanupExtension.class)
