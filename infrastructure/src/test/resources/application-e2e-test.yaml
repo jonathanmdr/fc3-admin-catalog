@@ -1,0 +1,9 @@
+logging:
+    level:
+        ROOT: info
+
+mariadb:
+    url: localhost:${mariadb.port}
+    schema: admin_catalog_videos
+    username: root
+    password: 123456
