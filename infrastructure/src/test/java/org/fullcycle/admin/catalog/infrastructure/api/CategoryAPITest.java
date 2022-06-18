@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fullcycle.admin.catalog.ApiTest;
 import org.fullcycle.admin.catalog.application.category.create.CreateCategoryOutput;
 import org.fullcycle.admin.catalog.application.category.create.CreateCategoryUseCase;
+import org.fullcycle.admin.catalog.application.category.delete.DeleteCategoryUseCase;
 import org.fullcycle.admin.catalog.application.category.retrieve.get.GetCategoryByIdOutput;
 import org.fullcycle.admin.catalog.application.category.retrieve.get.GetCategoryByIdUseCase;
 import org.fullcycle.admin.catalog.application.category.update.UpdateCategoryOutput;
@@ -35,9 +36,11 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -63,6 +66,9 @@ class CategoryAPITest {
 
     @MockBean
     private UpdateCategoryUseCase updateCategoryUseCase;
+
+    @MockBean
+    private DeleteCategoryUseCase deleteCategoryUseCase;
 
     @Test
     void givenAValidCommand_whenCallsCreateCategory_thenReturnCategoryId() throws Exception {
@@ -221,8 +227,7 @@ class CategoryAPITest {
         final var expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
-        final var category = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
-        final var expectedId = category.getId().getValue();
+        final var expectedId = CategoryID.unique().getValue();
 
         when(updateCategoryUseCase.execute(any()))
             .thenReturn(right(UpdateCategoryOutput.from(expectedId)));
@@ -251,8 +256,7 @@ class CategoryAPITest {
 
     @Test
     void givenAInvalidName_whenCallUpdateCategory_thenShouldReturnDomainException() throws Exception {
-        final var category = Category.newCategory("Bla", "Bla", true);
-        final var expectedId = category.getId();
+        final var expectedId = CategoryID.unique();
         final String expectedName = null;
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
@@ -314,6 +318,27 @@ class CategoryAPITest {
                 && Objects.equals(expectedName, cmd.name())
                 && Objects.equals(expectedDescription, cmd.description())
                 && Objects.equals(expectedIsActive, cmd.isActive())
+            ));
+    }
+
+    @Test
+    void givenAValidId_whenCallDeleteCategory_shouldBeReturnNoContent() throws Exception {
+        final var expectedId = CategoryID.unique();
+
+        doNothing()
+            .when(deleteCategoryUseCase).execute(any());
+
+        final var request = delete("/categories/{id}", expectedId.getValue())
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isNoContent());
+
+        verify(deleteCategoryUseCase, times(1))
+            .execute(argThat(cmd ->
+                Objects.equals(expectedId.getValue(), cmd.id())
             ));
     }
 

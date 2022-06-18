@@ -2,6 +2,8 @@ package org.fullcycle.admin.catalog.infrastructure.api.controllers;
 
 import org.fullcycle.admin.catalog.application.category.create.CreateCategoryCommand;
 import org.fullcycle.admin.catalog.application.category.create.CreateCategoryUseCase;
+import org.fullcycle.admin.catalog.application.category.delete.DeleteCategoryCommand;
+import org.fullcycle.admin.catalog.application.category.delete.DeleteCategoryUseCase;
 import org.fullcycle.admin.catalog.application.category.retrieve.get.GetCategoryByIdCommand;
 import org.fullcycle.admin.catalog.application.category.retrieve.get.GetCategoryByIdUseCase;
 import org.fullcycle.admin.catalog.application.category.update.UpdateCategoryCommand;
@@ -24,15 +26,18 @@ public class CategoryController implements CategoryAPI {
     private final GetCategoryByIdUseCase getCategoryByIdUseCase;
     private final CreateCategoryUseCase createCategoryUseCase;
     private final UpdateCategoryUseCase updateCategoryUseCase;
+    private final DeleteCategoryUseCase deleteCategoryUseCase;
 
     public CategoryController(
         final GetCategoryByIdUseCase getCategoryByIdUseCase,
         final CreateCategoryUseCase createCategoryUseCase,
-        final UpdateCategoryUseCase updateCategoryUseCase
+        final UpdateCategoryUseCase updateCategoryUseCase,
+        final DeleteCategoryUseCase deleteCategoryUseCase
     ) {
         this.getCategoryByIdUseCase = Objects.requireNonNull(getCategoryByIdUseCase, "'GetCategoryByIdUseCase' cannot be null");
         this.createCategoryUseCase = Objects.requireNonNull(createCategoryUseCase, "'CreateCategoryUseCase' cannot be null");
         this.updateCategoryUseCase = Objects.requireNonNull(updateCategoryUseCase, "'UpdateCategoryUseCase' cannot be null");
+        this.deleteCategoryUseCase = Objects.requireNonNull(deleteCategoryUseCase, "'DeleteCategoryUseCase' cannot be null");
     }
 
     @Override
@@ -75,6 +80,12 @@ public class CategoryController implements CategoryAPI {
                 onError -> ResponseEntity.unprocessableEntity().body(onError),
                 ResponseEntity::ok
             );
+    }
+
+    @Override
+    public void deleteCategoryById(final String id) {
+        final var command = DeleteCategoryCommand.with(id);
+        this.deleteCategoryUseCase.execute(command);
     }
 
 }

@@ -8,8 +8,10 @@ import org.fullcycle.admin.catalog.domain.pagination.Pagination;
 import org.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
 import org.fullcycle.admin.catalog.infrastructure.category.models.GetCategoryApiOutput;
 import org.fullcycle.admin.catalog.infrastructure.category.models.UpdateCategoryApiInput;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Tag(name = "Categories")
 @RequestMapping(
@@ -68,5 +71,14 @@ public interface CategoryAPI {
     })
     @PutMapping("/{id}")
     ResponseEntity<?> updateCategory(@PathVariable(name = "id") final String id, @RequestBody UpdateCategoryApiInput input);
+
+    @Operation(summary = "Delete a category by it's identifier")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Category deleted successfully"),
+        @ApiResponse(responseCode = "500", description = "An unexpected internal server error")
+    })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    void deleteCategoryById(@PathVariable(name = "id") final String id);
 
 }
