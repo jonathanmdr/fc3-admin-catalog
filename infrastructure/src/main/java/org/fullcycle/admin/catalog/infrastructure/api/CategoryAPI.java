@@ -7,11 +7,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fullcycle.admin.catalog.domain.pagination.Pagination;
 import org.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
 import org.fullcycle.admin.catalog.infrastructure.category.models.GetCategoryApiOutput;
+import org.fullcycle.admin.catalog.infrastructure.category.models.UpdateCategoryApiInput;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,5 +58,15 @@ public interface CategoryAPI {
     })
     @PostMapping
     ResponseEntity<?> createCategory(@RequestBody CreateCategoryApiInput input);
+
+    @Operation(summary = "Update a category")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Category updated successfully"),
+        @ApiResponse(responseCode = "404", description = "Category was not found"),
+        @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
+        @ApiResponse(responseCode = "500", description = "An unexpected internal server error")
+    })
+    @PutMapping("/{id}")
+    ResponseEntity<?> updateCategory(@PathVariable(name = "id") final String id, @RequestBody UpdateCategoryApiInput input);
 
 }

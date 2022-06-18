@@ -63,7 +63,7 @@ class UpdateCategoryUseCaseIT {
         final var categoryUpdated =  categoryRepository.findById(category.getId().getValue());
 
         categoryUpdated.ifPresent(actualCategory -> {
-            assertEquals(actual.id().getValue(), actualCategory.getId());
+            assertEquals(actual.id(), actualCategory.getId());
             assertEquals(expectedName, actualCategory.getName());
             assertEquals(expectedDescription, actualCategory.getDescription());
             assertEquals(expectedIsActive, actualCategory.isActive());
@@ -136,7 +136,7 @@ class UpdateCategoryUseCaseIT {
         final var categoryUpdated =  categoryRepository.findById(category.getId().getValue());
 
         categoryUpdated.ifPresent(actualCategory -> {
-            assertEquals(actual.id().getValue(), actualCategory.getId());
+            assertEquals(actual.id(), actualCategory.getId());
             assertEquals(expectedName, actualCategory.getName());
             assertEquals(expectedDescription, actualCategory.getDescription());
             assertEquals(expectedIsActive, actualCategory.isActive());
