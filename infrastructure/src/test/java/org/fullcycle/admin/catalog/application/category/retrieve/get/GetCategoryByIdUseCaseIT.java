@@ -4,7 +4,7 @@ import org.fullcycle.admin.catalog.IntegrationTest;
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.domain.exception.DomainException;
+import org.fullcycle.admin.catalog.domain.exception.NotFoundException;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -68,7 +68,7 @@ class GetCategoryByIdUseCaseIT {
         final var command = GetCategoryByIdCommand.with(expectedId.getValue());
 
         final var actual = assertThrows(
-            DomainException.class,
+            NotFoundException.class,
             () -> useCase.execute(command)
         );
 

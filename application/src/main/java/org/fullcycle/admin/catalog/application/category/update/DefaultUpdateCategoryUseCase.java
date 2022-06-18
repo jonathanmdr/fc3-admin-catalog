@@ -4,8 +4,7 @@ import io.vavr.control.Either;
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.domain.exception.DomainException;
-import org.fullcycle.admin.catalog.domain.validation.Error;
+import org.fullcycle.admin.catalog.domain.exception.NotFoundException;
 import org.fullcycle.admin.catalog.domain.validation.handler.NotificationValidationHandler;
 
 import java.util.Objects;
@@ -45,10 +44,8 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
             .bimap(NotificationValidationHandler::create, UpdateCategoryOutput::from);
     }
 
-    private Supplier<DomainException> categoryNotFound(final CategoryID id) {
-        return () -> DomainException.with(
-            new Error("Category with ID %s was not found".formatted(id.getValue()))
-        );
+    private Supplier<NotFoundException> categoryNotFound(final CategoryID id) {
+        return () -> NotFoundException.with(Category.class, id);
     }
 
 }

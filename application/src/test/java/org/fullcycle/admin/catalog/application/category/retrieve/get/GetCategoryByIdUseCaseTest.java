@@ -3,7 +3,7 @@ package org.fullcycle.admin.catalog.application.category.retrieve.get;
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.domain.exception.DomainException;
+import org.fullcycle.admin.catalog.domain.exception.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -69,7 +69,7 @@ class GetCategoryByIdUseCaseTest {
         final var command = GetCategoryByIdCommand.with(expectedId.getValue());
 
         final var actual = assertThrows(
-            DomainException.class,
+            NotFoundException.class,
             () -> useCase.execute(command)
         );
 

@@ -3,7 +3,7 @@ package org.fullcycle.admin.catalog.application.category.update;
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.domain.exception.DomainException;
+import org.fullcycle.admin.catalog.domain.exception.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -195,7 +195,7 @@ class UpdateCategoryUseCaseTest {
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
         final var expectedErrorMessage = "Category with ID %s was not found".formatted(expectedId);
-        final var expectedErrorCount = 1;
+        final var expectedErrorCount = 0;
 
         final var command = UpdateCategoryCommand.with(
             expectedId,
@@ -208,7 +208,7 @@ class UpdateCategoryUseCaseTest {
             .thenReturn(Optional.empty());
 
         final var actual  = assertThrows(
-            DomainException.class,
+            NotFoundException.class,
             () -> useCase.execute(command)
         );
 

@@ -4,7 +4,7 @@ import org.fullcycle.admin.catalog.IntegrationTest;
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.domain.exception.DomainException;
+import org.fullcycle.admin.catalog.domain.exception.NotFoundException;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -202,7 +202,7 @@ class UpdateCategoryUseCaseIT {
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
         final var expectedErrorMessage = "Category with ID %s was not found".formatted(expectedId);
-        final var expectedErrorCount = 1;
+        final var expectedErrorCount = 0;
 
         assertEquals(0, categoryRepository.count());
 
@@ -214,7 +214,7 @@ class UpdateCategoryUseCaseIT {
         );
 
         final var actual  = assertThrows(
-            DomainException.class,
+            NotFoundException.class,
             () -> useCase.execute(command)
         );
 
