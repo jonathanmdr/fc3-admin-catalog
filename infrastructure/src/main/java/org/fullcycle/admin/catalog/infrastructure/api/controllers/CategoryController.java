@@ -83,7 +83,8 @@ public class CategoryController implements CategoryAPI {
         return this.createCategoryUseCase.execute(command)
             .fold(
                 onError -> ResponseEntity.unprocessableEntity().body(onError),
-                onSuccess -> ResponseEntity.created(UriUtils.buildAndExpandResourceId(onSuccess.id())).body(onSuccess)
+                onSuccess -> ResponseEntity.created(UriUtils.buildAndExpandResourceId(onSuccess.id()))
+                    .body(CategoryApiPresenter.present(onSuccess))
             );
     }
 
