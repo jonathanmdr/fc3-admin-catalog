@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
         pattern = ".[DatabaseGateway]"
     )
 })
-@ExtendWith(CleanupExtension.class)
+@ExtendWith(CleanupDatabaseExtension.class)
 public @interface DatabaseGatewayIntegrationTest {
 
 }

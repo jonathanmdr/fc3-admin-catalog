@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Inherited
 @SpringBootTest(classes = WebServerConfiguration.class)
 @ActiveProfiles("test")
-@ExtendWith(CleanupExtension.class)
+@ExtendWith(CleanupDatabaseExtension.class)
 public @interface IntegrationTest {
 
 }
