@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -275,6 +276,32 @@ class CategoryE2ETest {
         assertEquals(1, categoryRepository.count());
     }
 
+    @Test
+    void asACatalogAdminIShouldBeAbleToDeleteACategory() throws Exception {
+        assertTrue(MYSQL_CONTAINER.isRunning());
+
+        assertEquals(0, categoryRepository.count());
+
+        final var createACategoryResponse = givenACategory("Bla", "Bla", true);
+
+        assertEquals(1, categoryRepository.count());
+
+        deleteACategory(createACategoryResponse.id());
+
+        assertEquals(0, categoryRepository.count());
+    }
+
+    @Test
+    void asACatalogAdminIShouldBeAbleToDeleteANotFoundCategory() throws Exception {
+        assertTrue(MYSQL_CONTAINER.isRunning());
+
+        assertEquals(0, categoryRepository.count());
+
+        deleteACategory(CategoryID.unique().getValue());
+
+        assertEquals(0, categoryRepository.count());
+    }
+
     private ResultActions listCategories(final int page, final int perPage)throws Exception {
         return listCategories(page, perPage, "", "", "");
     }
@@ -362,6 +389,15 @@ class CategoryE2ETest {
             .getResponse().getContentAsString();
 
         return Json.readValue(response, UpdateCategoryResponse.class);
+    }
+
+    private void deleteACategory(final String id) throws Exception {
+        final var request = delete("/categories/{id}", id)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+            .andExpect(status().isNoContent());
     }
 
 }
