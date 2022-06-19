@@ -77,7 +77,7 @@ public class CategoryController implements CategoryAPI {
         final var command = CreateCategoryCommand.with(
             input.name(),
             input.description(),
-            input.active() != null ? input.active() : true
+            input.active() != null ? input.active() : Boolean.TRUE
         );
 
         return this.createCategoryUseCase.execute(command)
@@ -94,7 +94,7 @@ public class CategoryController implements CategoryAPI {
             id,
             input.name(),
             input.description(),
-            input.active() != null ? input.active() : true
+            input.active() != null ? input.active() : Boolean.TRUE
         );
 
         return this.updateCategoryUseCase.execute(command)

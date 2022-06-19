@@ -23,11 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Tag(name = "Categories")
-@RequestMapping(
-    value = "/categories",
-    consumes = MediaType.APPLICATION_JSON_VALUE,
-    produces = MediaType.APPLICATION_JSON_VALUE
-)
+@RequestMapping("/categories")
 public interface CategoryAPI {
 
     @Operation(summary = "List all categories paginated")
@@ -36,14 +32,16 @@ public interface CategoryAPI {
         @ApiResponse(responseCode = "422", description = "An invalid parameter was received"),
         @ApiResponse(responseCode = "500", description = "An unexpected internal server error")
     })
-    @GetMapping
+    @GetMapping(
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     Pagination<ListCategoryResponse> listCategories(
         @RequestParam(name = "search", required = false, defaultValue = "") final String search,
         @RequestParam(name = "page", required = false, defaultValue = "0") final int page,
         @RequestParam(name = "perPage", required = false, defaultValue = "10") final int perPage,
         @RequestParam(name = "sort", required = false, defaultValue = "name") final String sort,
         @RequestParam(name = "direction", required = false, defaultValue = "asc") final String direction
-                                                   );
+    );
 
     @Operation(summary = "Get a category by it's identifier")
     @ApiResponses({
@@ -51,7 +49,10 @@ public interface CategoryAPI {
         @ApiResponse(responseCode = "404", description = "Category was not found"),
         @ApiResponse(responseCode = "500", description = "An unexpected internal server error")
     })
-    @GetMapping("/{id}")
+    @GetMapping(
+        value = "/{id}",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     GetCategoryResponse getCategoryById(@PathVariable(name = "id") final String id);
 
     @Operation(summary = "Create a new category")
@@ -60,7 +61,10 @@ public interface CategoryAPI {
         @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
         @ApiResponse(responseCode = "500", description = "An unexpected internal server error")
     })
-    @PostMapping
+    @PostMapping(
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     ResponseEntity<Object> createCategory(@RequestBody CreateCategoryRequest input);
 
     @Operation(summary = "Update a category")
@@ -70,7 +74,11 @@ public interface CategoryAPI {
         @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
         @ApiResponse(responseCode = "500", description = "An unexpected internal server error")
     })
-    @PutMapping("/{id}")
+    @PutMapping(
+        value = "/{id}",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     ResponseEntity<Object> updateCategory(@PathVariable(name = "id") final String id, @RequestBody UpdateCategoryRequest input);
 
     @Operation(summary = "Delete a category by it's identifier")
