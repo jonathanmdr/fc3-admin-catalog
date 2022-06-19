@@ -1,6 +1,7 @@
 package org.fullcycle.admin.catalog.e2e.category;
 
 import org.fullcycle.admin.catalog.E2ETest;
+import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
 import org.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryResponse;
 import org.fullcycle.admin.catalog.infrastructure.category.models.GetCategoryResponse;
@@ -190,6 +191,44 @@ class CategoryE2ETest {
         assertEquals(3, categoryRepository.count());
     }
 
+    @Test
+    void asACatalogAdminIShouldBeAbleToToGetACategoryByIdentifier() throws Exception {
+        assertTrue(MYSQL_CONTAINER.isRunning());
+
+        assertEquals(0, categoryRepository.count());
+
+        final var expectedName = "Filmes";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+
+        final var createCategoryResponse = givenACategory(expectedName, expectedDescription, expectedIsActive);
+        final var getCategoryResponse = retrieveACategoryById(createCategoryResponse.id());
+        final var category = categoryRepository.findById(createCategoryResponse.id());
+
+        category.ifPresent(expectedCategory -> {
+            assertEquals(expectedCategory.getId(), getCategoryResponse.id());
+            assertEquals(expectedCategory.getName(), getCategoryResponse.name());
+            assertEquals(expectedCategory.getDescription(), getCategoryResponse.description());
+            assertEquals(expectedCategory.isActive(), getCategoryResponse.active());
+            assertEquals(expectedCategory.getCreatedAt(), getCategoryResponse.createdAt());
+            assertEquals(expectedCategory.getUpdatedAt(), getCategoryResponse.updatedAt());
+            assertEquals(expectedCategory.getDeletedAt(), getCategoryResponse.deletedAt());
+        });
+
+        assertEquals(1, categoryRepository.count());
+    }
+
+    @Test
+    void asACatalogAdminIShouldBeAbleToSeeATreatedErrorByGettingANotFoundCategory() throws Exception {
+        assertTrue(MYSQL_CONTAINER.isRunning());
+
+        assertEquals(0, categoryRepository.count());
+
+        retrieveANotFoundCategoryById(CategoryID.unique().getValue());
+
+        assertEquals(0, categoryRepository.count());
+    }
+
     private ResultActions listCategories(final int page, final int perPage)throws Exception {
         return listCategories(page, perPage, "", "", "");
     }
@@ -249,6 +288,17 @@ class CategoryE2ETest {
             .getResponse().getContentAsString();
 
         return Json.readValue(response, GetCategoryResponse.class);
+    }
+
+    private void retrieveANotFoundCategoryById(final String categoryId) throws Exception {
+        final var request = get("/categories/{id}", categoryId)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+            .andExpect(status().isNotFound())
+            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.message", equalTo("Category with ID %s was not found".formatted(categoryId))));
     }
 
 }
