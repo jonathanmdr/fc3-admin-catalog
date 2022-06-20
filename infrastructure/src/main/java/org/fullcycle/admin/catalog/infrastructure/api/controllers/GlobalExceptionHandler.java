@@ -8,10 +8,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleUncaughtException(final Exception exception) {
+        return ResponseEntity.internalServerError()
+            .body(ApiError.from(exception));
+    }
 
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ApiError> handleDomainException(final DomainException exception) {
@@ -28,6 +35,10 @@ public class GlobalExceptionHandler {
     record ApiError(String message, List<Error> errors) {
         static ApiError from(final DomainException exception) {
             return new ApiError(exception.getMessage(), exception.getErrors());
+        }
+
+        static ApiError from(final Exception exception) {
+            return new ApiError(exception.getMessage(), Collections.emptyList());
         }
     }
 
