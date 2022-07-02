@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Test;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GenreTest {
 
@@ -82,6 +84,58 @@ class GenreTest {
 
         assertEquals(expectedErrorCount, actual.getErrors().size());
         assertEquals(expectedErrorMessage, actual.getErrors().get(0).message());
+    }
+
+    @Test
+    void givenAnActiveGenre_whenCallDeactivate_shouldReceiveOk() {
+        final var expectedName = "Ação";
+        final var expectedIsActive = false;
+        final var expectedCategoriesSize = 0;
+
+        final var actual = Genre.newGenre(expectedName, true);
+
+        assertTrue(actual.isActive());
+        assertNull(actual.getDeletedAt());
+
+        final var actualCreatedAt = actual.getCreatedAt();
+        final var actualUpdatedAt = actual.getUpdatedAt();
+
+        actual.deactivate();
+
+        assertNotNull(actual);
+        assertNotNull(actual.getId());
+        assertEquals(expectedName, actual.getName());
+        assertEquals(expectedIsActive, actual.isActive());
+        assertEquals(expectedCategoriesSize, actual.getCategories().size());
+        assertEquals(actualCreatedAt, actual.getCreatedAt());
+        assertTrue(actualUpdatedAt.isBefore(actual.getUpdatedAt()));
+        assertNotNull(actual.getDeletedAt());
+    }
+
+    @Test
+    void givenAnInactiveGenre_whenCallActivate_shouldReceiveOk() {
+        final var expectedName = "Ação";
+        final var expectedIsActive = true;
+        final var expectedCategoriesSize = 0;
+
+        final var actual = Genre.newGenre(expectedName, false);
+
+        assertFalse(actual.isActive());
+        assertNotNull(actual.getDeletedAt());
+
+        final var actualCreatedAt = actual.getCreatedAt();
+        final var actualUpdatedAt = actual.getUpdatedAt();
+
+        actual.activate();
+
+        assertNotNull(actual);
+        assertNotNull(actual.getId());
+        assertEquals(expectedName, actual.getName());
+        assertEquals(expectedIsActive, actual.isActive());
+        assertEquals(expectedCategoriesSize, actual.getCategories().size());
+        assertEquals(actualCreatedAt, actual.getCreatedAt());
+        assertTrue(actualUpdatedAt.isBefore(actual.getUpdatedAt()));
+        assertNull(actual.getDeletedAt());
     }
 
 }
