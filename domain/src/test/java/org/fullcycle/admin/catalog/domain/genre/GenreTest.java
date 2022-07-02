@@ -4,10 +4,12 @@ import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.exception.NotificationValidationException;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -251,6 +253,135 @@ class GenreTest {
 
         assertEquals(expectedErrorCount, actual.getErrors().size());
         assertEquals(expectedErrorMessage, actual.getErrors().get(0).message());
+    }
+
+    @Test
+    void givenAValidGenre_whenCallUpdateWithNullCategories_shouldReceiveOk() {
+        final String expectedName = "Ação";
+        final var expectedIsActive = true;
+        final var expectedCategories = new ArrayList<CategoryID>();
+
+        final var actualGenre = Genre.newGenre(expectedName, expectedIsActive);
+
+        final var actualCreatedAt = actualGenre.getCreatedAt();
+        final var actualUpdatedAt = actualGenre.getUpdatedAt();
+
+        final var actual = assertDoesNotThrow(
+            () -> actualGenre.update(expectedName, expectedIsActive, null)
+        );
+
+        assertNotNull(actual);
+        assertNotNull(actual.getId());
+        assertEquals(expectedName, actual.getName());
+        assertEquals(expectedIsActive, actual.isActive());
+        assertEquals(expectedCategories, actual.getCategories());
+        assertEquals(actualCreatedAt, actual.getCreatedAt());
+        assertTrue(actualUpdatedAt.isBefore(actual.getUpdatedAt()));
+        assertNull(actual.getDeletedAt());
+    }
+
+    @Test
+    void givenAValidEmptyCategoriesGenre_whenCallAddCategory_shouldReceiveOk() {
+        final String expectedName = "Ação";
+        final var expectedIsActive = true;
+        final var seriesId = CategoryID.unique();
+        final var moviesId = CategoryID.unique();
+        final var expectedCategories = List.of(seriesId, moviesId);
+
+        final var actual = Genre.newGenre(expectedName, expectedIsActive);
+        assertEquals(0, actual.getCategories().size());
+
+        final var actualCreatedAt = actual.getCreatedAt();
+        final var actualUpdatedAt = actual.getUpdatedAt();
+
+        actual.addCategory(seriesId);
+        actual.addCategory(moviesId);
+
+        assertNotNull(actual);
+        assertNotNull(actual.getId());
+        assertEquals(expectedName, actual.getName());
+        assertEquals(expectedIsActive, actual.isActive());
+        assertEquals(expectedCategories, actual.getCategories());
+        assertEquals(actualCreatedAt, actual.getCreatedAt());
+        assertTrue(actualUpdatedAt.isBefore(actual.getUpdatedAt()));
+        assertNull(actual.getDeletedAt());
+    }
+
+    @Test
+    void givenAValidGenreWithTwoCategories_whenCallRemoveCategory_shouldReceiveOk() {
+        final String expectedName = "Ação";
+        final var expectedIsActive = true;
+        final var seriesId = CategoryID.unique();
+        final var moviesId = CategoryID.unique();
+        final var expectedCategories = List.of(moviesId);
+
+        final var actual = Genre.newGenre(expectedName, expectedIsActive);
+        assertEquals(0, actual.getCategories().size());
+
+        actual.update(expectedName, expectedIsActive, List.of(seriesId, moviesId));
+        assertEquals(2, actual.getCategories().size());
+
+        final var actualCreatedAt = actual.getCreatedAt();
+        final var actualUpdatedAt = actual.getUpdatedAt();
+
+        actual.removeCategory(seriesId);
+
+        assertNotNull(actual);
+        assertNotNull(actual.getId());
+        assertEquals(expectedName, actual.getName());
+        assertEquals(expectedIsActive, actual.isActive());
+        assertEquals(expectedCategories, actual.getCategories());
+        assertEquals(actualCreatedAt, actual.getCreatedAt());
+        assertTrue(actualUpdatedAt.isBefore(actual.getUpdatedAt()));
+        assertNull(actual.getDeletedAt());
+    }
+
+    @Test
+    void givenAInvalidNullAsCategoryID_whenCallAddCategory_shouldReceiveOk() {
+        final String expectedName = "Ação";
+        final var expectedIsActive = true;
+        final var expectedCategories = new ArrayList<CategoryID>();
+
+        final var actual = Genre.newGenre(expectedName, expectedIsActive);
+        assertEquals(0, actual.getCategories().size());
+
+        final var actualCreatedAt = actual.getCreatedAt();
+        final var actualUpdatedAt = actual.getUpdatedAt();
+
+        actual.addCategory(null);
+
+        assertNotNull(actual);
+        assertNotNull(actual.getId());
+        assertEquals(expectedName, actual.getName());
+        assertEquals(expectedIsActive, actual.isActive());
+        assertEquals(expectedCategories, actual.getCategories());
+        assertEquals(actualCreatedAt, actual.getCreatedAt());
+        assertEquals(actualUpdatedAt, actual.getUpdatedAt());
+        assertNull(actual.getDeletedAt());
+    }
+
+    @Test
+    void givenAInvalidNullAsCategoryID_whenCallRemoveCategory_shouldReceiveOk() {
+        final String expectedName = "Ação";
+        final var expectedIsActive = true;
+        final var expectedCategories = new ArrayList<CategoryID>();
+
+        final var actual = Genre.newGenre(expectedName, expectedIsActive);
+        assertEquals(0, actual.getCategories().size());
+
+        final var actualCreatedAt = actual.getCreatedAt();
+        final var actualUpdatedAt = actual.getUpdatedAt();
+
+        actual.removeCategory(null);
+
+        assertNotNull(actual);
+        assertNotNull(actual.getId());
+        assertEquals(expectedName, actual.getName());
+        assertEquals(expectedIsActive, actual.isActive());
+        assertEquals(expectedCategories, actual.getCategories());
+        assertEquals(actualCreatedAt, actual.getCreatedAt());
+        assertEquals(actualUpdatedAt, actual.getUpdatedAt());
+        assertNull(actual.getDeletedAt());
     }
 
 }
