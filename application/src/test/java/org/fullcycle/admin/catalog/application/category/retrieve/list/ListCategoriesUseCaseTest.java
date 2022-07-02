@@ -2,7 +2,7 @@ package org.fullcycle.admin.catalog.application.category.retrieve.list;
 
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
-import org.fullcycle.admin.catalog.domain.category.CategorySearchQuery;
+import org.fullcycle.admin.catalog.domain.pagination.SearchQuery;
 import org.fullcycle.admin.catalog.domain.pagination.Pagination;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class ListCategoriesUseCaseTest {
         final var expectedSort = "createdAt";
         final var expectedDirection = "asc";
 
-        final var query = new CategorySearchQuery(
+        final var query = new SearchQuery(
             expectedPage,
             expectedPerPage,
             expectedTerms,
@@ -96,7 +96,7 @@ class ListCategoriesUseCaseTest {
         final var expectedSort = "createdAt";
         final var expectedDirection = "asc";
 
-        final var query = new CategorySearchQuery(
+        final var query = new SearchQuery(
             expectedPage,
             expectedPerPage,
             expectedTerms,
@@ -143,7 +143,7 @@ class ListCategoriesUseCaseTest {
         final var expectedDirection = "asc";
         final var expectedErrorMessage = "Gateway unexpected error";
 
-        final var query = new CategorySearchQuery(
+        final var query = new SearchQuery(
             expectedPage,
             expectedPerPage,
             expectedTerms,

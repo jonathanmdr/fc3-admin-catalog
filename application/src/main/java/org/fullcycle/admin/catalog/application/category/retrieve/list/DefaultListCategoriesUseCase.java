@@ -1,7 +1,7 @@
 package org.fullcycle.admin.catalog.application.category.retrieve.list;
 
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
-import org.fullcycle.admin.catalog.domain.category.CategorySearchQuery;
+import org.fullcycle.admin.catalog.domain.pagination.SearchQuery;
 import org.fullcycle.admin.catalog.domain.pagination.Pagination;
 
 import java.util.Objects;
@@ -22,7 +22,7 @@ public class DefaultListCategoriesUseCase extends ListCategoriesUseCase {
         final var sort = listCategoriesCommand.sort();
         final var direction = listCategoriesCommand.direction();
 
-        final var query = new CategorySearchQuery(page, perPage, terms, sort, direction);
+        final var query = new SearchQuery(page, perPage, terms, sort, direction);
 
         return this.categoryGateway.findAll(query)
             .map(ListCategoryOutput::from);
