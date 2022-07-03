@@ -2,7 +2,7 @@ package org.fullcycle.admin.catalog.domain.genre;
 
 import org.fullcycle.admin.catalog.domain.AggregateRoot;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.domain.exception.NotificationValidationException;
+import org.fullcycle.admin.catalog.domain.exception.NotificationException;
 import org.fullcycle.admin.catalog.domain.validation.ValidationHandler;
 import org.fullcycle.admin.catalog.domain.validation.handler.NotificationHandler;
 
@@ -124,6 +124,17 @@ public class Genre extends AggregateRoot<GenreID> {
         return this;
     }
 
+    public Genre addCategories(final List<CategoryID> categoryIds) {
+        if (Objects.isNull(categoryIds) || categoryIds.isEmpty()) {
+            return this;
+        }
+
+        this.categories.addAll(categoryIds);
+        this.updatedAt = Instant.now();
+
+        return this;
+    }
+
     public Genre removeCategory(final CategoryID categoryID) {
         if (Objects.isNull(categoryID)) {
             return this;
@@ -135,12 +146,23 @@ public class Genre extends AggregateRoot<GenreID> {
         return this;
     }
 
+    public Genre removeCategories(final List<CategoryID> categoryIds) {
+        if (Objects.isNull(categoryIds) || categoryIds.isEmpty()) {
+            return this;
+        }
+
+        this.categories.removeAll(categoryIds);
+        this.updatedAt = Instant.now();
+
+        return this;
+    }
+
     private void selfValidate() {
         final var notification = NotificationHandler.create();
         validate(notification);
 
         if (notification.hasErrors()) {
-            throw new NotificationValidationException("The aggregate genre validation failed", notification);
+            throw new NotificationException("The aggregate genre validation failed", notification);
         }
     }
 

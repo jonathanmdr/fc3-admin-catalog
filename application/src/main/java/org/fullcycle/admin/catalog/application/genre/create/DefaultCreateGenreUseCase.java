@@ -2,7 +2,7 @@ package org.fullcycle.admin.catalog.application.genre.create;
 
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.domain.exception.NotificationValidationException;
+import org.fullcycle.admin.catalog.domain.exception.NotificationException;
 import org.fullcycle.admin.catalog.domain.genre.Genre;
 import org.fullcycle.admin.catalog.domain.genre.GenreGateway;
 import org.fullcycle.admin.catalog.domain.validation.Error;
@@ -39,8 +39,10 @@ public class DefaultCreateGenreUseCase extends CreateGenreUseCase {
         final var genre = notification.validate(() -> Genre.newGenre(name, isActive));
 
         if (notification.hasErrors()) {
-            throw new NotificationValidationException("Could not create aggregate genre", notification);
+            throw new NotificationException("Could not create aggregate genre", notification);
         }
+
+        genre.addCategories(categories);
 
         return CreateGenreOutput.from(this.genreGateway.create(genre));
     }
