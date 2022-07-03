@@ -14,6 +14,8 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.fullcycle.admin.catalog.infrastructure.utils.SpecificationUtils.like;
@@ -72,6 +74,12 @@ public class CategoryDatabaseGateway implements CategoryGateway {
         if (this.categoryRepository.existsById(id)) {
             this.categoryRepository.deleteById(id);
         }
+    }
+
+    @Override
+    public List<CategoryID> existsByIds(final Iterable<CategoryID> categoryIds) {
+        // TODO: Implementar quando chegarmos na camada de infra de Genre
+        return Collections.emptyList();
     }
 
     private static Specification<CategoryJpaEntity> applyTerms(final String term) {

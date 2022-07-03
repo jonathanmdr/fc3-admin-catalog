@@ -4,7 +4,7 @@ import org.fullcycle.admin.catalog.domain.AggregateRoot;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.exception.NotificationValidationException;
 import org.fullcycle.admin.catalog.domain.validation.ValidationHandler;
-import org.fullcycle.admin.catalog.domain.validation.handler.NotificationValidationHandler;
+import org.fullcycle.admin.catalog.domain.validation.handler.NotificationHandler;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -136,7 +136,7 @@ public class Genre extends AggregateRoot<GenreID> {
     }
 
     private void selfValidate() {
-        final var notification = NotificationValidationHandler.create();
+        final var notification = NotificationHandler.create();
         validate(notification);
 
         if (notification.hasErrors()) {

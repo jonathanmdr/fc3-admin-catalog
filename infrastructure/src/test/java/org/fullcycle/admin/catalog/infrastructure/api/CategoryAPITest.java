@@ -17,7 +17,7 @@ import org.fullcycle.admin.catalog.domain.exception.DomainException;
 import org.fullcycle.admin.catalog.domain.exception.NotFoundException;
 import org.fullcycle.admin.catalog.domain.pagination.Pagination;
 import org.fullcycle.admin.catalog.domain.validation.Error;
-import org.fullcycle.admin.catalog.domain.validation.handler.NotificationValidationHandler;
+import org.fullcycle.admin.catalog.domain.validation.handler.NotificationHandler;
 import org.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
 import org.fullcycle.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
 import org.hamcrest.core.IsNull;
@@ -119,7 +119,7 @@ class CategoryAPITest {
         final var input = new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         when(createCategoryUseCase.execute(any()))
-            .thenReturn(left(NotificationValidationHandler.create(new Error(expectedErrorMessage))));
+            .thenReturn(left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = post("/categories")
             .accept(MediaType.APPLICATION_JSON)
@@ -270,7 +270,7 @@ class CategoryAPITest {
         final var expectedErrorMessage = "'name' should not be null";
 
         when(updateCategoryUseCase.execute(any()))
-            .thenReturn(left(NotificationValidationHandler.create(new Error(expectedErrorMessage))));
+            .thenReturn(left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var body = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 

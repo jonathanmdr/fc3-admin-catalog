@@ -8,7 +8,7 @@ public interface ValidationHandler {
 
     ValidationHandler append(final Error error);
     ValidationHandler append(final ValidationHandler handler);
-    ValidationHandler validate(final Validation validation);
+    <T> T validate(final Validation<T> validation);
     List<Error> getErrors();
 
     default boolean hasErrors() {
@@ -32,8 +32,8 @@ public interface ValidationHandler {
         return Optional.of(getErrors().get(lastIndex));
     }
 
-    interface Validation {
-        void validate();
+    interface Validation<T> {
+        T validate();
     }
 
 }
