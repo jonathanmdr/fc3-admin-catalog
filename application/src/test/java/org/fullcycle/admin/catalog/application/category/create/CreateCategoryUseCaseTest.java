@@ -1,13 +1,12 @@
 package org.fullcycle.admin.catalog.application.category.create;
 
+import org.fullcycle.admin.catalog.application.UseCaseTest;
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,13 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class CreateCategoryUseCaseTest {
+class CreateCategoryUseCaseTest extends UseCaseTest {
 
     @Mock
     private CategoryGateway categoryGateway;
@@ -29,9 +26,11 @@ class CreateCategoryUseCaseTest {
     @InjectMocks
     private DefaultCreateCategoryUseCase useCase;
 
-    @BeforeEach
-    void cleanup() {
-        reset(categoryGateway);
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(
+            categoryGateway
+        );
     }
 
     @Test
@@ -64,13 +63,12 @@ class CreateCategoryUseCaseTest {
 
     @Test
     void givenAInvalidName_whenCallCreateCategory_thenShouldReturnDomainException() {
-        final String expectedName = null;
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
         final var expectedErrorMessage = "'name' should not be null";
         final var expectedErrorCount = 1;
 
-        final var command = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
+        final var command = CreateCategoryCommand.with(null, expectedDescription, expectedIsActive);
 
         final var actual = useCase.execute(command).getLeft();
 

@@ -1,16 +1,15 @@
 package org.fullcycle.admin.catalog.application.category.update;
 
+import org.fullcycle.admin.catalog.application.UseCaseTest;
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.exception.NotFoundException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,13 +23,11 @@ import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class UpdateCategoryUseCaseTest {
+class UpdateCategoryUseCaseTest extends UseCaseTest {
 
     @Mock
     private CategoryGateway categoryGateway;
@@ -38,9 +35,11 @@ class UpdateCategoryUseCaseTest {
     @InjectMocks
     private DefaultUpdateCategoryUseCase useCase;
 
-    @BeforeEach
-    void cleanup() {
-        reset(categoryGateway);
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(
+            categoryGateway
+        );
     }
 
     @Test
@@ -85,7 +84,6 @@ class UpdateCategoryUseCaseTest {
     void givenAInvalidName_whenCallUpdateCategory_thenShouldReturnDomainException() {
         final var category = Category.newCategory("Bla", "Bla", true);
         final var expectedId = category.getId();
-        final String expectedName = null;
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
         final var expectedErrorMessage = "'name' should not be null";
@@ -93,7 +91,7 @@ class UpdateCategoryUseCaseTest {
 
         final var command = UpdateCategoryCommand.with(
             expectedId.getValue(),
-            expectedName,
+            null,
             expectedDescription,
             expectedIsActive
         );

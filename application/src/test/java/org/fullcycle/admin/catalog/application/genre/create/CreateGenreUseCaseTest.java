@@ -1,15 +1,14 @@
 package org.fullcycle.admin.catalog.application.genre.create;
 
+import org.fullcycle.admin.catalog.application.UseCaseTest;
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.exception.NotificationException;
 import org.fullcycle.admin.catalog.domain.genre.GenreGateway;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,8 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class CreateGenreUseCaseTest {
+class CreateGenreUseCaseTest extends UseCaseTest {
 
     @Mock
     private CategoryGateway categoryGateway;
@@ -35,6 +33,14 @@ class CreateGenreUseCaseTest {
 
     @InjectMocks
     private DefaultCreateGenreUseCase useCase;
+
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(
+            categoryGateway,
+            genreGateway
+        );
+    }
 
     @Test
     void givenAValidCommand_whenCallsCreateGenre_shouldReturnGenreId() {
@@ -155,13 +161,12 @@ class CreateGenreUseCaseTest {
 
     @Test
     void givenAnInvalidNullName_whenCallsCreateGenre_shouldReturnDomainException() {
-        final String expectedName = null;
         final var expectedIsActive = true;
         final var expectedCategories = List.<CategoryID>of();
         final var expectedErrorMessage = "'name' should not be null";
         final var expectedErrorCount = 1;
 
-        final var command = CreateGenreCommand.with(expectedName, expectedIsActive, asString(expectedCategories));
+        final var command = CreateGenreCommand.with(null, expectedIsActive, asString(expectedCategories));
 
         final var actual = assertThrows(
             NotificationException.class,

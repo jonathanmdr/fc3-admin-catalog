@@ -1,28 +1,24 @@
 package org.fullcycle.admin.catalog.application.category.retrieve.list;
 
+import org.fullcycle.admin.catalog.application.UseCaseTest;
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
-import org.fullcycle.admin.catalog.domain.pagination.SearchQuery;
 import org.fullcycle.admin.catalog.domain.pagination.Pagination;
-import org.junit.jupiter.api.BeforeEach;
+import org.fullcycle.admin.catalog.domain.pagination.SearchQuery;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class ListCategoriesUseCaseTest {
+class ListCategoriesUseCaseTest extends UseCaseTest {
 
     @Mock
     private CategoryGateway categoryGateway;
@@ -30,9 +26,11 @@ class ListCategoriesUseCaseTest {
     @InjectMocks
     private DefaultListCategoriesUseCase useCase;
 
-    @BeforeEach
-    void cleanup() {
-        reset(categoryGateway);
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(
+            categoryGateway
+        );
     }
 
     @Test
@@ -91,6 +89,7 @@ class ListCategoriesUseCaseTest {
         final var categories = Collections.<Category>emptyList();
 
         final var expectedPage = 0;
+        final var expectedTotal = 0;
         final var expectedPerPage = 10;
         final var expectedTerms = "";
         final var expectedSort = "createdAt";
@@ -107,7 +106,7 @@ class ListCategoriesUseCaseTest {
         final var expectedPagination = new Pagination<>(
             expectedPage,
             expectedPerPage,
-            categories.size(),
+            expectedTotal,
             categories
         );
 
@@ -131,7 +130,7 @@ class ListCategoriesUseCaseTest {
         assertEquals(expectedItemsCount, actual.items().size());
         assertEquals(expectedPage, actual.currentPage());
         assertEquals(expectedPerPage, actual.perPage());
-        assertEquals(categories.size(), actual.total());
+        assertEquals(expectedTotal, actual.total());
     }
 
     @Test
