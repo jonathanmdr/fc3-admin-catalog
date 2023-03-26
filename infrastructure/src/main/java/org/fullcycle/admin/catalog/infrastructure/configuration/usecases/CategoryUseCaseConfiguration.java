@@ -14,13 +14,15 @@ import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Objects;
+
 @Configuration
 public class CategoryUseCaseConfiguration {
 
     private final CategoryGateway categoryGateway;
 
     public CategoryUseCaseConfiguration(final CategoryGateway categoryGateway) {
-        this.categoryGateway = categoryGateway;
+        this.categoryGateway = Objects.requireNonNull(categoryGateway);
     }
 
     @Bean

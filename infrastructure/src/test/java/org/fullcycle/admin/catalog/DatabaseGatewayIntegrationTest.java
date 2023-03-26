@@ -17,12 +17,15 @@ import java.lang.annotation.Target;
 @Inherited
 @DataJpaTest
 @ActiveProfiles("integration-test")
-@ComponentScan(includeFilters = {
-    @ComponentScan.Filter(
-        type = FilterType.REGEX,
-        pattern = ".[DatabaseGateway]"
-    )
-})
+@ComponentScan(
+    basePackages = "org.fullcycle.admin.catalog",
+    includeFilters = {
+        @ComponentScan.Filter(
+            type = FilterType.REGEX,
+            pattern = ".[DatabaseGateway]"
+        )
+    }
+)
 @ExtendWith(CleanupDatabaseExtension.class)
 public @interface DatabaseGatewayIntegrationTest {
 

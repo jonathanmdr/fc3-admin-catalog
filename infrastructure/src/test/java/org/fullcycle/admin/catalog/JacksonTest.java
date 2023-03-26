@@ -16,9 +16,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @ActiveProfiles("integration-test")
-@JsonTest(includeFilters = {
-    @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = ObjectMapperConfiguration.class)
-})
+@JsonTest(
+    includeFilters = {
+        @ComponentScan.Filter(
+            type = FilterType.ASSIGNABLE_TYPE,
+            classes = ObjectMapperConfiguration.class
+        )
+    }
+)
 public @interface JacksonTest {
 
 }
