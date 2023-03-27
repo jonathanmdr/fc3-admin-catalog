@@ -86,7 +86,7 @@ class GetGenreByIdUseCaseTest extends UseCaseTest {
         final var expectedId = expected.getId();
         final var expectedErrorMessage = "Gateway error";
 
-        doThrow(new IllegalStateException(expectedErrorMessage)).when(gateway.findById(any()));
+        doThrow(new IllegalStateException(expectedErrorMessage)).when(gateway).findById(any());
 
         final var command = GetGenreByIdCommand.with(expectedId.getValue());
         final var actual = assertThrows(
