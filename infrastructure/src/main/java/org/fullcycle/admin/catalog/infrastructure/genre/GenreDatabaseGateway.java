@@ -38,7 +38,7 @@ public class GenreDatabaseGateway implements GenreGateway {
 
     @Override
     public Genre update(final Genre genre) {
-        return null;
+        return save(genre);
     }
 
     @Override
