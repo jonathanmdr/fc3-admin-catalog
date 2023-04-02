@@ -43,7 +43,10 @@ public class GenreDatabaseGateway implements GenreGateway {
 
     @Override
     public void deleteById(final GenreID genreID) {
-
+        final var id = genreID.getValue();
+        if (this.genreRepository.existsById(id)) {
+            this.genreRepository.deleteById(id);
+        }
     }
 
     private Genre save(final Genre genre) {

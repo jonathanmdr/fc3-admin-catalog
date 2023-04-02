@@ -4,6 +4,7 @@ import org.fullcycle.admin.catalog.DatabaseGatewayIntegrationTest;
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.genre.Genre;
+import org.fullcycle.admin.catalog.domain.genre.GenreID;
 import org.fullcycle.admin.catalog.infrastructure.category.CategoryDatabaseGateway;
 import org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity;
 import org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreRepository;
@@ -296,6 +297,25 @@ class GenreDatabaseGatewayTest {
         assertThat(actualInDatabase.getUpdatedAt()).isAfter(genre.getUpdatedAt());
         assertThat(actualInDatabase.getDeletedAt()).isEqualTo(genreToUpdate.getDeletedAt());
         assertThat(actualInDatabase.getDeletedAt()).isNotNull();
+    }
+
+    @Test
+    void givenAPrePersistedGenre_whenCallsDelete_shouldDeleteGenre() {
+        final var genre = Genre.newGenre("Action", true);
+
+        assertThat(genreRepository.count()).isZero();
+        genreRepository.save(GenreJpaEntity.from(genre));
+        assertThat(genreRepository.count()).isOne();
+
+        genreDatabaseGateway.deleteById(genre.getId());
+        assertThat(genreRepository.count()).isZero();
+    }
+
+    @Test
+    void givenANotFoundGenre_whenCallsDelete_shouldDoNothing() {
+        assertThat(genreRepository.count()).isZero();
+        genreDatabaseGateway.deleteById(GenreID.unique());
+        assertThat(genreRepository.count()).isZero();
     }
 
 }
