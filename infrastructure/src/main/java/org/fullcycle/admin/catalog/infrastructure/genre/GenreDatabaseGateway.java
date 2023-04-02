@@ -28,7 +28,8 @@ public class GenreDatabaseGateway implements GenreGateway {
 
     @Override
     public Optional<Genre> findById(final GenreID genreID) {
-        return Optional.empty();
+        return this.genreRepository.findById(genreID.getValue())
+            .map(GenreJpaEntity::toAggregate);
     }
 
     @Override

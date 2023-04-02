@@ -304,7 +304,7 @@ class GenreDatabaseGatewayTest {
         final var genre = Genre.newGenre("Action", true);
 
         assertThat(genreRepository.count()).isZero();
-        genreRepository.save(GenreJpaEntity.from(genre));
+        genreRepository.saveAndFlush(GenreJpaEntity.from(genre));
         assertThat(genreRepository.count()).isOne();
 
         genreDatabaseGateway.deleteById(genre.getId());
@@ -316,6 +316,39 @@ class GenreDatabaseGatewayTest {
         assertThat(genreRepository.count()).isZero();
         genreDatabaseGateway.deleteById(GenreID.unique());
         assertThat(genreRepository.count()).isZero();
+    }
+
+    @Test
+    void givenAPrePersistedGenre_whenCallsFindById_shouldReturnGenre() {
+        final var genre = Genre.newGenre("Action", true);
+
+        assertThat(genreRepository.count()).isZero();
+        genreRepository.saveAndFlush(GenreJpaEntity.from(genre));
+        assertThat(genreRepository.count()).isOne();
+
+        final var actual = genreDatabaseGateway.findById(genre.getId())
+                .orElseThrow(() -> new IllegalStateException("Expected genre not found"));
+
+        assertThat(actual.getId()).isEqualTo(genre.getId());
+        assertThat(actual.getName()).isEqualTo(genre.getName());
+        assertThat(actual.isActive()).isEqualTo(genre.isActive());
+        assertThat(actual.getCategories()).isEmpty();
+        assertThat(actual.getCreatedAt()).isEqualTo(genre.getCreatedAt());
+        assertThat(actual.getUpdatedAt()).isEqualTo(genre.getUpdatedAt());
+        assertThat(actual.getDeletedAt()).isEqualTo(genre.getDeletedAt());
+        assertThat(actual.getDeletedAt()).isNull();
+    }
+
+    @Test
+    void givenANotFoundGenre_whenCallsFindById_shouldReturnEmpty() {
+        final var genre = Genre.newGenre("Action", true);
+
+        assertThat(genreRepository.count()).isZero();
+
+        final var actual = genreDatabaseGateway.findById(genre.getId());
+
+        assertThat(genreRepository.count()).isZero();
+        assertThat(actual).isEmpty();
     }
 
 }
