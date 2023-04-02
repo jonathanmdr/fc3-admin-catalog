@@ -5,10 +5,13 @@ import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.genre.Genre;
 import org.fullcycle.admin.catalog.domain.genre.GenreID;
+import org.fullcycle.admin.catalog.domain.pagination.SearchQuery;
 import org.fullcycle.admin.catalog.infrastructure.category.CategoryDatabaseGateway;
 import org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity;
 import org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
@@ -349,6 +352,208 @@ class GenreDatabaseGatewayTest {
 
         assertThat(genreRepository.count()).isZero();
         assertThat(actual).isEmpty();
+    }
+
+    @Test
+    void givenAnEmptyGenres_whenCallsFindAll_shouldReturnsEmptyList() {
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTotal = 0;
+        final var expectedTerms = "";
+        final var expectedSort = "name";
+        final var expectedDirection = "asc";
+
+        final var query = new SearchQuery(
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection
+        );
+
+        final var actual = this.genreDatabaseGateway.findAll(query);
+
+        assertThat(actual.currentPage()).isEqualTo(expectedPage);
+        assertThat(actual.perPage()).isEqualTo(expectedPerPage);
+        assertThat(actual.total()).isEqualTo(expectedTotal);
+        assertThat(actual.items().size()).isZero();
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = {
+            "ac,0,10,1,1,Action",
+            "dr,0,10,1,1,Drama",
+            "com,0,10,1,1,Comedy",
+            "sc,0,10,1,1,Science Fiction",
+            "ho,0,10,1,1,Horror",
+            "a,0,10,2,2,Action;Drama",
+            "o,0,10,4,4,Action;Comedy;Horror;Science Fiction",
+        }
+    )
+    void givenAValidTerms_whenCallsFindAll_shouldReturnsFilteredGenres(
+        final String expectedTerms,
+        final int expectedPage,
+        final int expectedPerPage,
+        final int expectedItemsCount,
+        final long expectedTotal,
+        final String expectedGenreName
+    ) {
+        final var expectedSort = "name";
+        final var expectedDirection = "asc";
+
+        final var action = GenreJpaEntity.from(Genre.newGenre("Action", true));
+        final var drama = GenreJpaEntity.from(Genre.newGenre("Drama", true));
+        final var comedy = GenreJpaEntity.from(Genre.newGenre("Comedy", true));
+        final var scienceFiction = GenreJpaEntity.from(Genre.newGenre("Science Fiction", true));
+        final var horror = GenreJpaEntity.from(Genre.newGenre("Horror", true));
+
+        assertThat(this.genreRepository.count()).isZero();
+        this.genreRepository.saveAllAndFlush(
+            List.of(
+                action,
+                drama,
+                comedy,
+                scienceFiction,
+                horror
+            )
+        );
+        assertThat(this.genreRepository.count()).isEqualTo(5);
+
+        final var query = new SearchQuery(
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection
+        );
+
+        final var actual = this.genreDatabaseGateway.findAll(query);
+
+        assertThat(actual.currentPage()).isEqualTo(expectedPage);
+        assertThat(actual.perPage()).isEqualTo(expectedPerPage);
+        assertThat(actual.total()).isEqualTo(expectedTotal);
+        assertThat(actual.items().size()).isEqualTo(expectedItemsCount);
+
+        var index = 0;
+        for (final var expectedName : expectedGenreName.split(";")) {
+            assertThat(actual.items().get(index).getName()).isEqualTo(expectedName);
+            index++;
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = {
+            "name,asc,0,10,5,5,Action",
+            "name,desc,0,10,5,5,Science Fiction",
+            "createdAt,asc,0,10,5,5,Action",
+            "createdAt,desc,0,10,5,5,Horror"
+        }
+    )
+    void givenAValidSortAndDirection_whenCallsFindAll_shouldReturnsFilteredGenres(
+        final String expectedSort,
+        final String expectedDirection,
+        final int expectedPage,
+        final int expectedPerPage,
+        final int expectedItemsCount,
+        final long expectedTotal,
+        final String expectedGenreName
+    ) {
+        final var expectedTerms = "";
+
+        final var action = GenreJpaEntity.from(Genre.newGenre("Action", true));
+        final var drama = GenreJpaEntity.from(Genre.newGenre("Drama", true));
+        final var comedy = GenreJpaEntity.from(Genre.newGenre("Comedy", true));
+        final var scienceFiction = GenreJpaEntity.from(Genre.newGenre("Science Fiction", true));
+        final var horror = GenreJpaEntity.from(Genre.newGenre("Horror", true));
+
+        assertThat(this.genreRepository.count()).isZero();
+        this.genreRepository.saveAllAndFlush(
+            List.of(
+                action,
+                drama,
+                comedy,
+                scienceFiction,
+                horror
+            )
+        );
+        assertThat(this.genreRepository.count()).isEqualTo(5);
+
+        final var query = new SearchQuery(
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection
+        );
+
+        final var actual = this.genreDatabaseGateway.findAll(query);
+
+        assertThat(actual.currentPage()).isEqualTo(expectedPage);
+        assertThat(actual.perPage()).isEqualTo(expectedPerPage);
+        assertThat(actual.total()).isEqualTo(expectedTotal);
+        assertThat(actual.items().size()).isEqualTo(expectedItemsCount);
+        assertThat(actual.items().get(0).getName()).isEqualTo(expectedGenreName);
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = {
+            "0,2,2,5,Action;Comedy",
+            "1,2,2,5,Drama;Horror",
+            "2,2,1,5,Science Fiction"
+        }
+    )
+    void givenAValidSortAndDirection_whenCallsFindAll_shouldReturnsFilteredGenres(
+        final int expectedPage,
+        final int expectedPerPage,
+        final int expectedItemsCount,
+        final long expectedTotal,
+        final String expectedGenreName
+    ) {
+        final var expectedTerms = "";
+        final var expectedSort = "name";
+        final var expectedDirection = "asc";
+
+        final var action = GenreJpaEntity.from(Genre.newGenre("Action", true));
+        final var drama = GenreJpaEntity.from(Genre.newGenre("Drama", true));
+        final var comedy = GenreJpaEntity.from(Genre.newGenre("Comedy", true));
+        final var scienceFiction = GenreJpaEntity.from(Genre.newGenre("Science Fiction", true));
+        final var horror = GenreJpaEntity.from(Genre.newGenre("Horror", true));
+
+        assertThat(this.genreRepository.count()).isZero();
+        this.genreRepository.saveAllAndFlush(
+            List.of(
+                action,
+                drama,
+                comedy,
+                scienceFiction,
+                horror
+            )
+        );
+        assertThat(this.genreRepository.count()).isEqualTo(5);
+
+        final var query = new SearchQuery(
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection
+        );
+
+        final var actual = this.genreDatabaseGateway.findAll(query);
+
+        assertThat(actual.currentPage()).isEqualTo(expectedPage);
+        assertThat(actual.perPage()).isEqualTo(expectedPerPage);
+        assertThat(actual.total()).isEqualTo(expectedTotal);
+        assertThat(actual.items().size()).isEqualTo(expectedItemsCount);
+
+        var index = 0;
+        for (final var expectedName : expectedGenreName.split(";")) {
+            assertThat(actual.items().get(index).getName()).isEqualTo(expectedName);
+            index++;
+        }
     }
 
 }
