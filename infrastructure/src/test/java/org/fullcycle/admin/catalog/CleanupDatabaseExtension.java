@@ -23,10 +23,6 @@ public class CleanupDatabaseExtension implements BeforeEachCallback {
                 applicationContext.getBean(CategoryRepository.class)
             )
         );
-
-        final var entityManager = applicationContext.getBean(TestEntityManager.class);
-        entityManager.flush();
-        entityManager.clear();
     }
 
     private void cleanup(final Collection<CrudRepository> repositories) {
