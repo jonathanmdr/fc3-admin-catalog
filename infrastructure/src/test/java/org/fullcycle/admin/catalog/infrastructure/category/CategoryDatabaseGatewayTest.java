@@ -1,9 +1,9 @@
 package org.fullcycle.admin.catalog.infrastructure.category;
 
+import org.fullcycle.admin.catalog.DatabaseGatewayIntegrationTest;
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.pagination.SearchQuery;
-import org.fullcycle.admin.catalog.DatabaseGatewayIntegrationTest;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -317,6 +318,34 @@ class CategoryDatabaseGatewayTest {
         assertEquals(expectedTotal, actual.total());
         assertEquals(expectedPerPage, actual.items().size());
         assertEquals(filmes.getId().getValue(), actual.items().get(0).getId().getValue());
+    }
+
+    @Test
+    void givenPrePersistedCategories_whenCallsExistsByIds_shouldReturnIds() {
+        final var filmes = Category.newCategory("Filmes", "A categoria mais assistida", true);
+        final var series = Category.newCategory("Séries", "Uma categoria assistida", true);
+        final var documentarios = Category.newCategory("Documentarios", "A categoria menos assistida", true);
+
+        assertEquals(0, categoryRepository.count());
+
+        final var ids = categoryRepository.saveAll(
+            List.of(
+                CategoryJpaEntity.from(filmes),
+                CategoryJpaEntity.from(series),
+                CategoryJpaEntity.from(documentarios)
+            )
+        )
+        .stream()
+        .map(CategoryJpaEntity::getId)
+        .map(CategoryID::from)
+        .toList();
+
+        assertEquals(3, categoryRepository.count());
+
+        final var actual = categoryDatabaseGateway.existsByIds(ids);
+
+        assertThat(actual).hasSize(3);
+        assertThat(actual).containsAll(ids);
     }
 
 }

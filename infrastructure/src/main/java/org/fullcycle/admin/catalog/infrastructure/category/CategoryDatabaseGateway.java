@@ -3,8 +3,8 @@ package org.fullcycle.admin.catalog.infrastructure.category;
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.domain.pagination.SearchQuery;
 import org.fullcycle.admin.catalog.domain.pagination.Pagination;
+import org.fullcycle.admin.catalog.domain.pagination.SearchQuery;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryRepository;
 import org.fullcycle.admin.catalog.infrastructure.utils.StringUtils;
@@ -14,9 +14,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 import static org.fullcycle.admin.catalog.infrastructure.utils.SpecificationUtils.like;
 
@@ -78,8 +78,14 @@ public class CategoryDatabaseGateway implements CategoryGateway {
 
     @Override
     public List<CategoryID> existsByIds(final Iterable<CategoryID> categoryIds) {
-        // TODO: Implementar quando chegarmos na camada de infra de Genre
-        return Collections.emptyList();
+        final var ids = StreamSupport.stream(categoryIds.spliterator(), false)
+            .map(CategoryID::getValue)
+            .toList();
+
+        return this.categoryRepository.existsByIds(ids)
+            .stream()
+            .map(CategoryID::from)
+            .toList();
     }
 
     private static Specification<CategoryJpaEntity> applyTerms(final String term) {
