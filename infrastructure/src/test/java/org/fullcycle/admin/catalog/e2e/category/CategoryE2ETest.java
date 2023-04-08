@@ -2,23 +2,13 @@ package org.fullcycle.admin.catalog.e2e.category;
 
 import org.fullcycle.admin.catalog.E2ETest;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
-import org.fullcycle.admin.catalog.infrastructure.category.models.CreateCategoryResponse;
-import org.fullcycle.admin.catalog.infrastructure.category.models.GetCategoryResponse;
-import org.fullcycle.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
-import org.fullcycle.admin.catalog.infrastructure.category.models.UpdateCategoryResponse;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryRepository;
-import org.fullcycle.admin.catalog.infrastructure.configuration.json.Json;
 import org.hamcrest.core.IsNull;
-import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -30,17 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @E2ETest
 @Testcontainers
-class CategoryE2ETest {
+class CategoryE2ETest extends CategoryMockMvcDsl {
 
     @Autowired
     private MockMvc mvc;
@@ -60,6 +44,11 @@ class CategoryE2ETest {
         final var exposedPort = MYSQL_CONTAINER.getMappedPort(privatePort);
         System.out.printf("MariaDB container is running on port %s\n", exposedPort);
         registry.add("mariadb.port", () -> exposedPort);
+    }
+
+    @Override
+    public MockMvc mvc() {
+        return this.mvc;
     }
 
     @Test
@@ -300,104 +289,6 @@ class CategoryE2ETest {
         deleteACategory(CategoryID.unique().getValue());
 
         assertEquals(0, categoryRepository.count());
-    }
-
-    private ResultActions listCategories(final int page, final int perPage)throws Exception {
-        return listCategories(page, perPage, "", "", "");
-    }
-
-    private ResultActions listCategories(final int page, final int perPage, final String search)throws Exception {
-        return listCategories(page, perPage, search, "", "");
-    }
-
-    private ResultActions listCategories(
-        final int page,
-        final int perPage,
-        final String search,
-        final String sort,
-        final String direction
-    ) throws Exception {
-        final var request = get("/categories")
-            .queryParam("page", String.valueOf(page))
-            .queryParam("perPage", String.valueOf(perPage))
-            .queryParam("search", search)
-            .queryParam("sort", sort)
-            .queryParam("direction", direction)
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON);
-
-        return this.mvc.perform(request)
-            .andExpect(status().isOk())
-            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
-    }
-
-    private GetCategoryResponse retrieveACategoryById(final String categoryId) throws Exception {
-        final var request = get("/categories/{id}", categoryId)
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON);
-
-        final var response = this.mvc.perform(request)
-            .andExpect(status().isOk())
-            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-            .andReturn()
-            .getResponse().getContentAsString();
-
-        return Json.readValue(response, GetCategoryResponse.class);
-    }
-
-    private void retrieveANotFoundCategoryById(final String categoryId) throws Exception {
-        final var request = get("/categories/{id}", categoryId)
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON);
-
-        this.mvc.perform(request)
-            .andExpect(status().isNotFound())
-            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.message", equalTo("Category with ID %s was not found".formatted(categoryId))));
-    }
-
-    private CreateCategoryResponse givenACategory(final String name, final String description, final boolean active) throws Exception {
-        final var requestBody = new CreateCategoryRequest(name, description, active);
-
-        final var request = post("/categories")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(Json.writeValueAsString(requestBody));
-
-        final var response = this.mvc.perform(request)
-            .andExpect(status().isCreated())
-            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(header().string(HttpHeaders.LOCATION, StringContains.containsString("/categories/")))
-            .andReturn()
-            .getResponse().getContentAsString();
-
-        return Json.readValue(response, CreateCategoryResponse.class);
-    }
-
-    private UpdateCategoryResponse updateACategory(final String id, final String name, final String description, final boolean active) throws Exception {
-        final var requestBody = new UpdateCategoryRequest(name, description, active);
-
-        final var request = put("/categories/{id}", id)
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(Json.writeValueAsString(requestBody));
-
-        final var response = this.mvc.perform(request)
-            .andExpect(status().isOk())
-            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-            .andReturn()
-            .getResponse().getContentAsString();
-
-        return Json.readValue(response, UpdateCategoryResponse.class);
-    }
-
-    private void deleteACategory(final String id) throws Exception {
-        final var request = delete("/categories/{id}", id)
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON);
-
-        this.mvc.perform(request)
-            .andExpect(status().isNoContent());
     }
 
 }
