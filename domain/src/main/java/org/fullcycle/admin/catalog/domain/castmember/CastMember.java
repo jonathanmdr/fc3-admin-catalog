@@ -1,9 +1,9 @@
 package org.fullcycle.admin.catalog.domain.castmember;
 
 import org.fullcycle.admin.catalog.domain.AggregateRoot;
-import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.domain.category.CategoryValidator;
+import org.fullcycle.admin.catalog.domain.exception.NotificationException;
 import org.fullcycle.admin.catalog.domain.validation.ValidationHandler;
+import org.fullcycle.admin.catalog.domain.validation.handler.NotificationHandler;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -27,6 +27,7 @@ public class CastMember extends AggregateRoot<CastMemberID> {
         this.type = type;
         this.createdAt = Objects.requireNonNull(createdAt, "'createdAt' should not be null");
         this.updatedAt = Objects.requireNonNull(updatedAt, "'updatedAt' should not be null");
+        selfValidate();
     }
 
     public static CastMember newMember(final String name, final CastMemberType type) {
@@ -91,6 +92,15 @@ public class CastMember extends AggregateRoot<CastMemberID> {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    private void selfValidate() {
+        final var notification = NotificationHandler.create();
+        validate(notification);
+
+        if (notification.hasErrors()) {
+            throw new NotificationException("Failed to create a aggregate CastMember", notification);
+        }
     }
 
 }
