@@ -8,8 +8,8 @@ import java.util.Objects;
 
 public class CategoryValidator extends Validator {
 
-    public static final int NAME_MIN_LENGTH = 3;
-    public static final int NAME_MAX_LENGTH = 255;
+    private static final int NAME_MIN_LENGTH = 3;
+    private static final int NAME_MAX_LENGTH = 255;
 
     private final Category category;
 

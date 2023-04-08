@@ -8,8 +8,8 @@ import java.util.Objects;
 
 public class GenreValidator extends Validator {
 
-    public static final int NAME_MIN_LENGTH = 1;
-    public static final int NAME_MAX_LENGTH = 255;
+    private static final int NAME_MIN_LENGTH = 1;
+    private static final int NAME_MAX_LENGTH = 255;
 
     private final Genre genre;
 
