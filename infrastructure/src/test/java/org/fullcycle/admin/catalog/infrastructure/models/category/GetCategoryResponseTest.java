@@ -1,8 +1,8 @@
-package org.fullcycle.admin.catalog.infrastructure.models;
+package org.fullcycle.admin.catalog.infrastructure.models.category;
 
 import org.fullcycle.admin.catalog.JacksonTest;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.infrastructure.category.models.ListCategoryResponse;
+import org.fullcycle.admin.catalog.infrastructure.category.models.GetCategoryResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
@@ -12,10 +12,10 @@ import java.time.Instant;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JacksonTest
-class ListCategoryResponseTest {
+class GetCategoryResponseTest {
 
     @Autowired
-    private JacksonTester<ListCategoryResponse> jacksonTester;
+    private JacksonTester<GetCategoryResponse> jacksonTester;
 
     @Test
     void testMarshall() throws Exception {
@@ -24,14 +24,16 @@ class ListCategoryResponseTest {
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = false;
         final var expectedCreatedAt = Instant.now();
+        final var expectedUpdatedAt = Instant.now();
         final var expectedDeletedAt = Instant.now();
 
-        final var response = new ListCategoryResponse(
+        final var response = new GetCategoryResponse(
             expectedId,
             expectedName,
             expectedDescription,
             expectedIsActive,
             expectedCreatedAt,
+            expectedUpdatedAt,
             expectedDeletedAt
         );
 
@@ -43,6 +45,7 @@ class ListCategoryResponseTest {
             .hasJsonPath("$.description", expectedDescription)
             .hasJsonPath("$.is_active", expectedIsActive)
             .hasJsonPath("$.created_at", expectedCreatedAt.toString())
+            .hasJsonPath("$.updated_at", expectedUpdatedAt.toString())
             .hasJsonPath("$.deleted_at", expectedDeletedAt.toString());
     }
 
@@ -53,6 +56,7 @@ class ListCategoryResponseTest {
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = false;
         final var expectedCreatedAt = Instant.now();
+        final var expectedUpdatedAt = Instant.now();
         final var expectedDeletedAt = Instant.now();
 
         final var json = """
@@ -62,6 +66,7 @@ class ListCategoryResponseTest {
               "description": "%s",
               "is_active": %s,
               "created_at": "%s",
+              "updated_at": "%s",
               "deleted_at": "%s"
             }
             """
@@ -71,6 +76,7 @@ class ListCategoryResponseTest {
                 expectedDescription,
                 expectedIsActive,
                 expectedCreatedAt.toString(),
+                expectedUpdatedAt.toString(),
                 expectedDeletedAt.toString()
             );
 
@@ -82,6 +88,7 @@ class ListCategoryResponseTest {
             .hasFieldOrPropertyWithValue("description", expectedDescription)
             .hasFieldOrPropertyWithValue("active", expectedIsActive)
             .hasFieldOrPropertyWithValue("createdAt", expectedCreatedAt)
+            .hasFieldOrPropertyWithValue("updatedAt", expectedUpdatedAt)
             .hasFieldOrPropertyWithValue("deletedAt", expectedDeletedAt);
     }
 

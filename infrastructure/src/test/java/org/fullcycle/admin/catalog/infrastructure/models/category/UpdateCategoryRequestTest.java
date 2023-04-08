@@ -1,4 +1,4 @@
-package org.fullcycle.admin.catalog.infrastructure.models;
+package org.fullcycle.admin.catalog.infrastructure.models.category;
 
 import org.fullcycle.admin.catalog.JacksonTest;
 import org.fullcycle.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
