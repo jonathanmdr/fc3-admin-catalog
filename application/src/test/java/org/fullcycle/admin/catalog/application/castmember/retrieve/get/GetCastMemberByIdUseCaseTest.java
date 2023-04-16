@@ -35,7 +35,7 @@ class GetCastMemberByIdUseCaseTest extends UseCaseTest {
     }
 
     @Test
-    void givenAValidId_whenCallsGetCastMemberById_thenReturnCategoryId() {
+    void givenAValidId_whenCallsGetCastMemberById_thenReturnCastMemberId() {
         final var expectedName = "Vin Diesel";
         final var expectedType = CastMemberType.ACTOR;
         final var castMember = CastMember.newMember(expectedName, expectedType);
