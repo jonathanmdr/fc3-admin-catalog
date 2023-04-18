@@ -76,9 +76,7 @@ public class CastMemberDatabaseGateway implements CastMemberGateway {
     }
 
     private static Specification<CastMemberJpaEntity> applyTerms(final String term) {
-        final Specification<CastMemberJpaEntity> nameLike = like("name", term);
-        final Specification<CastMemberJpaEntity> typeLike = like("type", term);
-        return nameLike.or(typeLike);
+        return like("name", term);
     }
 
     private CastMember save(final CastMember castMember) {
