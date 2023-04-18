@@ -3,9 +3,11 @@ package org.fullcycle.admin.catalog.infrastructure.castmember.presenters;
 import org.fullcycle.admin.catalog.application.castmember.create.CreateCastMemberOutput;
 import org.fullcycle.admin.catalog.application.castmember.retrieve.get.GetCastMemberByIdOutput;
 import org.fullcycle.admin.catalog.application.castmember.retrieve.list.ListCastMembersOutput;
+import org.fullcycle.admin.catalog.application.castmember.update.UpdateCastMemberOutput;
 import org.fullcycle.admin.catalog.infrastructure.castmember.models.CreateCastMemberResponse;
 import org.fullcycle.admin.catalog.infrastructure.castmember.models.GetCastMemberResponse;
 import org.fullcycle.admin.catalog.infrastructure.castmember.models.ListCastMembersResponse;
+import org.fullcycle.admin.catalog.infrastructure.castmember.models.UpdateCastMemberResponse;
 
 public interface CastMemberApiPresenter {
 
@@ -30,6 +32,10 @@ public interface CastMemberApiPresenter {
 
     static CreateCastMemberResponse present(final CreateCastMemberOutput output) {
         return new CreateCastMemberResponse(output.id());
+    }
+
+    static UpdateCastMemberResponse present(final UpdateCastMemberOutput output) {
+        return new UpdateCastMemberResponse(output.id());
     }
 
 }
