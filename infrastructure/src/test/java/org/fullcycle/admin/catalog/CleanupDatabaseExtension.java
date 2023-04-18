@@ -1,10 +1,10 @@
 package org.fullcycle.admin.catalog;
 
+import org.fullcycle.admin.catalog.infrastructure.castmember.persistence.CastMemberRepository;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryRepository;
 import org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreRepository;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -20,7 +20,8 @@ public class CleanupDatabaseExtension implements BeforeEachCallback {
         cleanup(
             List.of(
                 applicationContext.getBean(GenreRepository.class),
-                applicationContext.getBean(CategoryRepository.class)
+                applicationContext.getBean(CategoryRepository.class),
+                applicationContext.getBean(CastMemberRepository.class)
             )
         );
     }

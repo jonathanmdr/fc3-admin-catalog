@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -26,7 +27,7 @@ public class CategoryDatabaseGateway implements CategoryGateway {
     private final CategoryRepository categoryRepository;
 
     public CategoryDatabaseGateway(final CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+        this.categoryRepository = Objects.requireNonNull(categoryRepository);
     }
 
     @Override
