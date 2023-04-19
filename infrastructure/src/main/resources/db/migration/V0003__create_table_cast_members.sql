@@ -4,5 +4,5 @@ CREATE TABLE cast_members (
     type VARCHAR(32) NOT NULL,
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL,
-    CONSTRAINT PK_CAST_MEMBER PRIMARY KEY (id)
+    CONSTRAINT PRIMARY KEY (id)
 );

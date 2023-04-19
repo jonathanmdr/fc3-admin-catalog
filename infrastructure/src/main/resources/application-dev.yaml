@@ -5,6 +5,12 @@ server:
             worker: 10
             io: 2
 
+spring:
+    jpa:
+        show-sql: true
+        properties:
+            "[hibernate.format_sql]": true
+
 mariadb:
     url: localhost:3306
     schema: admin_catalog_videos

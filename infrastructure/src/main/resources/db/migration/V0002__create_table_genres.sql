@@ -5,7 +5,7 @@ CREATE TABLE genres (
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL,
     deleted_at DATETIME(6) NULL,
-    CONSTRAINT PK_GENRE PRIMARY KEY (id)
+    CONSTRAINT PRIMARY KEY (id)
 );
 
 CREATE TABLE genres_categories (

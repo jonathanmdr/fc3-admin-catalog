@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
             .body(ApiError.from(exception));
     }
 
-    record ApiError(String message, List<Error> errors) {
+    public record ApiError(String message, List<Error> errors) {
         static ApiError from(final DomainException exception) {
             return new ApiError(exception.getMessage(), exception.getErrors());
         }

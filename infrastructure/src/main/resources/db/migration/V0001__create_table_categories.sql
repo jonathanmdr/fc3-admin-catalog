@@ -6,5 +6,5 @@ CREATE TABLE categories (
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL,
     deleted_at DATETIME(6) NULL,
-    CONSTRAINT PK_CATEGORY PRIMARY KEY (id)
+    CONSTRAINT PRIMARY KEY (id)
 );
