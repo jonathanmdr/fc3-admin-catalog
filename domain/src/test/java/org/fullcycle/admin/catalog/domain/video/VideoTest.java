@@ -67,7 +67,7 @@ class VideoTest {
         assertTrue(actual.getThumbnailHalf().isEmpty());
 
         assertDoesNotThrow(
-            () -> actual.validate(new ThrowsValidationHandler())
+            () -> actual.validate(ThrowsValidationHandler.create())
         );
     }
 
@@ -134,7 +134,7 @@ class VideoTest {
         assertTrue(actual.getThumbnailHalf().isEmpty());
 
         assertDoesNotThrow(
-            () -> actual.validate(new ThrowsValidationHandler())
+            () -> actual.validate(ThrowsValidationHandler.create())
         );
     }
 
@@ -192,7 +192,7 @@ class VideoTest {
         assertTrue(actual.getThumbnailHalf().isEmpty());
 
         assertDoesNotThrow(
-            () -> actual.validate(new ThrowsValidationHandler())
+            () -> actual.validate(ThrowsValidationHandler.create())
         );
     }
 
@@ -250,7 +250,7 @@ class VideoTest {
         assertTrue(actual.getThumbnailHalf().isEmpty());
 
         assertDoesNotThrow(
-            () -> actual.validate(new ThrowsValidationHandler())
+            () -> actual.validate(ThrowsValidationHandler.create())
         );
     }
 
@@ -308,7 +308,7 @@ class VideoTest {
         assertEquals(expectedImageMedia, actual.getThumbnailHalf().orElseThrow(() -> new IllegalStateException("Expected thumbnailHalf cannot be null or empty")));
 
         assertDoesNotThrow(
-            () -> actual.validate(new ThrowsValidationHandler())
+            () -> actual.validate(ThrowsValidationHandler.create())
         );
     }
 
@@ -372,7 +372,7 @@ class VideoTest {
         assertTrue(actual.getThumbnailHalf().isEmpty());
 
         assertDoesNotThrow(
-            () -> actual.validate(new ThrowsValidationHandler())
+            () -> actual.validate(ThrowsValidationHandler.create())
         );
     }
 
@@ -436,7 +436,7 @@ class VideoTest {
         assertTrue(actual.getThumbnailHalf().isEmpty());
 
         assertDoesNotThrow(
-            () -> actual.validate(new ThrowsValidationHandler())
+            () -> actual.validate(ThrowsValidationHandler.create())
         );
     }
 

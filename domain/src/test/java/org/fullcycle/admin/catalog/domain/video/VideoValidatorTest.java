@@ -45,7 +45,7 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, new ThrowsValidationHandler());
+        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
 
         final var actual = assertThrows(
             DomainException.class,
@@ -85,7 +85,7 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, new ThrowsValidationHandler());
+        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
 
         final var actual = assertThrows(
             DomainException.class,
@@ -132,7 +132,7 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, new ThrowsValidationHandler());
+        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
 
         final var actual = assertThrows(
             DomainException.class,
@@ -170,7 +170,7 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, new ThrowsValidationHandler());
+        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
 
         final var actual = assertThrows(
             DomainException.class,
@@ -208,7 +208,7 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, new ThrowsValidationHandler());
+        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
 
         final var actual = assertThrows(
             DomainException.class,
@@ -253,7 +253,7 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, new ThrowsValidationHandler());
+        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
 
         final var actual = assertThrows(
             DomainException.class,
@@ -293,7 +293,7 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, new ThrowsValidationHandler());
+        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
 
         final var actual = assertThrows(
             DomainException.class,
@@ -333,7 +333,7 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, new ThrowsValidationHandler());
+        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
 
         final var actual = assertThrows(
             DomainException.class,

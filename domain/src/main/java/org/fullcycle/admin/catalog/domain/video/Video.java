@@ -210,7 +210,7 @@ public class Video extends AggregateRoot<VideoID> {
         this.genres = Objects.isNull(genres) ? new HashSet<>() : new HashSet<>(genres);
         this.castMembers = Objects.isNull(castMembers) ? new HashSet<>() : new HashSet<>(castMembers);
 
-        validate(new ThrowsValidationHandler());
+        validate(ThrowsValidationHandler.create());
 
         return this;
     }

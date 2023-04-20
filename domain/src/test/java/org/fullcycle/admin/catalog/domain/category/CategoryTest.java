@@ -43,7 +43,7 @@ class CategoryTest {
 
         final var actualException = assertThrows(
             DomainException.class,
-            () -> actual.validate(new ThrowsValidationHandler())
+            () -> actual.validate(ThrowsValidationHandler.create())
         );
         assertEquals("'name' should not be null", actualException.getErrors().get(0).message());
         assertEquals(1, actualException.getErrors().size());
@@ -59,7 +59,7 @@ class CategoryTest {
 
         final var actualException = assertThrows(
             DomainException.class,
-            () -> actual.validate(new ThrowsValidationHandler())
+            () -> actual.validate(ThrowsValidationHandler.create())
         );
         assertEquals("'name' should not be empty", actualException.getErrors().get(0).message());
         assertEquals(1, actualException.getErrors().size());
@@ -75,7 +75,7 @@ class CategoryTest {
 
         final var actualException = assertThrows(
             DomainException.class,
-            () -> actual.validate(new ThrowsValidationHandler())
+            () -> actual.validate(ThrowsValidationHandler.create())
         );
         assertEquals("'name' must be between 3 and 255 characters", actualException.getErrors().get(0).message());
         assertEquals(1, actualException.getErrors().size());
@@ -97,7 +97,7 @@ class CategoryTest {
 
         final var actualException = assertThrows(
             DomainException.class,
-            () -> actual.validate(new ThrowsValidationHandler())
+            () -> actual.validate(ThrowsValidationHandler.create())
         );
         assertEquals("'name' must be between 3 and 255 characters", actualException.getErrors().get(0).message());
         assertEquals(1, actualException.getErrors().size());
@@ -111,7 +111,7 @@ class CategoryTest {
 
         final var actual = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        assertDoesNotThrow(() -> actual.validate(new ThrowsValidationHandler()));
+        assertDoesNotThrow(() -> actual.validate(ThrowsValidationHandler.create()));
         assertNotNull(actual);
         assertNotNull(actual.getId());
         assertEquals(expectedName, actual.getName());
@@ -129,7 +129,7 @@ class CategoryTest {
 
         final var actual = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        assertDoesNotThrow(() -> actual.validate(new ThrowsValidationHandler()));
+        assertDoesNotThrow(() -> actual.validate(ThrowsValidationHandler.create()));
         assertNotNull(actual);
         assertNotNull(actual.getId());
         assertEquals(expectedName, actual.getName());
@@ -147,7 +147,7 @@ class CategoryTest {
 
         final var actual = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        assertDoesNotThrow(() -> actual.validate(new ThrowsValidationHandler()));
+        assertDoesNotThrow(() -> actual.validate(ThrowsValidationHandler.create()));
         assertNotNull(actual);
         assertNotNull(actual.getId());
         assertEquals(expectedName, actual.getName());
@@ -167,13 +167,13 @@ class CategoryTest {
         final var createdAt = category.getCreatedAt();
         final var updatedAt = category.getUpdatedAt();
 
-        assertDoesNotThrow(() -> category.validate(new ThrowsValidationHandler()));
+        assertDoesNotThrow(() -> category.validate(ThrowsValidationHandler.create()));
         assertTrue(category.isActive());
         assertNull(category.getDeletedAt());
 
         final var actual = category.deactivate();
 
-        assertDoesNotThrow(() -> actual.validate(new ThrowsValidationHandler()));
+        assertDoesNotThrow(() -> actual.validate(ThrowsValidationHandler.create()));
         assertEquals(category.getId(), actual.getId());
         assertEquals(expectedName, actual.getName());
         assertEquals(expectedIsActive, actual.isActive());
@@ -192,13 +192,13 @@ class CategoryTest {
         final var createdAt = category.getCreatedAt();
         final var updatedAt = category.getUpdatedAt();
 
-        assertDoesNotThrow(() -> category.validate(new ThrowsValidationHandler()));
+        assertDoesNotThrow(() -> category.validate(ThrowsValidationHandler.create()));
         assertFalse(category.isActive());
         assertNotNull(category.getDeletedAt());
 
         final var actual = category.activate();
 
-        assertDoesNotThrow(() -> actual.validate(new ThrowsValidationHandler()));
+        assertDoesNotThrow(() -> actual.validate(ThrowsValidationHandler.create()));
         assertEquals(category.getId(), actual.getId());
         assertEquals(expectedName, actual.getName());
         assertEquals(expectedIsActive, actual.isActive());
@@ -217,13 +217,13 @@ class CategoryTest {
         final var createdAt = category.getCreatedAt();
         final var updatedAt = category.getUpdatedAt();
 
-        assertDoesNotThrow(() -> category.validate(new ThrowsValidationHandler()));
+        assertDoesNotThrow(() -> category.validate(ThrowsValidationHandler.create()));
         assertFalse(category.isActive());
         assertNotNull(category.getDeletedAt());
 
         final var actual = category.update(expectedName, expectedDescription, expectedIsActive);
 
-        assertDoesNotThrow(() -> actual.validate(new ThrowsValidationHandler()));
+        assertDoesNotThrow(() -> actual.validate(ThrowsValidationHandler.create()));
         assertEquals(category.getId(), actual.getId());
         assertEquals(expectedName, actual.getName());
         assertEquals(expectedIsActive, actual.isActive());
@@ -242,13 +242,13 @@ class CategoryTest {
         final var createdAt = category.getCreatedAt();
         final var updatedAt = category.getUpdatedAt();
 
-        assertDoesNotThrow(() -> category.validate(new ThrowsValidationHandler()));
+        assertDoesNotThrow(() -> category.validate(ThrowsValidationHandler.create()));
         assertTrue(category.isActive());
         assertNull(category.getDeletedAt());
 
         final var actual = category.update(expectedName, expectedDescription, expectedIsActive);
 
-        assertDoesNotThrow(() -> actual.validate(new ThrowsValidationHandler()));
+        assertDoesNotThrow(() -> actual.validate(ThrowsValidationHandler.create()));
         assertEquals(category.getId(), actual.getId());
         assertEquals(expectedName, actual.getName());
         assertEquals(expectedIsActive, actual.isActive());
@@ -267,7 +267,7 @@ class CategoryTest {
         final var createdAt = category.getCreatedAt();
         final var updatedAt = category.getUpdatedAt();
 
-        assertDoesNotThrow(() -> category.validate(new ThrowsValidationHandler()));
+        assertDoesNotThrow(() -> category.validate(ThrowsValidationHandler.create()));
         assertTrue(category.isActive());
         assertNull(category.getDeletedAt());
 

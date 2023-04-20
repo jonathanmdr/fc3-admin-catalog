@@ -4,10 +4,13 @@ import org.fullcycle.admin.catalog.domain.exception.DomainException;
 import org.fullcycle.admin.catalog.domain.validation.Error;
 import org.fullcycle.admin.catalog.domain.validation.ValidationHandler;
 
-import java.util.Collections;
-import java.util.List;
-
 public class ThrowsValidationHandler implements ValidationHandler {
+
+    private ThrowsValidationHandler() { }
+
+    public static ThrowsValidationHandler create() {
+        return new ThrowsValidationHandler();
+    }
 
     @Override
     public ThrowsValidationHandler append(final Error error) {
@@ -26,11 +29,6 @@ public class ThrowsValidationHandler implements ValidationHandler {
         } catch (final Exception ex) {
             throw DomainException.with(new Error(ex.getMessage()));
         }
-    }
-
-    @Override
-    public List<Error> getErrors() {
-        return Collections.emptyList();
     }
 
 }
