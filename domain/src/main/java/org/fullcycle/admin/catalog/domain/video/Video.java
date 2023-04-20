@@ -5,6 +5,7 @@ import org.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.genre.GenreID;
 import org.fullcycle.admin.catalog.domain.validation.ValidationHandler;
+import org.fullcycle.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
 
 import java.time.Instant;
 import java.time.Year;
@@ -25,7 +26,7 @@ public class Video extends AggregateRoot<VideoID> {
     private boolean opened;
     private boolean published;
 
-    private Instant createdAt;
+    private final Instant createdAt;
     private Instant updatedAt;
 
     private ImageMedia banner;
@@ -183,6 +184,60 @@ public class Video extends AggregateRoot<VideoID> {
     @Override
     public void validate(final ValidationHandler handler) {
         new VideoValidator(this, handler).validate();
+    }
+
+    public Video update(
+        final String title,
+        final String description,
+        final Year launchedAt,
+        final double duration,
+        final Rating rating,
+        final boolean opened,
+        final boolean published,
+        final Set<CategoryID> categories,
+        final Set<GenreID> genres,
+        final Set<CastMemberID> castMembers
+    ) {
+        this.title = title;
+        this.description = description;
+        this.launchedAt = launchedAt;
+        this.duration = duration;
+        this.rating = rating;
+        this.opened = opened;
+        this.published = published;
+        this.updatedAt = Instant.now();
+        this.categories = Objects.isNull(categories) ? new HashSet<>() : new HashSet<>(categories);
+        this.genres = Objects.isNull(genres) ? new HashSet<>() : new HashSet<>(genres);
+        this.castMembers = Objects.isNull(castMembers) ? new HashSet<>() : new HashSet<>(castMembers);
+
+        validate(new ThrowsValidationHandler());
+
+        return this;
+    }
+
+    public void addImageMediaBanner(final ImageMedia media) {
+        this.banner = Objects.requireNonNull(media);
+        this.updatedAt = Instant.now();
+    }
+
+    public void addImageMediaThumbnail(final ImageMedia media) {
+        this.thumbnail = Objects.requireNonNull(media);
+        this.updatedAt = Instant.now();
+    }
+
+    public void addImageMediaThumbnailHalf(final ImageMedia media) {
+        this.thumbnailHalf = Objects.requireNonNull(media);
+        this.updatedAt = Instant.now();
+    }
+
+    public void addAudioVideoMediaTrailer(final AudioVideoMedia media) {
+        this.trailer = Objects.requireNonNull(media);
+        this.updatedAt = Instant.now();
+    }
+
+    public void addAudioVideoMediaVideo(final AudioVideoMedia media) {
+        this.video = Objects.requireNonNull(media);
+        this.updatedAt = Instant.now();
     }
 
     public String getTitle() {
