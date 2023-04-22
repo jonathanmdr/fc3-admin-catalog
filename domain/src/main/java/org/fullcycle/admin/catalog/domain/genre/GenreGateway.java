@@ -3,6 +3,7 @@ package org.fullcycle.admin.catalog.domain.genre;
 import org.fullcycle.admin.catalog.domain.pagination.Pagination;
 import org.fullcycle.admin.catalog.domain.pagination.SearchQuery;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface GenreGateway {
@@ -12,5 +13,6 @@ public interface GenreGateway {
     Genre create(final Genre genre);
     Genre update(final Genre genre);
     void deleteById(final GenreID genreID);
+    List<GenreID> existsByIds(final Iterable<GenreID> categoryIds);
 
 }

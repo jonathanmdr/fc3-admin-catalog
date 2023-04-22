@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -72,6 +73,11 @@ public class GenreDatabaseGateway implements GenreGateway {
         if (this.genreRepository.existsById(id)) {
             this.genreRepository.deleteById(id);
         }
+    }
+
+    @Override
+    public List<GenreID> existsByIds(final Iterable<GenreID> categoryIds) {
+        throw new UnsupportedOperationException("Unimplemented method");
     }
 
     private Genre save(final Genre genre) {

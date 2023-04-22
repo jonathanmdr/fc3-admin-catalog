@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -73,6 +74,11 @@ public class CastMemberDatabaseGateway implements CastMemberGateway {
         if (this.castMemberRepository.existsById(id)) {
             this.castMemberRepository.deleteById(id);
         }
+    }
+
+    @Override
+    public List<CastMemberID> existsByIds(final Iterable<CastMemberID> categoryIds) {
+        throw new UnsupportedOperationException("Unimplemented method");
     }
 
     private static Specification<CastMemberJpaEntity> applyTerms(final String term) {
