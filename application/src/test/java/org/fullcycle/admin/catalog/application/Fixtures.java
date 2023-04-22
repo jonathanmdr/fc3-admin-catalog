@@ -8,8 +8,6 @@ import org.fullcycle.admin.catalog.domain.genre.Genre;
 import org.fullcycle.admin.catalog.domain.video.Rating;
 import org.fullcycle.admin.catalog.domain.video.Resource;
 
-import java.util.stream.Stream;
-
 import static io.vavr.API.$;
 import static io.vavr.API.Case;
 import static io.vavr.API.List;

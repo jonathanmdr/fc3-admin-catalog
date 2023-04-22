@@ -45,11 +45,9 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
-
         final var actual = assertThrows(
             DomainException.class,
-            validator::validate
+            () -> video.validate(ThrowsValidationHandler.create())
         );
 
         assertEquals(expectedErrorCount, actual.getErrors().size());
@@ -85,11 +83,9 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
-
         final var actual = assertThrows(
             DomainException.class,
-            validator::validate
+            () -> video.validate(ThrowsValidationHandler.create())
         );
 
         assertEquals(expectedErrorCount, actual.getErrors().size());
@@ -132,11 +128,9 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
-
         final var actual = assertThrows(
             DomainException.class,
-            validator::validate
+            () -> video.validate(ThrowsValidationHandler.create())
         );
 
         assertEquals(expectedErrorCount, actual.getErrors().size());
@@ -170,11 +164,9 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
-
         final var actual = assertThrows(
             DomainException.class,
-            validator::validate
+            () -> video.validate(ThrowsValidationHandler.create())
         );
 
         assertEquals(expectedErrorCount, actual.getErrors().size());
@@ -208,11 +200,9 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
-
         final var actual = assertThrows(
             DomainException.class,
-            validator::validate
+            () -> video.validate(ThrowsValidationHandler.create())
         );
 
         assertEquals(expectedErrorCount, actual.getErrors().size());
@@ -253,11 +243,9 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
-
         final var actual = assertThrows(
             DomainException.class,
-            validator::validate
+            () -> video.validate(ThrowsValidationHandler.create())
         );
 
         assertEquals(expectedErrorCount, actual.getErrors().size());
@@ -333,11 +321,9 @@ class VideoValidatorTest {
             expectedCastMembers
         );
 
-        final var validator = new VideoValidator(video, ThrowsValidationHandler.create());
-
         final var actual = assertThrows(
             DomainException.class,
-            validator::validate
+            () -> video.validate(ThrowsValidationHandler.create())
         );
 
         assertEquals(expectedErrorCount, actual.getErrors().size());

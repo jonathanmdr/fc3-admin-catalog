@@ -2,6 +2,7 @@ package org.fullcycle.admin.catalog.application.video.create;
 
 import org.fullcycle.admin.catalog.domain.video.Resource;
 
+import java.util.Optional;
 import java.util.Set;
 
 public record CreateVideoCommand(
@@ -15,11 +16,11 @@ public record CreateVideoCommand(
     Set<String> categories,
     Set<String> genres,
     Set<String> castMembers,
-    Resource video,
-    Resource trailer,
-    Resource banner,
-    Resource thumbnail,
-    Resource thumbnailHalf
+    Optional<Resource> video,
+    Optional<Resource> trailer,
+    Optional<Resource> banner,
+    Optional<Resource> thumbnail,
+    Optional<Resource> thumbnailHalf
 ) {
 
     public static CreateVideoCommand with(
@@ -50,11 +51,11 @@ public record CreateVideoCommand(
             categories,
             genres,
             castMembers,
-            video,
-            trailer,
-            banner,
-            thumbnail,
-            thumbnailHalf
+            Optional.ofNullable(video),
+            Optional.ofNullable(trailer),
+            Optional.ofNullable(banner),
+            Optional.ofNullable(thumbnail),
+            Optional.ofNullable(thumbnailHalf)
         );
     }
 
