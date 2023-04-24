@@ -5,7 +5,6 @@ import org.fullcycle.admin.catalog.domain.castmember.CastMemberGateway;
 import org.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.domain.exception.DomainException;
 import org.fullcycle.admin.catalog.domain.exception.InternalErrorException;
 import org.fullcycle.admin.catalog.domain.exception.NotificationException;
 import org.fullcycle.admin.catalog.domain.genre.GenreGateway;
@@ -20,11 +19,11 @@ import org.fullcycle.admin.catalog.domain.video.VideoGateway;
 
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
@@ -51,9 +50,8 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
 
     @Override
     public CreateVideoOutput execute(final CreateVideoCommand command) {
-        final var rating = Rating.of(command.rating())
-            .orElseThrow(invalidRating(command.rating()));
-        final var launchedAt = Year.of(command.launchedAt());
+        final var rating = Rating.of(command.rating()).orElse(null);
+        final var launchedAt = Objects.isNull(command.launchedAt()) ? null : Year.of(command.launchedAt());
         final var categories = toIdentifier(command.categories(), CategoryID::from);
         final var genres = toIdentifier(command.genres(), GenreID::from);
         final var castMembers = toIdentifier(command.castMembers(), CastMemberID::from);
@@ -122,11 +120,11 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
         }
     }
 
-    private Supplier<DomainException> invalidRating(final String rating) {
-        return () -> DomainException.with(new Error("Rating %s not found".formatted(rating)));
-    }
-
     private <T> Set<T> toIdentifier(final Set<String> ids, final Function<String, T> mapper) {
+        if (Objects.isNull(ids)) {
+            return Collections.emptySet();
+        }
+
         return ids.stream()
             .map(mapper)
             .collect(Collectors.toSet());
