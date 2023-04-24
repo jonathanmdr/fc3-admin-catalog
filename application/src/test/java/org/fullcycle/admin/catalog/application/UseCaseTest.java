@@ -7,7 +7,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,6 +24,10 @@ public abstract class UseCaseTest {
     }
 
     protected Set<String> listIdAsString(final Collection<? extends Identifier> identifiers) {
+        if (Objects.isNull(identifiers)) {
+            return Collections.emptySet();
+        }
+
         return identifiers.stream()
             .map(Identifier::getValue)
             .collect(Collectors.toSet());
