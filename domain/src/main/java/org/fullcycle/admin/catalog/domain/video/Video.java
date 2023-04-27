@@ -5,7 +5,6 @@ import org.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.genre.GenreID;
 import org.fullcycle.admin.catalog.domain.validation.ValidationHandler;
-import org.fullcycle.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
 
 import java.time.Instant;
 import java.time.Year;
@@ -209,9 +208,6 @@ public class Video extends AggregateRoot<VideoID> {
         this.categories = Objects.isNull(categories) ? new HashSet<>() : new HashSet<>(categories);
         this.genres = Objects.isNull(genres) ? new HashSet<>() : new HashSet<>(genres);
         this.castMembers = Objects.isNull(castMembers) ? new HashSet<>() : new HashSet<>(castMembers);
-
-        validate(ThrowsValidationHandler.create());
-
         return this;
     }
 
