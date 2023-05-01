@@ -155,8 +155,4 @@ public class GenreJpaEntity {
         this.categories.add(GenreCategoryJpaEntity.from(this, categoryID));
     }
 
-    private void removeCategory(final CategoryID categoryID) {
-        this.categories.remove(GenreCategoryJpaEntity.from(this, categoryID));
-    }
-
 }
