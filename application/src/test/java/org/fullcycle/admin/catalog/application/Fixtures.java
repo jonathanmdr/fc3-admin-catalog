@@ -7,6 +7,10 @@ import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.genre.Genre;
 import org.fullcycle.admin.catalog.domain.video.Rating;
 import org.fullcycle.admin.catalog.domain.video.Resource;
+import org.fullcycle.admin.catalog.domain.video.Video;
+
+import java.time.Year;
+import java.util.Set;
 
 import static io.vavr.API.$;
 import static io.vavr.API.Case;
@@ -57,6 +61,23 @@ public final class Fixtures {
     }
 
     public static final class VideoFixture {
+
+        private static final Video ANY_VIDEO = Video.newVideo(
+                title(),
+                description(),
+                Year.of(year()),
+                duration(),
+                rating(),
+                opened(),
+                published(),
+                Set.of(CategoryFixture.classes().getId()),
+                Set.of(GenreFixture.technology().getId()),
+                Set.of(CastMemberFixture.wesley().getId(), CastMemberFixture.gabriel().getId())
+        );
+
+        public static Video video() {
+            return Video.with(ANY_VIDEO);
+        }
 
         public static String title() {
             return FAKER.options()
