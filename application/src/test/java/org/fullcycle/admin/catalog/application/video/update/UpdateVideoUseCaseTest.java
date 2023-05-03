@@ -1013,14 +1013,14 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
     }
 
     @Test
-    void givenACommandWithDescriptionGreaterThan4000Characters_whenCallsUpdateVideo_shouldReturnNotificationException() {
-        final var expectedErrorMessage = "'description' must be between 1 and 4000 characters";
+    void givenACommandWithDescriptionGreaterThan1000Characters_whenCallsUpdateVideo_shouldReturnNotificationException() {
+        final var expectedErrorMessage = "'description' must be between 1 and 1000 characters";
         final var expectedErrorCount = 1;
 
         final var expectedTitle = Fixtures.VideoFixture.title();
         final var leftLimit = 97;
         final var limitRight = 122;
-        final var targetStringLength = 4001;
+        final var targetStringLength = 1001;
         final String expectedDescription = new Random().ints(leftLimit, limitRight + 1)
             .limit(targetStringLength)
             .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)

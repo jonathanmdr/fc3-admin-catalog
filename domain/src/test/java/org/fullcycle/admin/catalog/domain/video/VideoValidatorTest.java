@@ -210,11 +210,11 @@ class VideoValidatorTest {
     }
 
     @Test
-    void givenDescriptionGraterThan4000Characters_whenCallsValidate_shouldReceiveError() {
+    void givenDescriptionGraterThan1000Characters_whenCallsValidate_shouldReceiveError() {
         final var expectedTitle = "System Design Interview";
         final var leftLimit = 97;
         final var limitRight = 122;
-        final var targetStringLength = 4001;
+        final var targetStringLength = 1001;
         final String expectedDescription = new Random().ints(leftLimit, limitRight + 1)
             .limit(targetStringLength)
             .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
@@ -228,7 +228,7 @@ class VideoValidatorTest {
         final var expectedGenres = Set.of(GenreID.unique());
         final var expectedCastMembers = Set.of(CastMemberID.unique());
         final var expectedErrorCount = 1;
-        final var expectedErrorMessage = "'description' must be between 1 and 4000 characters";
+        final var expectedErrorMessage = "'description' must be between 1 and 1000 characters";
 
         final var video = Video.newVideo(
             expectedTitle,

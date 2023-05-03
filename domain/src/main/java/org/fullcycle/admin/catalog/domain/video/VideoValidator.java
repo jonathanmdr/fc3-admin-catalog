@@ -11,7 +11,7 @@ public class VideoValidator extends Validator {
     private static final int TITLE_MIN_LENGTH = 1;
     private static final int TITLE_MAX_LENGTH = 255;
     private static final int DESCRIPTION_MIN_LENGTH = 1;
-    private static final int DESCRIPTION_MAX_LENGTH = 4000;
+    private static final int DESCRIPTION_MAX_LENGTH = 1000;
 
     private final Video video;
 

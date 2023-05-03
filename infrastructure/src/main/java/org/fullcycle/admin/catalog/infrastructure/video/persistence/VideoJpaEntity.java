@@ -36,7 +36,7 @@ public class VideoJpaEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "description", length = 4000)
+    @Column(name = "description", length = 1000)
     private String description;
 
     @Column(name = "year_launched", nullable = false)
