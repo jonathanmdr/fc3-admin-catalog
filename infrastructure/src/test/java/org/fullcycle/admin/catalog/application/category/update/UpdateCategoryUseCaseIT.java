@@ -5,6 +5,7 @@ import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.exception.NotFoundException;
+import org.fullcycle.admin.catalog.domain.utils.IdentifierUtils;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -197,7 +198,7 @@ class UpdateCategoryUseCaseIT {
 
     @Test
     void givenACommandWithInvalidId_whenCallUpdateCategory_thenReturnNotFoundException() {
-        final var expectedId = UUID.randomUUID().toString();
+        final var expectedId = IdentifierUtils.unique();
         final var expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;

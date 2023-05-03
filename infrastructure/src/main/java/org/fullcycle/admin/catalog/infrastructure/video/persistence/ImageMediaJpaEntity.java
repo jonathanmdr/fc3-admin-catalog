@@ -12,6 +12,7 @@ import javax.persistence.Table;
 public class ImageMediaJpaEntity {
 
     @Id
+    @Column(name = "id", nullable = false)
     private String id;
 
     @Column(name = "name", nullable = false)

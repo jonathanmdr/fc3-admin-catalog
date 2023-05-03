@@ -1,7 +1,6 @@
 package org.fullcycle.admin.catalog.infrastructure.video.persistence;
 
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -10,7 +9,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import java.util.Objects;
-import java.util.UUID;
 
 @Table(name = "videos_categories")
 @Entity(name = "VideoCategory")
@@ -32,7 +30,7 @@ public class VideoCategoryJpaEntity {
 
     public static VideoCategoryJpaEntity from(final VideoJpaEntity videoJpaEntity, final CategoryID categoryID) {
         return new VideoCategoryJpaEntity(
-            VideoCategoryID.from(videoJpaEntity.getId(), UUID.fromString(categoryID.getValue())),
+            VideoCategoryID.from(videoJpaEntity.getId(), categoryID.getValue()),
             videoJpaEntity
         );
     }

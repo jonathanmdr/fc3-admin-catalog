@@ -20,7 +20,7 @@ group "org.fullcycle.admin.catalog.infrastructure"
 version "1.0-SNAPSHOT"
 
 bootJar {
-    archiveName("application.jar")
+    archiveFileName = "application.jar"
     destinationDirectory.set(file("${rootProject.buildDir}/libs"))
 }
 

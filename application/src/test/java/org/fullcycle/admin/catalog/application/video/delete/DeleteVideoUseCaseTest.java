@@ -1,6 +1,7 @@
 package org.fullcycle.admin.catalog.application.video.delete;
 
 import org.fullcycle.admin.catalog.application.UseCaseTest;
+import org.fullcycle.admin.catalog.domain.utils.IdentifierUtils;
 import org.fullcycle.admin.catalog.domain.video.VideoGateway;
 import org.fullcycle.admin.catalog.domain.video.VideoID;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,7 +46,7 @@ class DeleteVideoUseCaseTest extends UseCaseTest {
 
     @Test
     void givenANotFoundId_whenCallsDeleteVideo_shouldBeOk() {
-        final var notFoundIdentifier = UUID.randomUUID();
+        final var notFoundIdentifier = IdentifierUtils.unique();
         final var expectedId = VideoID.from(notFoundIdentifier);
 
         doNothing().when(videoGateway)

@@ -1,29 +1,28 @@
 package org.fullcycle.admin.catalog.domain.genre;
 
 import org.fullcycle.admin.catalog.domain.Identifier;
+import org.fullcycle.admin.catalog.domain.utils.IdentifierUtils;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class GenreID extends Identifier {
 
     private final String value;
 
     private GenreID(final String value) {
-        Objects.requireNonNull(value);
-        this.value = value;
+        this.value = Objects.requireNonNull(value);
     }
 
     public static GenreID unique() {
-        return GenreID.from(UUID.randomUUID());
+        return GenreID.from(
+            IdentifierUtils.unique()
+        );
     }
 
-    public static GenreID from(final String id) {
-        return GenreID.from(UUID.fromString(id));
-    }
-
-    public static GenreID from(final UUID id) {
-        return new GenreID(id.toString().toLowerCase());
+    public static GenreID from(final String unique) {
+        return new GenreID(
+            IdentifierUtils.from(unique)
+        );
     }
 
     @Override

@@ -9,7 +9,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import java.util.Objects;
-import java.util.UUID;
 
 @Table(name = "videos_genres")
 @Entity(name = "VideoGenre")
@@ -31,7 +30,7 @@ public class VideoGenreJpaEntity {
 
     public static VideoGenreJpaEntity from(final VideoJpaEntity videoJpaEntity, final GenreID genreID) {
         return new VideoGenreJpaEntity(
-            VideoGenreID.from(videoJpaEntity.getId(), UUID.fromString(genreID.getValue())),
+            VideoGenreID.from(videoJpaEntity.getId(), genreID.getValue()),
             videoJpaEntity
         );
     }

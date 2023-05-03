@@ -6,10 +6,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface CastMemberRepository extends JpaRepository<VideoJpaEntity, UUID> {
+public interface VideoRepository extends JpaRepository<VideoJpaEntity, String> {
 
     Page<VideoJpaEntity> findAll(final Specification<VideoJpaEntity> whereClause, final Pageable pageable);
 

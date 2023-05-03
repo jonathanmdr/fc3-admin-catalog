@@ -6,6 +6,7 @@ import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.exception.DomainException;
 import org.fullcycle.admin.catalog.domain.genre.Genre;
 import org.fullcycle.admin.catalog.domain.genre.GenreGateway;
+import org.fullcycle.admin.catalog.domain.utils.IdentifierUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -14,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -133,8 +133,8 @@ class UpdateGenreUseCaseTest extends UseCaseTest {
         final var expectedGenreId = genre.getId();
         final var expectedName = "Ação";
         final var expectedActive = true;
-        final var expectedCategoryOne = UUID.randomUUID();
-        final var expectedCategoryTwo = UUID.randomUUID();
+        final var expectedCategoryOne = IdentifierUtils.unique();
+        final var expectedCategoryTwo = IdentifierUtils.unique();
         final var expectedCategories = List.of(
             CategoryID.from(expectedCategoryOne),
             CategoryID.from(expectedCategoryTwo)
@@ -208,8 +208,8 @@ class UpdateGenreUseCaseTest extends UseCaseTest {
 
         final var expectedGenreId = genre.getId();
         final var expectedActive = true;
-        final var expectedValidCategoryId = UUID.randomUUID().toString();
-        final var expectedInvalidCategoryId = UUID.randomUUID().toString();
+        final var expectedValidCategoryId = IdentifierUtils.unique();
+        final var expectedInvalidCategoryId = IdentifierUtils.unique();
         final var expectedCategories = List.of(
             CategoryID.from(expectedValidCategoryId),
             CategoryID.from(expectedInvalidCategoryId)

@@ -1,28 +1,28 @@
 package org.fullcycle.admin.catalog.domain.category;
 
 import org.fullcycle.admin.catalog.domain.Identifier;
+import org.fullcycle.admin.catalog.domain.utils.IdentifierUtils;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class CategoryID extends Identifier {
+
     private final String value;
 
     private CategoryID(final String value) {
-        Objects.requireNonNull(value);
-        this.value = value;
+        this.value = Objects.requireNonNull(value);
     }
 
     public static CategoryID unique() {
-        return CategoryID.from(UUID.randomUUID());
+        return CategoryID.from(
+            IdentifierUtils.unique()
+        );
     }
 
-    public static CategoryID from(final String id) {
-        return CategoryID.from(UUID.fromString(id));
-    }
-
-    public static CategoryID from(final UUID id) {
-        return new CategoryID(id.toString().toLowerCase());
+    public static CategoryID from(final String unique) {
+        return new CategoryID(
+            IdentifierUtils.from(unique)
+        );
     }
 
     @Override

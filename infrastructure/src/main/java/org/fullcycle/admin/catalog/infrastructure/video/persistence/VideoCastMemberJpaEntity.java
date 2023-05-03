@@ -9,7 +9,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import java.util.Objects;
-import java.util.UUID;
 
 @Table(name = "videos_cast_members")
 @Entity(name = "VideoCastMember")
@@ -31,7 +30,7 @@ public class VideoCastMemberJpaEntity {
 
     public static VideoCastMemberJpaEntity from(final VideoJpaEntity videoJpaEntity, final CastMemberID castMemberID) {
         return new VideoCastMemberJpaEntity(
-            VideoCastMemberID.from(videoJpaEntity.getId(), UUID.fromString(castMemberID.getValue())),
+            VideoCastMemberID.from(videoJpaEntity.getId(), castMemberID.getValue()),
             videoJpaEntity
         );
     }

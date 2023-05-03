@@ -15,6 +15,7 @@ import javax.persistence.Table;
 public class AudioVideoMediaJpaEntity {
 
     @Id
+    @Column(name = "id", nullable = false)
     private String id;
 
     @Column(name = "name", nullable = false)

@@ -1,28 +1,28 @@
 package org.fullcycle.admin.catalog.domain.castmember;
 
 import org.fullcycle.admin.catalog.domain.Identifier;
+import org.fullcycle.admin.catalog.domain.utils.IdentifierUtils;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class CastMemberID extends Identifier {
+
     private final String value;
 
     private CastMemberID(final String value) {
-        Objects.requireNonNull(value);
-        this.value = value;
+        this.value = Objects.requireNonNull(value);
     }
 
     public static CastMemberID unique() {
-        return CastMemberID.from(UUID.randomUUID());
+        return CastMemberID.from(
+            IdentifierUtils.unique()
+        );
     }
 
-    public static CastMemberID from(final String id) {
-        return CastMemberID.from(UUID.fromString(id));
-    }
-
-    public static CastMemberID from(final UUID id) {
-        return new CastMemberID(id.toString().toLowerCase());
+    public static CastMemberID from(final String unique) {
+        return new CastMemberID(
+            IdentifierUtils.from(unique)
+        );
     }
 
     @Override
