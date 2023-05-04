@@ -1,6 +1,6 @@
-package org.fullcycle.admin.catalog.application;
+package org.fullcycle.admin.catalog.domain;
 
-import com.github.javafaker.Faker;
+import net.datafaker.Faker;
 import org.fullcycle.admin.catalog.domain.castmember.CastMember;
 import org.fullcycle.admin.catalog.domain.castmember.CastMemberType;
 import org.fullcycle.admin.catalog.domain.category.Category;
@@ -8,6 +8,7 @@ import org.fullcycle.admin.catalog.domain.genre.Genre;
 import org.fullcycle.admin.catalog.domain.video.Rating;
 import org.fullcycle.admin.catalog.domain.video.Resource;
 import org.fullcycle.admin.catalog.domain.video.Video;
+import org.fullcycle.admin.catalog.domain.video.VideoPreview;
 
 import java.time.Year;
 import java.util.Set;
@@ -141,4 +142,20 @@ public final class Fixtures {
         }
 
     }
+
+    public static final class VideoPreviewFixture {
+
+        private static final Video VIDEO = VideoFixture.video();
+        public static VideoPreview videoPreview() {
+            return new VideoPreview(
+                VIDEO.getId().getValue(),
+                VIDEO.getTitle(),
+                VIDEO.getDescription(),
+                VIDEO.getCreatedAt(),
+                VIDEO.getUpdatedAt()
+            );
+        }
+
+    }
+
 }

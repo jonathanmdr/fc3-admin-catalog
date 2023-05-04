@@ -1,6 +1,6 @@
 package org.fullcycle.admin.catalog.application.video.retrieve.get;
 
-import org.fullcycle.admin.catalog.application.Fixtures;
+import org.fullcycle.admin.catalog.domain.Fixtures;
 import org.fullcycle.admin.catalog.application.UseCaseTest;
 import org.fullcycle.admin.catalog.domain.exception.NotFoundException;
 import org.fullcycle.admin.catalog.domain.video.AudioVideoMedia;

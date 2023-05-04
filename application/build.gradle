@@ -11,14 +11,15 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":domain"))
+    implementation(project(':domain'))
 
-    implementation("io.vavr:vavr:0.10.4")
+    implementation('io.vavr:vavr:0.10.4')
 
-    testImplementation("com.github.javafaker:javafaker:1.0.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testImplementation("org.mockito:mockito-junit-jupiter:4.6.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testImplementation(project(path: ':domain', configuration: 'testClasses'))
+
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.8.2')
+    testImplementation('org.mockito:mockito-junit-jupiter:4.6.1')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.8.2')
 }
 
 test {

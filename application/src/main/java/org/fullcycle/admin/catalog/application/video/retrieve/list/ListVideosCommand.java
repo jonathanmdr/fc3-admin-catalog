@@ -1,11 +1,16 @@
 package org.fullcycle.admin.catalog.application.video.retrieve.list;
 
+import java.util.Set;
+
 public record ListVideosCommand(
     int page,
     int perPage,
     String terms,
     String sort,
-    String direction
+    String direction,
+    Set<String> categories,
+    Set<String> genres,
+    Set<String> castMembers
 ) {
 
     public static ListVideosCommand with(
@@ -13,14 +18,20 @@ public record ListVideosCommand(
         final int perPage,
         final String terms,
         final String sort,
-        final String direction
+        final String direction,
+        final Set<String> categories,
+        final Set<String> genres,
+        final Set<String> castMembers
     ) {
         return new ListVideosCommand(
             page,
             perPage,
             terms,
             sort,
-            direction
+            direction,
+            categories,
+            genres,
+            castMembers
         );
     }
 

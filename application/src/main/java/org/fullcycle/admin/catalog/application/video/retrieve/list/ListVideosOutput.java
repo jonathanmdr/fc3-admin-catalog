@@ -1,6 +1,6 @@
 package org.fullcycle.admin.catalog.application.video.retrieve.list;
 
-import org.fullcycle.admin.catalog.domain.video.Video;
+import org.fullcycle.admin.catalog.domain.video.VideoPreview;
 
 import java.time.Instant;
 
@@ -12,13 +12,13 @@ public record ListVideosOutput(
     Instant updatedAt
 ) {
 
-    public static ListVideosOutput from(final Video video) {
+    public static ListVideosOutput from(final VideoPreview video) {
         return new ListVideosOutput(
-            video.getId().getValue(),
-            video.getTitle(),
-            video.getDescription(),
-            video.getCreatedAt(),
-            video.getUpdatedAt()
+            video.id(),
+            video.title(),
+            video.description(),
+            video.createdAt(),
+            video.updatedAt()
         );
     }
 

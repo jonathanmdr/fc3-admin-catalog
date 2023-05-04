@@ -1,10 +1,10 @@
 package org.fullcycle.admin.catalog.application.video.retrieve.list;
 
-import org.fullcycle.admin.catalog.application.Fixtures;
 import org.fullcycle.admin.catalog.application.UseCaseTest;
+import org.fullcycle.admin.catalog.domain.Fixtures;
 import org.fullcycle.admin.catalog.domain.pagination.Pagination;
-import org.fullcycle.admin.catalog.domain.video.Video;
 import org.fullcycle.admin.catalog.domain.video.VideoGateway;
+import org.fullcycle.admin.catalog.domain.video.VideoPreview;
 import org.fullcycle.admin.catalog.domain.video.VideoSearchQuery;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,6 +12,7 @@ import org.mockito.Mock;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,8 +36,8 @@ class ListVideosUseCaseTest extends UseCaseTest {
     @Test
     void givenAValidQuery_whenCallsListVideos_thenReturnVideos() {
         final var expectedVideos = List.of(
-                Fixtures.VideoFixture.video(),
-                Fixtures.VideoFixture.video()
+            Fixtures.VideoPreviewFixture.videoPreview(),
+            Fixtures.VideoPreviewFixture.videoPreview()
         );
 
         final var expectedPage = 0;
@@ -47,18 +48,21 @@ class ListVideosUseCaseTest extends UseCaseTest {
         final var expectedItemsCount = 2;
 
         final var expectedPagination = new Pagination<>(
-                expectedPage,
-                expectedPerPage,
-                expectedItemsCount,
-                expectedVideos
+            expectedPage,
+            expectedPerPage,
+            expectedItemsCount,
+            expectedVideos
         );
 
         final var searchQuery = new VideoSearchQuery(
-                expectedPage,
-                expectedPerPage,
-                expectedTerms,
-                expectedSort,
-                expectedDirection
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection,
+            Set.of(),
+            Set.of(),
+            Set.of()
         );
 
         final var expectedResult = expectedPagination.map(ListVideosOutput::from);
@@ -66,11 +70,14 @@ class ListVideosUseCaseTest extends UseCaseTest {
         when(gateway.findAll(searchQuery)).thenReturn(expectedPagination);
 
         final var listVideosCommand = ListVideosCommand.with(
-                expectedPage,
-                expectedPerPage,
-                expectedTerms,
-                expectedSort,
-                expectedDirection
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection,
+            Set.of(),
+            Set.of(),
+            Set.of()
         );
 
         final var actual = this.useCase.execute(listVideosCommand);
@@ -86,7 +93,7 @@ class ListVideosUseCaseTest extends UseCaseTest {
 
     @Test
     void givenAValidQuery_whenHasNoResults_thenReturnEmptyVideos() {
-        final var expectedVideos = Collections.<Video>emptyList();
+        final var expectedVideos = Collections.<VideoPreview>emptyList();
 
         final var expectedPage = 0;
         final var expectedPerPage = 10;
@@ -96,18 +103,21 @@ class ListVideosUseCaseTest extends UseCaseTest {
         final var expectedItemsCount = 0;
 
         final var expectedPagination = new Pagination<>(
-                expectedPage,
-                expectedPerPage,
-                expectedItemsCount,
-                expectedVideos
+            expectedPage,
+            expectedPerPage,
+            expectedItemsCount,
+            expectedVideos
         );
 
         final var searchQuery = new VideoSearchQuery(
-                expectedPage,
-                expectedPerPage,
-                expectedTerms,
-                expectedSort,
-                expectedDirection
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection,
+            Set.of(),
+            Set.of(),
+            Set.of()
         );
 
         final var expectedResult = expectedPagination.map(ListVideosOutput::from);
@@ -115,11 +125,14 @@ class ListVideosUseCaseTest extends UseCaseTest {
         when(gateway.findAll(searchQuery)).thenReturn(expectedPagination);
 
         final var listVideosCommand = ListVideosCommand.with(
-                expectedPage,
-                expectedPerPage,
-                expectedTerms,
-                expectedSort,
-                expectedDirection
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection,
+            Set.of(),
+            Set.of(),
+            Set.of()
         );
 
         final var actual = this.useCase.execute(listVideosCommand);
@@ -143,22 +156,28 @@ class ListVideosUseCaseTest extends UseCaseTest {
         final var expectedErrorMessage = "Gateway unexpected error";
 
         final var searchQuery = new VideoSearchQuery(
-                expectedPage,
-                expectedPerPage,
-                expectedTerms,
-                expectedSort,
-                expectedDirection
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection,
+            Set.of(),
+            Set.of(),
+            Set.of()
         );
 
         when(gateway.findAll(searchQuery))
                 .thenThrow(new IllegalStateException(expectedErrorMessage));
 
         final var listVideosCommand = ListVideosCommand.with(
-                expectedPage,
-                expectedPerPage,
-                expectedTerms,
-                expectedSort,
-                expectedDirection
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection,
+            Set.of(),
+            Set.of(),
+            Set.of()
         );
 
         final var actual = assertThrows(

@@ -50,6 +50,8 @@ dependencies {
 
     implementation("org.flywaydb:flyway-mysql:8.5.12")
 
+    testImplementation(project(path: ':domain', configuration: 'testClasses'))
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.flywaydb:flyway-core")
 
