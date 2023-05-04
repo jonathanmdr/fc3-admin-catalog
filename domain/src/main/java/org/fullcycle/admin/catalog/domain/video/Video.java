@@ -216,8 +216,18 @@ public class Video extends AggregateRoot<VideoID> {
         this.updatedAt = Instant.now();
     }
 
+    public void removeImageMediaBanner() {
+        this.banner = null;
+        this.updatedAt = Instant.now();
+    }
+
     public void addImageMediaThumbnail(final ImageMedia media) {
         this.thumbnail = Objects.requireNonNull(media);
+        this.updatedAt = Instant.now();
+    }
+
+    public void removeImageMediaThumbnail() {
+        this.thumbnail = null;
         this.updatedAt = Instant.now();
     }
 
@@ -226,13 +236,28 @@ public class Video extends AggregateRoot<VideoID> {
         this.updatedAt = Instant.now();
     }
 
+    public void removeImageMediaThumbnailHalf() {
+        this.thumbnailHalf = null;
+        this.updatedAt = Instant.now();
+    }
+
     public void addAudioVideoMediaTrailer(final AudioVideoMedia media) {
         this.trailer = Objects.requireNonNull(media);
         this.updatedAt = Instant.now();
     }
 
+    public void removeAudioVideoMediaTrailer() {
+        this.trailer = null;
+        this.updatedAt = Instant.now();
+    }
+
     public void addAudioVideoMediaVideo(final AudioVideoMedia media) {
         this.video = Objects.requireNonNull(media);
+        this.updatedAt = Instant.now();
+    }
+
+    public void removeAudioVideoMediaVideo() {
+        this.video = null;
         this.updatedAt = Instant.now();
     }
 
