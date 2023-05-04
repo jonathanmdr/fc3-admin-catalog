@@ -1,43 +1,66 @@
 package org.fullcycle.admin.catalog.domain.video;
 
 import org.fullcycle.admin.catalog.domain.ValueObject;
+import org.fullcycle.admin.catalog.domain.utils.IdentifierUtils;
 
 import java.util.Objects;
 
 public class ImageMedia extends ValueObject {
 
-    private final String checksum;
+    private final String id;
     private final String name;
+    private final String checksum;
     private final String location;
 
     private ImageMedia(
-        final String checksum,
+        final String id,
         final String name,
+        final String checksum,
         final String location
     ) {
-        this.checksum = Objects.requireNonNull(checksum);
+        this.id = Objects.requireNonNull(id);
         this.name = Objects.requireNonNull(name);
+        this.checksum = Objects.requireNonNull(checksum);
         this.location = Objects.requireNonNull(location);
     }
 
-    public static ImageMedia with(
-        final String checksum,
+    public static ImageMedia newImageMedia(
         final String name,
+        final String checksum,
         final String location
     ) {
         return new ImageMedia(
-            checksum,
+            IdentifierUtils.unique(),
             name,
+            checksum,
             location
         );
     }
 
-    public String checksum() {
-        return checksum;
+    public static ImageMedia with(
+        final String id,
+        final String name,
+        final String checksum,
+        final String location
+    ) {
+        return new ImageMedia(
+            id,
+            name,
+            checksum,
+            location
+        );
+    }
+
+    public String id() {
+        return id;
     }
 
     public String name() {
         return name;
+    }
+
+    public String checksum() {
+        return checksum;
     }
 
     public String location() {

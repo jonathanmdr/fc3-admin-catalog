@@ -1,53 +1,94 @@
 package org.fullcycle.admin.catalog.domain.video;
 
 import org.fullcycle.admin.catalog.domain.ValueObject;
+import org.fullcycle.admin.catalog.domain.utils.IdentifierUtils;
 
 import java.util.Objects;
 
 public class AudioVideoMedia extends ValueObject {
 
-    private final String checksum;
+    private final String id;
     private final String name;
+    private final String checksum;
     private final String rawLocation;
     private final String encodedLocation;
     private final MediaStatus status;
 
     private AudioVideoMedia(
-        final String checksum,
+        final String id,
         final String name,
+        final String checksum,
         final String rawLocation,
         final String encodedLocation,
         final MediaStatus status
     ) {
-        this.checksum = Objects.requireNonNull(checksum);
+        this.id = Objects.requireNonNull(id);
         this.name = Objects.requireNonNull(name);
+        this.checksum = Objects.requireNonNull(checksum);
         this.rawLocation = Objects.requireNonNull(rawLocation);
         this.encodedLocation = Objects.requireNonNull(encodedLocation);
         this.status = Objects.requireNonNull(status);
     }
 
-    public static AudioVideoMedia with(
-        final String checksum,
+    public static AudioVideoMedia newAudioVideoMedia(
         final String name,
+        final String checksum,
         final String rawLocation,
         final String encodedLocation,
         final MediaStatus status
     ) {
         return new AudioVideoMedia(
-            checksum,
+            IdentifierUtils.unique(),
             name,
+            checksum,
             rawLocation,
             encodedLocation,
             status
         );
     }
 
-    public String checksum() {
-        return checksum;
+    public static AudioVideoMedia newAudioVideoMedia(
+        final String name,
+        final String checksum,
+        final String rawLocation
+    ) {
+        return newAudioVideoMedia(
+            name,
+            checksum,
+            rawLocation,
+            "",
+            MediaStatus.PENDING
+        );
+    }
+
+    public static AudioVideoMedia with(
+        final String id,
+        final String name,
+        final String checksum,
+        final String rawLocation,
+        final String encodedLocation,
+        final MediaStatus status
+    ) {
+        return new AudioVideoMedia(
+            id,
+            name,
+            checksum,
+            rawLocation,
+            encodedLocation,
+            status
+        );
+    }
+
+    public String id() {
+        return id;
     }
 
     public String name() {
         return name;
+    }
+
+    public String checksum() {
+        return checksum;
     }
 
     public String rawLocation() {

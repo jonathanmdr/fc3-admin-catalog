@@ -3,6 +3,7 @@ package org.fullcycle.admin.catalog.infrastructure.video.persistence;
 import org.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.genre.GenreID;
+import org.fullcycle.admin.catalog.domain.utils.CollectionUtils;
 import org.fullcycle.admin.catalog.domain.video.Rating;
 import org.fullcycle.admin.catalog.domain.video.Video;
 import org.fullcycle.admin.catalog.domain.video.VideoID;
@@ -204,6 +205,27 @@ public class VideoJpaEntity {
             getCastMembers().stream()
                 .map(it -> CastMemberID.from(it.getId().getCastMemberId()))
                 .collect(Collectors.toSet())
+        );
+    }
+
+    public Set<CategoryID> getCategoryIds() {
+        return CollectionUtils.mapTo(
+            this.categories,
+            (it) -> CategoryID.from(it.getId().getCategoryId())
+        );
+    }
+
+    public Set<GenreID> getGenreIds() {
+        return CollectionUtils.mapTo(
+            this.genres,
+            (it) -> GenreID.from(it.getId().getGenreId())
+        );
+    }
+
+    public Set<CastMemberID> getCastMemberIds() {
+        return CollectionUtils.mapTo(
+            this.castMembers,
+            (it) -> CastMemberID.from(it.getId().getCastMemberId())
         );
     }
 

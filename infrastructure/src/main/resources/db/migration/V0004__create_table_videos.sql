@@ -21,7 +21,7 @@ CREATE TABLE videos (
     year_launched SMALLINT NOT NULL,
     opened BOOLEAN NOT NULL DEFAULT FALSE,
     published BOOLEAN NOT NULL DEFAULT FALSE,
-    rating VARCHAR(5) NOT NULL,
+    rating VARCHAR(6) NOT NULL,
     duration DECIMAL(5, 2) NOT NULL,
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL,
@@ -47,10 +47,10 @@ CREATE TABLE videos_categories (
 
 CREATE TABLE videos_genres (
     video_id CHAR(32) NOT NULL,
-    genres_id CHAR(32) NOT NULL,
-    CONSTRAINT UN_VIDEOS_GENRES UNIQUE (video_id, genres_id),
+    genre_id CHAR(32) NOT NULL,
+    CONSTRAINT UN_VIDEOS_GENRES UNIQUE (video_id, genre_id),
     CONSTRAINT FK_VIDEOS_GENRES_VIDEO_ID FOREIGN KEY (video_id) REFERENCES videos (id) ON DELETE CASCADE,
-    CONSTRAINT FK_VIDEOS_GENRES_GENRE_ID FOREIGN KEY (genres_id) REFERENCES genres (id) ON DELETE CASCADE
+    CONSTRAINT FK_VIDEOS_GENRES_GENRE_ID FOREIGN KEY (genre_id) REFERENCES genres (id) ON DELETE CASCADE
 );
 
 CREATE TABLE videos_cast_members (

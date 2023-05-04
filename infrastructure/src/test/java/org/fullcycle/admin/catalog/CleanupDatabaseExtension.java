@@ -3,6 +3,7 @@ package org.fullcycle.admin.catalog;
 import org.fullcycle.admin.catalog.infrastructure.castmember.persistence.CastMemberRepository;
 import org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryRepository;
 import org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreRepository;
+import org.fullcycle.admin.catalog.infrastructure.video.persistence.VideoRepository;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.data.repository.CrudRepository;
@@ -19,6 +20,7 @@ public class CleanupDatabaseExtension implements BeforeEachCallback {
 
         cleanup(
             List.of(
+                applicationContext.getBean(VideoRepository.class),
                 applicationContext.getBean(GenreRepository.class),
                 applicationContext.getBean(CategoryRepository.class),
                 applicationContext.getBean(CastMemberRepository.class)
@@ -26,7 +28,7 @@ public class CleanupDatabaseExtension implements BeforeEachCallback {
         );
     }
 
-    private void cleanup(final Collection<CrudRepository> repositories) {
+    private void cleanup(final Collection<CrudRepository<?, ?>> repositories) {
         repositories.forEach(CrudRepository::deleteAll);
     }
 

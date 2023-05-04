@@ -12,11 +12,11 @@ class ImageMediaTest {
 
     @Test
     void givenValidParams_whenCreateANewImage_shouldInstantiate() {
-        final var expectedChecksum = "a1s2d3";
         final var expectedName = "image.jpeg";
+        final var expectedChecksum = "a1s2d3";
         final var expectedLocation = "/tmp/images";
 
-        final var actual = ImageMedia.with(expectedChecksum, expectedName, expectedLocation);
+        final var actual = ImageMedia.newImageMedia(expectedName, expectedChecksum, expectedLocation);
 
         assertNotNull(actual);
         assertEquals(expectedChecksum, actual.checksum());
@@ -29,8 +29,8 @@ class ImageMediaTest {
         final var expectedChecksum = "a1s2d3";
         final var expectedLocation = "/tmp/images";
 
-        final var firstImage = ImageMedia.with(expectedChecksum, "bla.jpeg", expectedLocation);
-        final var secondImage = ImageMedia.with(expectedChecksum, "foo.jpeg", expectedLocation);
+        final var firstImage = ImageMedia.newImageMedia("bla.jpeg", expectedChecksum, expectedLocation);
+        final var secondImage = ImageMedia.newImageMedia("foo.jpeg", expectedChecksum, expectedLocation);
 
         assertNotNull(firstImage);
         assertNotNull(secondImage);
@@ -42,8 +42,8 @@ class ImageMediaTest {
     void givenTwoImagesWithoutSameChecksumAndLocation_whenCallsEquals_shouldReturnFalse() {
         final var expectedLocation = "/tmp/images";
 
-        final var firstImage = ImageMedia.with("a1d2s3", "bla.jpeg", expectedLocation);
-        final var secondImage = ImageMedia.with("z1x2c3", "bla.jpeg", expectedLocation);
+        final var firstImage = ImageMedia.newImageMedia("bla.jpeg", "a1d2s3", expectedLocation);
+        final var secondImage = ImageMedia.newImageMedia("bla.jpeg", "z1x2c3", expectedLocation);
 
         assertNotNull(firstImage);
         assertNotNull(secondImage);
@@ -59,17 +59,17 @@ class ImageMediaTest {
 
         assertThrows(
             NullPointerException.class,
-            () -> ImageMedia.with(null, expectedName, expectedLocation)
+            () -> ImageMedia.newImageMedia(null, expectedChecksum, expectedLocation)
         );
 
         assertThrows(
             NullPointerException.class,
-            () -> ImageMedia.with(expectedChecksum, null, expectedLocation)
+            () -> ImageMedia.newImageMedia(expectedName, null, expectedLocation)
         );
 
         assertThrows(
             NullPointerException.class,
-            () -> ImageMedia.with(expectedChecksum, expectedName, null)
+            () -> ImageMedia.newImageMedia(expectedName, expectedChecksum, null)
         );
     }
 

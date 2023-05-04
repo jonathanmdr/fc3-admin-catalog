@@ -1658,7 +1658,7 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
 
     private AudioVideoMedia audioVideoMedia(final Resource.Type type) {
         final var checksum = UUID.randomUUID().toString();
-        return AudioVideoMedia.with(
+        return AudioVideoMedia.newAudioVideoMedia(
             checksum,
             type.name().toLowerCase(),
             "/videos/".concat(checksum),
@@ -1669,7 +1669,7 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
 
     private ImageMedia imageMedia(final Resource.Type type) {
         final var checksum = UUID.randomUUID().toString();
-        return ImageMedia.with(
+        return ImageMedia.newImageMedia(
             checksum,
             type.name().toLowerCase(),
             "/images/".concat(checksum)
@@ -1680,9 +1680,9 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
         when(mediaResourceGateway.storeAudioVideo(any(), any()))
             .thenAnswer(answer -> {
                 final var resource = answer.getArgument(1, Resource.class);
-                return AudioVideoMedia.with(
-                    UUID.randomUUID().toString(),
+                return AudioVideoMedia.newAudioVideoMedia(
                     resource.name(),
+                    UUID.randomUUID().toString(),
                     "/videos",
                     "",
                     MediaStatus.PENDING
@@ -1694,9 +1694,9 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
         when(mediaResourceGateway.storeImage(any(), any()))
             .thenAnswer(answer -> {
                 final var resource = answer.getArgument(1, Resource.class);
-                return ImageMedia.with(
-                    UUID.randomUUID().toString(),
+                return ImageMedia.newImageMedia(
                     resource.name(),
+                    UUID.randomUUID().toString(),
                     "/images"
                 );
             });

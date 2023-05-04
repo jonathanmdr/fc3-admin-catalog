@@ -1243,9 +1243,9 @@ class CreateVideoUseCaseTest extends UseCaseTest {
         when(mediaResourceGateway.storeAudioVideo(any(), any()))
             .thenAnswer(answer -> {
                 final var resource = answer.getArgument(1, Resource.class);
-                return AudioVideoMedia.with(
-                    UUID.randomUUID().toString(),
+                return AudioVideoMedia.newAudioVideoMedia(
                     resource.name(),
+                    UUID.randomUUID().toString(),
                     "/videos",
                     "",
                     MediaStatus.PENDING
@@ -1257,9 +1257,9 @@ class CreateVideoUseCaseTest extends UseCaseTest {
         when(mediaResourceGateway.storeImage(any(), any()))
             .thenAnswer(answer -> {
                 final var resource = answer.getArgument(1, Resource.class);
-                return ImageMedia.with(
-                    UUID.randomUUID().toString(),
+                return ImageMedia.newImageMedia(
                     resource.name(),
+                    UUID.randomUUID().toString(),
                     "/images"
                 );
             });

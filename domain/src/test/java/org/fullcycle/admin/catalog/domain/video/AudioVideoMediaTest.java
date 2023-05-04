@@ -18,9 +18,9 @@ class AudioVideoMediaTest {
         final var expectedEncodedLocation = "/tmp/videos/encoded";
         final var expectedMediaStatus = MediaStatus.PENDING;
 
-        final var actual = AudioVideoMedia.with(
-            expectedChecksum,
+        final var actual = AudioVideoMedia.newAudioVideoMedia(
             expectedName,
+            expectedChecksum,
             expectedRawLocation,
             expectedEncodedLocation,
             expectedMediaStatus
@@ -39,17 +39,17 @@ class AudioVideoMediaTest {
         final var expectedChecksum = "a1s2d3";
         final var expectedRawLocation = "/tmp/images";
 
-        final var firstVideo = AudioVideoMedia.with(
-            expectedChecksum,
+        final var firstVideo = AudioVideoMedia.newAudioVideoMedia(
             "first-video.mp4",
+            expectedChecksum,
             expectedRawLocation,
             "/videos/encoded",
             MediaStatus.PROCESSING
         );
 
-        final var secondVideo = AudioVideoMedia.with(
-            expectedChecksum,
+        final var secondVideo = AudioVideoMedia.newAudioVideoMedia(
             "second-video.mp4",
+            expectedChecksum,
             expectedRawLocation,
             "/tmp/videos/encoded",
             MediaStatus.COMPLETED
@@ -68,17 +68,17 @@ class AudioVideoMediaTest {
         final var expectedEncodedLocation = "/tmp/videos/encoded";
         final var expectedMediaStatus = MediaStatus.PENDING;
 
-        final var firstVideo = AudioVideoMedia.with(
-            "a1s2d3",
+        final var firstVideo = AudioVideoMedia.newAudioVideoMedia(
             expectedName,
+            "a1s2d3",
             "/tmp/videos",
             expectedEncodedLocation,
             expectedMediaStatus
         );
 
-        final var secondVideo = AudioVideoMedia.with(
-            "z1x2c3",
+        final var secondVideo = AudioVideoMedia.newAudioVideoMedia(
             expectedName,
+            "z1x2c3",
             "/tmp/medias/videos",
             expectedEncodedLocation,
             expectedMediaStatus
@@ -100,27 +100,27 @@ class AudioVideoMediaTest {
 
         assertThrows(
             NullPointerException.class,
-            () -> AudioVideoMedia.with(null, expectedName, expectedRawLocation, expectedEncodedLocation, expectedMediaStatus)
+            () -> AudioVideoMedia.newAudioVideoMedia(null, expectedChecksum, expectedRawLocation, expectedEncodedLocation, expectedMediaStatus)
         );
 
         assertThrows(
             NullPointerException.class,
-            () -> AudioVideoMedia.with(expectedChecksum, null, expectedRawLocation, expectedEncodedLocation, expectedMediaStatus)
+            () -> AudioVideoMedia.newAudioVideoMedia(expectedName, null, expectedRawLocation, expectedEncodedLocation, expectedMediaStatus)
         );
 
         assertThrows(
             NullPointerException.class,
-            () -> AudioVideoMedia.with(expectedChecksum, expectedName, null, expectedEncodedLocation, expectedMediaStatus)
+            () -> AudioVideoMedia.newAudioVideoMedia(expectedName, expectedChecksum, null, expectedEncodedLocation, expectedMediaStatus)
         );
 
         assertThrows(
             NullPointerException.class,
-            () -> AudioVideoMedia.with(expectedChecksum, expectedName, expectedRawLocation, null, expectedMediaStatus)
+            () -> AudioVideoMedia.newAudioVideoMedia(expectedName, expectedChecksum, expectedRawLocation, null, expectedMediaStatus)
         );
 
         assertThrows(
             NullPointerException.class,
-            () -> AudioVideoMedia.with(expectedChecksum, expectedName, expectedRawLocation, expectedEncodedLocation, null)
+            () -> AudioVideoMedia.newAudioVideoMedia(expectedName, expectedChecksum, expectedRawLocation, expectedEncodedLocation, null)
         );
     }
 

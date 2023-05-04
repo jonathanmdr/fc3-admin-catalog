@@ -166,7 +166,7 @@ class VideoTest {
             expectedCastMembers
         );
 
-        final var expectedImageMedia = ImageMedia.with("a1b2c3", "banner.jpeg", "/temp/banners");
+        final var expectedImageMedia = ImageMedia.newImageMedia("banner.jpeg", "a1b2c3", "/temp/banners");
         actual.addImageMediaBanner(expectedImageMedia);
 
         assertNotNull(actual);
@@ -224,7 +224,7 @@ class VideoTest {
             expectedCastMembers
         );
 
-        final var expectedImageMedia = ImageMedia.with("a1b2c3", "thumbnail.jpeg", "/temp/thumbnails");
+        final var expectedImageMedia = ImageMedia.newImageMedia("thumbnail.jpeg", "a1b2c3", "/temp/thumbnails");
         actual.addImageMediaThumbnail(expectedImageMedia);
 
         assertNotNull(actual);
@@ -282,7 +282,7 @@ class VideoTest {
             expectedCastMembers
         );
 
-        final var expectedImageMedia = ImageMedia.with("a1b2c3", "thumbnail-half.jpeg", "/temp/thumbnails");
+        final var expectedImageMedia = ImageMedia.newImageMedia("thumbnail-half.jpeg", "a1b2c3", "/temp/thumbnails");
         actual.addImageMediaThumbnailHalf(expectedImageMedia);
 
         assertNotNull(actual);
@@ -340,9 +340,9 @@ class VideoTest {
             expectedCastMembers
         );
 
-        final var expectedAudioVideoMedia = AudioVideoMedia.with(
-            "a1b2c3",
+        final var expectedAudioVideoMedia = AudioVideoMedia.newAudioVideoMedia(
             "trailer.mp4",
+            "a1b2c3",
             "/temp/videos",
             "/temp/videos",
             MediaStatus.PENDING
@@ -404,9 +404,9 @@ class VideoTest {
             expectedCastMembers
         );
 
-        final var expectedAudioVideoMedia = AudioVideoMedia.with(
-            "a1b2c3",
+        final var expectedAudioVideoMedia = AudioVideoMedia.newAudioVideoMedia(
             "video.mp4",
+            "a1b2c3",
             "/temp/videos",
             "/temp/videos",
             MediaStatus.PENDING
