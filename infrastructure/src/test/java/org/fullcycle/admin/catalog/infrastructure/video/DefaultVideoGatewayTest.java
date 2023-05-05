@@ -11,6 +11,7 @@ import org.fullcycle.admin.catalog.domain.genre.GenreID;
 import org.fullcycle.admin.catalog.domain.video.AudioVideoMedia;
 import org.fullcycle.admin.catalog.domain.video.ImageMedia;
 import org.fullcycle.admin.catalog.domain.video.Video;
+import org.fullcycle.admin.catalog.domain.video.VideoID;
 import org.fullcycle.admin.catalog.infrastructure.video.persistence.VideoRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import java.time.Year;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @IntegrationTest
 class DefaultVideoGatewayTest {
@@ -441,6 +443,71 @@ class DefaultVideoGatewayTest {
         assertThat(persisted.getCreatedAt()).isNotNull();
         assertThat(persisted.getUpdatedAt()).isNotNull();
         assertThat(persisted.getUpdatedAt()).isAfter(persisted.getCreatedAt());
+    }
+
+    @Test
+    @Transactional
+    void givenAValidVideoId_whenCallsDeleteById_shouldRemoveIt() {
+        final var category = this.categoryGateway.create(Fixtures.CategoryFixture.classes());
+        final var genre = this.genreGateway.create(Fixtures.GenreFixture.technology());
+        final var castMember = this.castMemberGateway.create(Fixtures.CastMemberFixture.wesley());
+
+        final var expectedTitle = Fixtures.VideoFixture.title();
+        final var expectedDescription = Fixtures.VideoFixture.description();
+        final var expectedLaunchedAt = Year.of(Fixtures.VideoFixture.year());
+        final var expectedDuration = Fixtures.VideoFixture.duration();
+        final var expectedOpened = Fixtures.VideoFixture.opened();
+        final var expectedPublished = Fixtures.VideoFixture.published();
+        final var expectedRating = Fixtures.VideoFixture.rating();
+        final var expectedCategories = Set.of(category.getId());
+        final var expectedGenres = Set.of(genre.getId());
+        final var expectedCastMembers = Set.of(castMember.getId());
+        final var expectedVideo = AudioVideoMedia.newAudioVideoMedia("video", "a1s2d3", "/media/video");
+        final var expectedTrailer = AudioVideoMedia.newAudioVideoMedia("trailer", "d3s2a1", "/media/trailer");
+        final var expectedBanner = ImageMedia.newImageMedia("banner", "q1w2e3", "/media/banner");
+        final var expectedThumbnail = ImageMedia.newImageMedia("thumbnail", "e3w2q1", "/media/thumbnail");
+        final var expectedThumbnailHalf = ImageMedia.newImageMedia("thumbnail_half", "z1x2c3", "/media/thumbnail_half");
+
+        final var video = Video.newVideo(
+            expectedTitle,
+            expectedDescription,
+            expectedLaunchedAt,
+            expectedDuration,
+            expectedRating,
+            expectedOpened,
+            expectedPublished,
+            expectedCategories,
+            expectedGenres,
+            expectedCastMembers
+        );
+        video.addAudioVideoMediaVideo(expectedVideo);
+        video.addAudioVideoMediaTrailer(expectedTrailer);
+        video.addImageMediaBanner(expectedBanner);
+        video.addImageMediaThumbnail(expectedThumbnail);
+        video.addImageMediaThumbnailHalf(expectedThumbnailHalf);
+
+        final var output = this.videoGateway.create(video);
+
+        assertThat(output).isNotNull();
+        assertThat(output.getId()).isNotNull();
+
+        assertThat(this.videoRepository.findById(output.getId().getValue())).isPresent();
+
+        assertDoesNotThrow(() -> this.videoGateway.deleteById(output.getId()));
+
+        assertThat(this.videoRepository.findById(output.getId().getValue())).isEmpty();
+    }
+
+    @Test
+    @Transactional
+    void givenANotFoundVideoId_whenCallsDeleteById_shouldDoNothing() {
+        final var notFoundVideoId = VideoID.unique();
+
+        assertThat(this.videoRepository.findById(notFoundVideoId.getValue())).isEmpty();
+
+        assertDoesNotThrow(() -> this.videoGateway.deleteById(notFoundVideoId));
+
+        assertThat(this.videoRepository.findById(notFoundVideoId.getValue())).isEmpty();
     }
 
 }
