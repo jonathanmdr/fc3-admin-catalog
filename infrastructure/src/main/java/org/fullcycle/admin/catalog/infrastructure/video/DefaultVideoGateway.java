@@ -68,17 +68,21 @@ public class DefaultVideoGateway implements VideoGateway {
             Sort.by(Sort.Direction.fromString(query.direction()), query.sort())
         );
 
+        final var categories = nullIfEmpty(
+            mapTo(query.categories(), CategoryID::getValue)
+        );
+        final var genres = nullIfEmpty(
+            mapTo(query.genres(), GenreID::getValue)
+        );
+        final var castMembers = nullIfEmpty(
+            mapTo(query.castMembers(), CastMemberID::getValue)
+        );
+
         final var pageResult = this.videoRepository.findAll(
             SqlUtils.like(query.terms()),
-            nullIfEmpty(
-                mapTo(query.categories(), CategoryID::getValue)
-            ),
-            nullIfEmpty(
-                mapTo(query.genres(), GenreID::getValue)
-            ),
-            nullIfEmpty(
-                mapTo(query.castMembers(), CastMemberID::getValue)
-            ),
+            categories,
+            genres,
+            castMembers,
             page
         );
 

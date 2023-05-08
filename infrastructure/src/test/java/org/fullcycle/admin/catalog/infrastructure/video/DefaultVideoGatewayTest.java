@@ -1,5 +1,6 @@
 package org.fullcycle.admin.catalog.infrastructure.video;
 
+import org.assertj.core.data.Index;
 import org.fullcycle.admin.catalog.IntegrationTest;
 import org.fullcycle.admin.catalog.domain.Fixtures;
 import org.fullcycle.admin.catalog.domain.castmember.CastMemberGateway;
@@ -8,16 +9,20 @@ import org.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.fullcycle.admin.catalog.domain.genre.GenreGateway;
 import org.fullcycle.admin.catalog.domain.genre.GenreID;
+import org.fullcycle.admin.catalog.domain.pagination.Pagination;
 import org.fullcycle.admin.catalog.domain.video.AudioVideoMedia;
 import org.fullcycle.admin.catalog.domain.video.ImageMedia;
 import org.fullcycle.admin.catalog.domain.video.Video;
 import org.fullcycle.admin.catalog.domain.video.VideoID;
+import org.fullcycle.admin.catalog.domain.video.VideoPreview;
+import org.fullcycle.admin.catalog.domain.video.VideoSearchQuery;
 import org.fullcycle.admin.catalog.infrastructure.video.persistence.VideoRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Year;
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -581,6 +586,770 @@ class DefaultVideoGatewayTest {
     void givenANotFoundVideoId_whenCallsFindById_shouldReturnEmpty() {
         final var notFoundVideoId = VideoID.unique();
         assertThat(this.videoGateway.findById(notFoundVideoId)).isEmpty();
+    }
+
+    @Test
+    void givenAValidSearchQueryWithoutTerms_whenCallsFindAll_shouldReturnVideoList() {
+        final var category = this.categoryGateway.create(Fixtures.CategoryFixture.classes());
+        final var genre = this.genreGateway.create(Fixtures.GenreFixture.technology());
+        final var castMember = this.castMemberGateway.create(Fixtures.CastMemberFixture.wesley());
+
+        final var systemDesign = Video.newVideo(
+            "System Design",
+            "System Design Interview",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var ddd = Video.newVideo(
+            "DDD",
+            "Domain Driven Design",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var cleanArchitecture = Video.newVideo(
+            "Clean Architecture",
+            "Clean Architecture Concepts",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var kubernetes = Video.newVideo(
+            "K8s",
+            "Kubernetes Platform",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        this.videoGateway.create(systemDesign);
+        this.videoGateway.create(ddd);
+        this.videoGateway.create(cleanArchitecture);
+        this.videoGateway.create(kubernetes);
+
+        final var systemDesignVideoPreview = VideoPreview.from(systemDesign);
+        final var dddVideoPreview = VideoPreview.from(ddd);
+        final var cleanArchitectureVideoPreview = VideoPreview.from(cleanArchitecture);
+        final var kubernetesVideoPreview = VideoPreview.from(kubernetes);
+
+        final var expectedVideos = List.of(
+            systemDesignVideoPreview,
+            dddVideoPreview,
+            cleanArchitectureVideoPreview,
+            kubernetesVideoPreview
+        );
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "createdAt";
+        final var expectedDirection = "asc";
+        final var expectedItemsCount = 4;
+
+        final var searchQuery = new VideoSearchQuery(
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection,
+            Set.of(),
+            Set.of(),
+            Set.of()
+        );
+
+        final var expectedPagination = new Pagination<>(
+            expectedPage,
+            expectedPerPage,
+            expectedItemsCount,
+            expectedVideos
+        );
+
+        final var output = this.videoGateway.findAll(searchQuery);
+
+        assertThat(output).isNotNull();
+        assertThat(output.currentPage()).isEqualTo(expectedPage);
+        assertThat(output.perPage()).isEqualTo(expectedPerPage);
+        assertThat(output.total()).isEqualTo(expectedItemsCount);
+        assertThat(output).isEqualTo(expectedPagination);
+        assertThat(output.items()).contains(systemDesignVideoPreview, Index.atIndex(0));
+        assertThat(output.items()).contains(dddVideoPreview, Index.atIndex(1));
+        assertThat(output.items()).contains(cleanArchitectureVideoPreview, Index.atIndex(2));
+        assertThat(output.items()).contains(kubernetesVideoPreview, Index.atIndex(3));
+    }
+
+    @Test
+    void givenAValidSearchQueryWithTerms_whenCallsFindAll_shouldReturnFilteredVideoList() {
+        final var category = this.categoryGateway.create(Fixtures.CategoryFixture.classes());
+        final var genre = this.genreGateway.create(Fixtures.GenreFixture.technology());
+        final var castMember = this.castMemberGateway.create(Fixtures.CastMemberFixture.wesley());
+
+        final var systemDesign = Video.newVideo(
+            "System Design",
+            "System Design Interview",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var ddd = Video.newVideo(
+            "DDD",
+            "Domain Driven Design",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var cleanArchitecture = Video.newVideo(
+            "Clean Architecture",
+            "Clean Architecture Concepts",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var kubernetes = Video.newVideo(
+            "K8s",
+            "Kubernetes Platform",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        this.videoGateway.create(systemDesign);
+        this.videoGateway.create(ddd);
+        this.videoGateway.create(cleanArchitecture);
+        this.videoGateway.create(kubernetes);
+
+        final var kubernetesVideoPreview = VideoPreview.from(kubernetes);
+
+        final var expectedVideos = List.of(
+            kubernetesVideoPreview
+        );
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "8";
+        final var expectedSort = "createdAt";
+        final var expectedDirection = "asc";
+        final var expectedItemsCount = 1;
+
+        final var searchQuery = new VideoSearchQuery(
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection,
+            Set.of(),
+            Set.of(),
+            Set.of()
+        );
+
+        final var expectedPagination = new Pagination<>(
+            expectedPage,
+            expectedPerPage,
+            expectedItemsCount,
+            expectedVideos
+        );
+
+        final var output = this.videoGateway.findAll(searchQuery);
+
+        assertThat(output).isNotNull();
+        assertThat(output.currentPage()).isEqualTo(expectedPage);
+        assertThat(output.perPage()).isEqualTo(expectedPerPage);
+        assertThat(output.total()).isEqualTo(expectedItemsCount);
+        assertThat(output).isEqualTo(expectedPagination);
+        assertThat(output.items()).contains(kubernetesVideoPreview, Index.atIndex(0));
+    }
+
+    @Test
+    void givenAValidSearchQueryWithCategory_whenCallsFindAll_shouldReturnFilteredVideoList() {
+        final var category = this.categoryGateway.create(Fixtures.CategoryFixture.classes());
+        final var genre = this.genreGateway.create(Fixtures.GenreFixture.technology());
+        final var castMember = this.castMemberGateway.create(Fixtures.CastMemberFixture.wesley());
+
+        final var systemDesign = Video.newVideo(
+            "System Design",
+            "System Design Interview",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var ddd = Video.newVideo(
+            "DDD",
+            "Domain Driven Design",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var cleanArchitecture = Video.newVideo(
+            "Clean Architecture",
+            "Clean Architecture Concepts",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var kubernetes = Video.newVideo(
+            "K8s",
+            "Kubernetes Platform",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        this.videoGateway.create(systemDesign);
+        this.videoGateway.create(ddd);
+        this.videoGateway.create(cleanArchitecture);
+        this.videoGateway.create(kubernetes);
+
+        final var dddVideoPreview = VideoPreview.from(ddd);
+        final var kubernetesVideoPreview = VideoPreview.from(kubernetes);
+
+        final var expectedVideos = List.of(
+            dddVideoPreview,
+            kubernetesVideoPreview
+        );
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "createdAt";
+        final var expectedDirection = "asc";
+        final var expectedItemsCount = 2;
+
+        final var searchQuery = new VideoSearchQuery(
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection,
+            Set.of(category.getId()),
+            Set.of(),
+            Set.of()
+        );
+
+        final var expectedPagination = new Pagination<>(
+            expectedPage,
+            expectedPerPage,
+            expectedItemsCount,
+            expectedVideos
+        );
+
+        final var output = this.videoGateway.findAll(searchQuery);
+
+        assertThat(output).isNotNull();
+        assertThat(output.currentPage()).isEqualTo(expectedPage);
+        assertThat(output.perPage()).isEqualTo(expectedPerPage);
+        assertThat(output.total()).isEqualTo(expectedItemsCount);
+        assertThat(output).isEqualTo(expectedPagination);
+        assertThat(output.items()).contains(dddVideoPreview, Index.atIndex(0));
+        assertThat(output.items()).contains(kubernetesVideoPreview, Index.atIndex(1));
+    }
+
+    @Test
+    void givenAValidSearchQueryWithGenre_whenCallsFindAll_shouldReturnFilteredVideoList() {
+        final var category = this.categoryGateway.create(Fixtures.CategoryFixture.classes());
+        final var genre = this.genreGateway.create(Fixtures.GenreFixture.technology());
+        final var castMember = this.castMemberGateway.create(Fixtures.CastMemberFixture.wesley());
+
+        final var systemDesign = Video.newVideo(
+            "System Design",
+            "System Design Interview",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var ddd = Video.newVideo(
+            "DDD",
+            "Domain Driven Design",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(),
+            Set.of(castMember.getId())
+        );
+
+        final var cleanArchitecture = Video.newVideo(
+            "Clean Architecture",
+            "Clean Architecture Concepts",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var kubernetes = Video.newVideo(
+            "K8s",
+            "Kubernetes Platform",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(),
+            Set.of(castMember.getId())
+        );
+
+        this.videoGateway.create(systemDesign);
+        this.videoGateway.create(ddd);
+        this.videoGateway.create(cleanArchitecture);
+        this.videoGateway.create(kubernetes);
+
+        final var systemDesignVideoPreview = VideoPreview.from(systemDesign);
+        final var cleanArchitectureVideoPreview = VideoPreview.from(cleanArchitecture);
+
+        final var expectedVideos = List.of(
+            systemDesignVideoPreview,
+            cleanArchitectureVideoPreview
+        );
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "createdAt";
+        final var expectedDirection = "asc";
+        final var expectedItemsCount = 2;
+
+        final var searchQuery = new VideoSearchQuery(
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection,
+            Set.of(),
+            Set.of(genre.getId()),
+            Set.of()
+        );
+
+        final var expectedPagination = new Pagination<>(
+            expectedPage,
+            expectedPerPage,
+            expectedItemsCount,
+            expectedVideos
+        );
+
+        final var output = this.videoGateway.findAll(searchQuery);
+
+        assertThat(output).isNotNull();
+        assertThat(output.currentPage()).isEqualTo(expectedPage);
+        assertThat(output.perPage()).isEqualTo(expectedPerPage);
+        assertThat(output.total()).isEqualTo(expectedItemsCount);
+        assertThat(output).isEqualTo(expectedPagination);
+        assertThat(output.items()).contains(systemDesignVideoPreview, Index.atIndex(0));
+        assertThat(output.items()).contains(cleanArchitectureVideoPreview, Index.atIndex(1));
+    }
+
+    @Test
+    void givenAValidSearchQueryWithCastMember_whenCallsFindAll_shouldReturnFilteredVideoList() {
+        final var category = this.categoryGateway.create(Fixtures.CategoryFixture.classes());
+        final var genre = this.genreGateway.create(Fixtures.GenreFixture.technology());
+        final var castMember = this.castMemberGateway.create(Fixtures.CastMemberFixture.wesley());
+
+        final var systemDesign = Video.newVideo(
+            "System Design",
+            "System Design Interview",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var ddd = Video.newVideo(
+            "DDD",
+            "Domain Driven Design",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var cleanArchitecture = Video.newVideo(
+            "Clean Architecture",
+            "Clean Architecture Concepts",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of()
+        );
+
+        final var kubernetes = Video.newVideo(
+            "K8s",
+            "Kubernetes Platform",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of()
+        );
+
+        this.videoGateway.create(systemDesign);
+        this.videoGateway.create(ddd);
+        this.videoGateway.create(cleanArchitecture);
+        this.videoGateway.create(kubernetes);
+
+        final var systemDesignVideoPreview = VideoPreview.from(systemDesign);
+        final var dddVideoPreview = VideoPreview.from(ddd);
+
+        final var expectedVideos = List.of(
+            systemDesignVideoPreview,
+            dddVideoPreview
+        );
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "createdAt";
+        final var expectedDirection = "asc";
+        final var expectedItemsCount = 2;
+
+        final var searchQuery = new VideoSearchQuery(
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection,
+            Set.of(),
+            Set.of(),
+            Set.of(castMember.getId())
+        );
+
+        final var expectedPagination = new Pagination<>(
+            expectedPage,
+            expectedPerPage,
+            expectedItemsCount,
+            expectedVideos
+        );
+
+        final var output = this.videoGateway.findAll(searchQuery);
+
+        assertThat(output).isNotNull();
+        assertThat(output.currentPage()).isEqualTo(expectedPage);
+        assertThat(output.perPage()).isEqualTo(expectedPerPage);
+        assertThat(output.total()).isEqualTo(expectedItemsCount);
+        assertThat(output).isEqualTo(expectedPagination);
+        assertThat(output.items()).contains(systemDesignVideoPreview, Index.atIndex(0));
+        assertThat(output.items()).contains(dddVideoPreview, Index.atIndex(1));
+    }
+
+    @Test
+    void givenAValidSearchQueryWithSortByTitle_whenCallsFindAll_shouldReturnOrderedVideoList() {
+        final var category = this.categoryGateway.create(Fixtures.CategoryFixture.classes());
+        final var genre = this.genreGateway.create(Fixtures.GenreFixture.technology());
+        final var castMember = this.castMemberGateway.create(Fixtures.CastMemberFixture.wesley());
+
+        final var systemDesign = Video.newVideo(
+            "System Design",
+            "System Design Interview",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var ddd = Video.newVideo(
+            "DDD",
+            "Domain Driven Design",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var cleanArchitecture = Video.newVideo(
+            "Clean Architecture",
+            "Clean Architecture Concepts",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var kubernetes = Video.newVideo(
+            "K8s",
+            "Kubernetes Platform",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        this.videoGateway.create(systemDesign);
+        this.videoGateway.create(ddd);
+        this.videoGateway.create(cleanArchitecture);
+        this.videoGateway.create(kubernetes);
+
+        final var systemDesignVideoPreview = VideoPreview.from(systemDesign);
+        final var dddVideoPreview = VideoPreview.from(ddd);
+        final var cleanArchitectureVideoPreview = VideoPreview.from(cleanArchitecture);
+        final var kubernetesVideoPreview = VideoPreview.from(kubernetes);
+
+        final var expectedVideos = List.of(
+            cleanArchitectureVideoPreview,
+            dddVideoPreview,
+            kubernetesVideoPreview,
+            systemDesignVideoPreview
+        );
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedItemsCount = 4;
+
+        final var searchQuery = new VideoSearchQuery(
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection,
+            Set.of(),
+            Set.of(),
+            Set.of()
+        );
+
+        final var expectedPagination = new Pagination<>(
+            expectedPage,
+            expectedPerPage,
+            expectedItemsCount,
+            expectedVideos
+        );
+
+        final var output = this.videoGateway.findAll(searchQuery);
+
+        assertThat(output).isNotNull();
+        assertThat(output.currentPage()).isEqualTo(expectedPage);
+        assertThat(output.perPage()).isEqualTo(expectedPerPage);
+        assertThat(output.total()).isEqualTo(expectedItemsCount);
+        assertThat(output).isEqualTo(expectedPagination);
+        assertThat(output.items()).contains(cleanArchitectureVideoPreview, Index.atIndex(0));
+        assertThat(output.items()).contains(dddVideoPreview, Index.atIndex(1));
+        assertThat(output.items()).contains(kubernetesVideoPreview, Index.atIndex(2));
+        assertThat(output.items()).contains(systemDesignVideoPreview, Index.atIndex(3));
+    }
+
+    @Test
+    void givenAValidSearchQueryWithDirectionDesc_whenCallsFindAll_shouldReturnOrderedVideoList() {
+        final var category = this.categoryGateway.create(Fixtures.CategoryFixture.classes());
+        final var genre = this.genreGateway.create(Fixtures.GenreFixture.technology());
+        final var castMember = this.castMemberGateway.create(Fixtures.CastMemberFixture.wesley());
+
+        final var systemDesign = Video.newVideo(
+            "System Design",
+            "System Design Interview",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var ddd = Video.newVideo(
+            "DDD",
+            "Domain Driven Design",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var cleanArchitecture = Video.newVideo(
+            "Clean Architecture",
+            "Clean Architecture Concepts",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        final var kubernetes = Video.newVideo(
+            "K8s",
+            "Kubernetes Platform",
+            Year.of(Fixtures.VideoFixture.year()),
+            Fixtures.VideoFixture.duration(),
+            Fixtures.VideoFixture.rating(),
+            Fixtures.VideoFixture.opened(),
+            Fixtures.VideoFixture.published(),
+            Set.of(category.getId()),
+            Set.of(genre.getId()),
+            Set.of(castMember.getId())
+        );
+
+        this.videoGateway.create(systemDesign);
+        this.videoGateway.create(ddd);
+        this.videoGateway.create(cleanArchitecture);
+        this.videoGateway.create(kubernetes);
+
+        final var systemDesignVideoPreview = VideoPreview.from(systemDesign);
+        final var dddVideoPreview = VideoPreview.from(ddd);
+        final var cleanArchitectureVideoPreview = VideoPreview.from(cleanArchitecture);
+        final var kubernetesVideoPreview = VideoPreview.from(kubernetes);
+
+        final var expectedVideos = List.of(
+            kubernetesVideoPreview,
+            cleanArchitectureVideoPreview,
+            dddVideoPreview,
+            systemDesignVideoPreview
+        );
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "createdAt";
+        final var expectedDirection = "desc";
+        final var expectedItemsCount = 4;
+
+        final var searchQuery = new VideoSearchQuery(
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection,
+            Set.of(),
+            Set.of(),
+            Set.of()
+        );
+
+        final var expectedPagination = new Pagination<>(
+            expectedPage,
+            expectedPerPage,
+            expectedItemsCount,
+            expectedVideos
+        );
+
+        final var output = this.videoGateway.findAll(searchQuery);
+
+        assertThat(output).isNotNull();
+        assertThat(output.currentPage()).isEqualTo(expectedPage);
+        assertThat(output.perPage()).isEqualTo(expectedPerPage);
+        assertThat(output.total()).isEqualTo(expectedItemsCount);
+        assertThat(output).isEqualTo(expectedPagination);
+        assertThat(output.items()).contains(kubernetesVideoPreview, Index.atIndex(0));
+        assertThat(output.items()).contains(cleanArchitectureVideoPreview, Index.atIndex(1));
+        assertThat(output.items()).contains(dddVideoPreview, Index.atIndex(2));
+        assertThat(output.items()).contains(systemDesignVideoPreview, Index.atIndex(3));
     }
 
 }

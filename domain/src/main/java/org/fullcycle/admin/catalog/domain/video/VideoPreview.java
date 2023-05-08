@@ -8,4 +8,16 @@ public record VideoPreview(
     String description,
     Instant createdAt,
     Instant updatedAt
-) { }
+) {
+
+    public static VideoPreview from(final Video video) {
+        return new VideoPreview(
+            video.getId().getValue(),
+            video.getTitle(),
+            video.getDescription(),
+            video.getCreatedAt(),
+            video.getUpdatedAt()
+        );
+    }
+
+}
