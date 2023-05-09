@@ -11,7 +11,7 @@ public final class SqlUtils {
             return null;
         }
 
-        return "%".concat(term).concat("%");
+        return "%".concat(term.toUpperCase()).concat("%");
     }
 
 }
