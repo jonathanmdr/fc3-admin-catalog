@@ -13,6 +13,6 @@ public interface GenreGateway {
     Genre create(final Genre genre);
     Genre update(final Genre genre);
     void deleteById(final GenreID genreID);
-    List<GenreID> existsByIds(final Iterable<GenreID> categoryIds);
+    List<GenreID> existsByIds(final Iterable<GenreID> genreIds);
 
 }

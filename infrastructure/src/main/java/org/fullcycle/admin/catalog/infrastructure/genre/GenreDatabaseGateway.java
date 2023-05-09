@@ -1,5 +1,6 @@
 package org.fullcycle.admin.catalog.infrastructure.genre;
 
+import org.fullcycle.admin.catalog.domain.Identifier;
 import org.fullcycle.admin.catalog.domain.genre.Genre;
 import org.fullcycle.admin.catalog.domain.genre.GenreGateway;
 import org.fullcycle.admin.catalog.domain.genre.GenreID;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 import static org.fullcycle.admin.catalog.infrastructure.utils.SpecificationUtils.like;
 
@@ -76,8 +78,15 @@ public class GenreDatabaseGateway implements GenreGateway {
     }
 
     @Override
-    public List<GenreID> existsByIds(final Iterable<GenreID> categoryIds) {
-        throw new UnsupportedOperationException("Unimplemented method");
+    public List<GenreID> existsByIds(final Iterable<GenreID> genreIds) {
+        final var ids = StreamSupport.stream(genreIds.spliterator(), false)
+            .map(Identifier::getValue)
+            .toList();
+
+        return this.genreRepository.existsByIds(ids)
+            .stream()
+            .map(GenreID::from)
+            .toList();
     }
 
     private Genre save(final Genre genre) {

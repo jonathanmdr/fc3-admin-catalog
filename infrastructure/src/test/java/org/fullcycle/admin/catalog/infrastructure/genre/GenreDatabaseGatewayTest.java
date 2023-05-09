@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DatabaseGatewayIntegrationTest
 class GenreDatabaseGatewayTest {
@@ -554,6 +555,34 @@ class GenreDatabaseGatewayTest {
             assertThat(actual.items().get(index).getName()).isEqualTo(expectedName);
             index++;
         }
+    }
+
+    @Test
+    void givenPrePersistedGenres_whenCallsExistsByIds_shouldReturnIds() {
+        final var action = Genre.newGenre("Action", true);
+        final var suspense = Genre.newGenre("Suspense", true);
+        final var kids = Genre.newGenre("Kids", true);
+
+        assertEquals(0, this.genreRepository.count());
+
+        final var ids = this.genreRepository.saveAll(
+                List.of(
+                    GenreJpaEntity.from(action),
+                    GenreJpaEntity.from(suspense),
+                    GenreJpaEntity.from(kids)
+                )
+            )
+            .stream()
+            .map(GenreJpaEntity::getId)
+            .map(GenreID::from)
+            .toList();
+
+        assertEquals(3, this.genreRepository.count());
+
+        final var actual = this.genreDatabaseGateway.existsByIds(ids);
+
+        assertThat(actual).hasSize(3);
+        assertThat(actual).containsAll(ids);
     }
 
 }
