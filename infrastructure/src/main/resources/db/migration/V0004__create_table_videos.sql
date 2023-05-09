@@ -21,7 +21,7 @@ CREATE TABLE videos (
     year_launched SMALLINT NOT NULL,
     opened BOOLEAN NOT NULL DEFAULT FALSE,
     published BOOLEAN NOT NULL DEFAULT FALSE,
-    rating VARCHAR(6) NOT NULL,
+    rating VARCHAR(5) NOT NULL,
     duration DECIMAL(5, 2) NOT NULL,
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL,
