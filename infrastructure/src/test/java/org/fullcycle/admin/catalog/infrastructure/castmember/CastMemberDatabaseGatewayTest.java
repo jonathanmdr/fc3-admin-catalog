@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DatabaseGatewayIntegrationTest
 class CastMemberDatabaseGatewayTest {
@@ -285,6 +286,34 @@ class CastMemberDatabaseGatewayTest {
         assertThat(actual.total()).isEqualTo(expectedTotal);
         assertThat(actual.items().size()).isEqualTo(expectedPerPage);
         assertThat(actual.items().get(0).getId().getValue()).isEqualTo(willSmith.getId().getValue());
+    }
+
+    @Test
+    void givenPrePersistedGenres_whenCallsExistsByIds_shouldReturnIds() {
+        final var vinDiesel = CastMember.newMember("Vin Diesel", CastMemberType.ACTOR);
+        final var willSmith = CastMember.newMember("Will Smith", CastMemberType.ACTOR);
+        final var theRock = CastMember.newMember("The Rock", CastMemberType.ACTOR);
+
+        assertEquals(0, this.castMemberRepository.count());
+
+        final var ids = this.castMemberRepository.saveAll(
+                List.of(
+                    CastMemberJpaEntity.from(vinDiesel),
+                    CastMemberJpaEntity.from(willSmith),
+                    CastMemberJpaEntity.from(theRock)
+                )
+            )
+            .stream()
+            .map(CastMemberJpaEntity::getId)
+            .map(CastMemberID::from)
+            .toList();
+
+        assertEquals(3, this.castMemberRepository.count());
+
+        final var actual = this.castMemberDatabaseGateway.existsByIds(ids);
+
+        assertThat(actual).hasSize(3);
+        assertThat(actual).containsAll(ids);
     }
 
 }

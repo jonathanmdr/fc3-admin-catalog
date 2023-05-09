@@ -1,5 +1,6 @@
 package org.fullcycle.admin.catalog.infrastructure.castmember;
 
+import org.fullcycle.admin.catalog.domain.Identifier;
 import org.fullcycle.admin.catalog.domain.castmember.CastMember;
 import org.fullcycle.admin.catalog.domain.castmember.CastMemberGateway;
 import org.fullcycle.admin.catalog.domain.castmember.CastMemberID;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 import static org.fullcycle.admin.catalog.infrastructure.utils.SpecificationUtils.like;
 
@@ -77,8 +79,15 @@ public class CastMemberDatabaseGateway implements CastMemberGateway {
     }
 
     @Override
-    public List<CastMemberID> existsByIds(final Iterable<CastMemberID> categoryIds) {
-        throw new UnsupportedOperationException("Unimplemented method");
+    public List<CastMemberID> existsByIds(final Iterable<CastMemberID> castMemberIds) {
+        final var ids = StreamSupport.stream(castMemberIds.spliterator(), false)
+            .map(Identifier::getValue)
+            .toList();
+
+        return this.castMemberRepository.existsByIds(ids)
+            .stream()
+            .map(CastMemberID::from)
+            .toList();
     }
 
     private static Specification<CastMemberJpaEntity> applyTerms(final String term) {

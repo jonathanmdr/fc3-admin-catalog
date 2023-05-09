@@ -13,6 +13,6 @@ public interface CastMemberGateway {
     CastMember create(final CastMember castMember);
     CastMember update(final CastMember castMember);
     void deleteById(final CastMemberID castMemberID);
-    List<CastMemberID> existsByIds(final Iterable<CastMemberID> categoryIds);
+    List<CastMemberID> existsByIds(final Iterable<CastMemberID> castMemberIds);
 
 }
