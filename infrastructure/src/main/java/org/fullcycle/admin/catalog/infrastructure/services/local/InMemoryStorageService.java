@@ -1,7 +1,8 @@
 package org.fullcycle.admin.catalog.infrastructure.services.local;
 
-import org.fullcycle.admin.catalog.domain.utils.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fullcycle.admin.catalog.domain.resource.Resource;
+import org.fullcycle.admin.catalog.domain.utils.CollectionUtils;
 import org.fullcycle.admin.catalog.infrastructure.services.StorageService;
 
 import java.util.Collection;
@@ -30,12 +31,16 @@ public class InMemoryStorageService implements StorageService {
 
     @Override
     public Optional<Resource> get(final String fileName) {
-        return Objects.isNull(fileName) ? Optional.empty() : Optional.of(this.storage.get(fileName));
+        if (StringUtils.isBlank(fileName)) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(this.storage.get(fileName));
     }
 
     @Override
     public List<String> findAll(final String prefixName) {
-        if (Objects.isNull(prefixName)) {
+        if (StringUtils.isBlank(prefixName)) {
             return Collections.emptyList();
         }
 
@@ -47,8 +52,8 @@ public class InMemoryStorageService implements StorageService {
 
     @Override
     public void store(final String fileName, final Resource resource) {
-        Objects.requireNonNull(fileName);
-        Objects.requireNonNull(resource);
+        Objects.requireNonNull(fileName, "fileName cannot be null");
+        Objects.requireNonNull(resource, "resource cannot be null");
 
         this.storage.put(fileName, resource);
     }
