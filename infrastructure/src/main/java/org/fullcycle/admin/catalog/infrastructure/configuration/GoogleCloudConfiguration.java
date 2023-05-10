@@ -8,6 +8,7 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import org.fullcycle.admin.catalog.infrastructure.configuration.properties.GoogleCloudProperties;
 import org.fullcycle.admin.catalog.infrastructure.configuration.properties.GoogleCloudStorageProperties;
+import org.fullcycle.admin.catalog.infrastructure.utils.ProfileUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,11 +19,14 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Base64;
 
+import static org.fullcycle.admin.catalog.infrastructure.utils.ProfileUtils.DEVELOPMENT;
+import static org.fullcycle.admin.catalog.infrastructure.utils.ProfileUtils.PRODUCTION;
+
 @Configuration
 @Profile(
     value = {
-        "dev",
-        "prod"
+        DEVELOPMENT,
+        PRODUCTION
     }
 )
 public class GoogleCloudConfiguration {
