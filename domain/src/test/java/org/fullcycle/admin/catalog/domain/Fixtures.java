@@ -5,8 +5,10 @@ import org.fullcycle.admin.catalog.domain.castmember.CastMember;
 import org.fullcycle.admin.catalog.domain.castmember.CastMemberType;
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.genre.Genre;
+import org.fullcycle.admin.catalog.domain.resource.Resource;
+import org.fullcycle.admin.catalog.domain.utils.IdentifierUtils;
+import org.fullcycle.admin.catalog.domain.video.MediaType;
 import org.fullcycle.admin.catalog.domain.video.Rating;
-import org.fullcycle.admin.catalog.domain.video.Resource;
 import org.fullcycle.admin.catalog.domain.video.Video;
 import org.fullcycle.admin.catalog.domain.video.VideoPreview;
 
@@ -17,8 +19,7 @@ import static io.vavr.API.$;
 import static io.vavr.API.Case;
 import static io.vavr.API.List;
 import static io.vavr.API.Match;
-import static org.fullcycle.admin.catalog.domain.video.Resource.Type;
-import static org.fullcycle.admin.catalog.domain.video.Resource.with;
+import static org.fullcycle.admin.catalog.domain.resource.Resource.with;
 
 public final class Fixtures {
 
@@ -127,17 +128,21 @@ public final class Fixtures {
             return FAKER.bool().bool();
         }
 
-        public static Resource resource(final Type resourceType) {
-            final String contentType = Match(resourceType).of(
-                Case($(List(Type.VIDEO, Type.TRAILER)::contains), "video/mp4"),
-                Case($(), "image/jpeg")
+    }
+
+    public static final class ResourceFixture {
+
+        public static Resource resource(final MediaType mediaType) {
+            final String contentType = Match(mediaType).of(
+                    Case($(List(MediaType.VIDEO, MediaType.TRAILER)::contains), "video/mp4"),
+                    Case($(), "image/jpeg")
             );
             final var content = "AnyContent".getBytes();
             return with(
-                content,
-                contentType,
-                resourceType.name().toLowerCase(),
-                resourceType
+                    IdentifierUtils.unique(),
+                    content,
+                    contentType,
+                    mediaType.name().toLowerCase()
             );
         }
 

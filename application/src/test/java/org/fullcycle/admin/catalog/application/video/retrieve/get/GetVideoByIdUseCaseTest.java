@@ -1,12 +1,12 @@
 package org.fullcycle.admin.catalog.application.video.retrieve.get;
 
-import org.fullcycle.admin.catalog.domain.Fixtures;
 import org.fullcycle.admin.catalog.application.UseCaseTest;
+import org.fullcycle.admin.catalog.domain.Fixtures;
 import org.fullcycle.admin.catalog.domain.exception.NotFoundException;
 import org.fullcycle.admin.catalog.domain.video.AudioVideoMedia;
 import org.fullcycle.admin.catalog.domain.video.ImageMedia;
 import org.fullcycle.admin.catalog.domain.video.MediaStatus;
-import org.fullcycle.admin.catalog.domain.video.Resource;
+import org.fullcycle.admin.catalog.domain.video.MediaType;
 import org.fullcycle.admin.catalog.domain.video.Video;
 import org.fullcycle.admin.catalog.domain.video.VideoGateway;
 import org.fullcycle.admin.catalog.domain.video.VideoID;
@@ -55,11 +55,11 @@ class GetVideoByIdUseCaseTest extends UseCaseTest {
         final var expectedCategories = Set.of(Fixtures.CategoryFixture.classes().getId());
         final var expectedGenres = Set.of(Fixtures.GenreFixture.technology().getId());
         final var expectedCastMembers = Set.of(Fixtures.CastMemberFixture.wesley().getId());
-        final var expectedVideo = audioVideoMedia(Resource.Type.VIDEO);
-        final var expectedTrailer = audioVideoMedia(Resource.Type.TRAILER);
-        final var expectedBanner = imageMedia(Resource.Type.BANNER);
-        final var expectedThumbnail = imageMedia(Resource.Type.THUMBNAIL);
-        final var expectedThumbnailHalf = imageMedia(Resource.Type.THUMBNAIL_HALF);
+        final var expectedVideo = audioVideoMedia(MediaType.VIDEO);
+        final var expectedTrailer = audioVideoMedia(MediaType.TRAILER);
+        final var expectedBanner = imageMedia(MediaType.BANNER);
+        final var expectedThumbnail = imageMedia(MediaType.THUMBNAIL);
+        final var expectedThumbnailHalf = imageMedia(MediaType.THUMBNAIL_HALF);
 
         final var video = Video.newVideo(
             expectedTitle,
@@ -156,7 +156,7 @@ class GetVideoByIdUseCaseTest extends UseCaseTest {
         verify(videoGateway, atMostOnce()).findById(expectedId);
     }
 
-    private AudioVideoMedia audioVideoMedia(final Resource.Type type) {
+    private AudioVideoMedia audioVideoMedia(final MediaType type) {
         final var checksum = UUID.randomUUID().toString();
         return AudioVideoMedia.newAudioVideoMedia(
             type.name().toLowerCase(),
@@ -167,7 +167,7 @@ class GetVideoByIdUseCaseTest extends UseCaseTest {
         );
     }
 
-    private ImageMedia imageMedia(final Resource.Type type) {
+    private ImageMedia imageMedia(final MediaType type) {
         final var checksum = UUID.randomUUID().toString();
         return ImageMedia.newImageMedia(
             type.name().toLowerCase(),

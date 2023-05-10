@@ -14,21 +14,15 @@ import org.fullcycle.admin.catalog.domain.genre.GenreID;
 import org.fullcycle.admin.catalog.domain.validation.Error;
 import org.fullcycle.admin.catalog.domain.validation.ValidationHandler;
 import org.fullcycle.admin.catalog.domain.validation.handler.NotificationHandler;
-import org.fullcycle.admin.catalog.domain.video.MediaResourceGateway;
-import org.fullcycle.admin.catalog.domain.video.Rating;
-import org.fullcycle.admin.catalog.domain.video.Video;
-import org.fullcycle.admin.catalog.domain.video.VideoGateway;
-import org.fullcycle.admin.catalog.domain.video.VideoID;
+import org.fullcycle.admin.catalog.domain.video.*;
 
 import java.time.Year;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import static org.fullcycle.admin.catalog.domain.video.MediaType.*;
 
 public class DefaultUpdateVideoUseCase extends UpdateVideoUseCase {
 
@@ -102,19 +96,19 @@ public class DefaultUpdateVideoUseCase extends UpdateVideoUseCase {
 
         try {
             final var videoMedia = command.video()
-                .map(resource -> this.mediaResourceGateway.storeAudioVideo(videoId, resource));
+                .map(resource -> this.mediaResourceGateway.storeAudioVideo(videoId, VideoResource.with(resource, VIDEO)));
 
             final var trailerMedia = command.trailer()
-                .map(resource -> this.mediaResourceGateway.storeAudioVideo(videoId, resource));
+                .map(resource -> this.mediaResourceGateway.storeAudioVideo(videoId, VideoResource.with(resource, TRAILER)));
 
             final var bannerMedia = command.banner()
-                .map(resource -> this.mediaResourceGateway.storeImage(videoId, resource));
+                .map(resource -> this.mediaResourceGateway.storeImage(videoId, VideoResource.with(resource, BANNER)));
 
             final var thumbnailMedia = command.thumbnail()
-                .map(resource -> this.mediaResourceGateway.storeImage(videoId, resource));
+                .map(resource -> this.mediaResourceGateway.storeImage(videoId, VideoResource.with(resource, THUMBNAIL)));
 
             final var thumbnailHalfMedia = command.thumbnailHalf()
-                .map(resource -> this.mediaResourceGateway.storeImage(videoId, resource));
+                .map(resource -> this.mediaResourceGateway.storeImage(videoId, VideoResource.with(resource, THUMBNAIL_HALF)));
 
             videoMedia.ifPresent(video::addAudioVideoMediaVideo);
             trailerMedia.ifPresent(video::addAudioVideoMediaTrailer);

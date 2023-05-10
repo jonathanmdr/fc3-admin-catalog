@@ -4,8 +4,8 @@ import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import org.apache.commons.lang3.StringUtils;
+import org.fullcycle.admin.catalog.domain.resource.Resource;
 import org.fullcycle.admin.catalog.domain.utils.CollectionUtils;
-import org.fullcycle.admin.catalog.domain.video.Resource;
 import org.fullcycle.admin.catalog.infrastructure.services.StorageService;
 
 import java.util.Collection;
@@ -35,10 +35,10 @@ public class GoogleCloudStorageService implements StorageService {
             this.storage.get(this.bucketName, fileName)
         ).map(
             blob -> Resource.with(
+                blob.getCrc32cToHexString(),
                 blob.getContent(),
                 blob.getContentType(),
-                blob.getName(),
-                null
+                blob.getName()
             )
         );
     }
@@ -67,7 +67,7 @@ public class GoogleCloudStorageService implements StorageService {
 
         final var blobInfo = BlobInfo.newBuilder(this.bucketName, fileName)
             .setContentType(resource.contentType())
-            .setCrc32cFromHexString("")
+            .setCrc32cFromHexString(resource.checksum())
             .build();
 
         this.storage.create(blobInfo, resource.content());
