@@ -25,6 +25,10 @@ public final class CollectionUtils {
         return isNullOrEmpty(collection) ? null : new HashSet<>(collection);
     }
 
+    public static boolean isNonNullAndNonEmpty(final Collection<?> collection) {
+        return !isNullOrEmpty(collection);
+    }
+
     private static boolean isNullOrEmpty(final Collection<?> collection) {
         return Objects.isNull(collection) || collection.isEmpty();
     }
