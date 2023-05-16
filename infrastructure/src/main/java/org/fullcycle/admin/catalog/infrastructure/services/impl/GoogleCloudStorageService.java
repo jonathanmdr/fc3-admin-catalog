@@ -21,8 +21,8 @@ public class GoogleCloudStorageService implements StorageService {
     private final Storage storage;
 
     public GoogleCloudStorageService(final String bucketName, final Storage storage) {
-        this.bucketName = bucketName;
-        this.storage = storage;
+        this.bucketName = Objects.requireNonNull(bucketName, "bucketName cannot be null");
+        this.storage = Objects.requireNonNull(storage, "storage cannot be null");
     }
 
     @Override
@@ -62,8 +62,8 @@ public class GoogleCloudStorageService implements StorageService {
 
     @Override
     public void store(final String fileName, final Resource resource) {
-        Objects.requireNonNull(fileName);
-        Objects.requireNonNull(resource);
+        Objects.requireNonNull(fileName, "fileName cannot be null");
+        Objects.requireNonNull(resource, "resource cannot be null");
 
         final var blobInfo = BlobInfo.newBuilder(this.bucketName, fileName)
             .setContentType(resource.contentType())
