@@ -120,7 +120,7 @@ class InMemoryStorageServiceTest {
     }
 
     @Test
-    void givenAnInvalidParam_whenCallsFindAllWithNotFoundPrefix_shouldBeReturnEmptyList() {
+    void givenAnInvalidParam_whenCallsFindAll_shouldBeReturnEmptyList() {
         final var trailer = Fixtures.ResourceFixture.resource(MediaType.TRAILER);
         final var banner = Fixtures.ResourceFixture.resource(MediaType.BANNER);
         final var thumbnail = Fixtures.ResourceFixture.resource(MediaType.THUMBNAIL);
