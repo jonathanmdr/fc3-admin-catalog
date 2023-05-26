@@ -120,6 +120,11 @@ public final class Fixtures {
                 .option(Rating.values());
         }
 
+        public static MediaType mediaType() {
+            return FAKER.options()
+                .option(MediaType.values());
+        }
+
         public static Boolean opened() {
             return FAKER.bool().bool();
         }
