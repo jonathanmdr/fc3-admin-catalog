@@ -1,7 +1,7 @@
 package org.fullcycle.admin.catalog.infrastructure.configuration;
 
 import com.google.cloud.storage.Storage;
-import org.fullcycle.admin.catalog.infrastructure.configuration.properties.GoogleCloudStorageProperties;
+import org.fullcycle.admin.catalog.infrastructure.configuration.properties.google.GoogleCloudStorageProperties;
 import org.fullcycle.admin.catalog.infrastructure.services.StorageService;
 import org.fullcycle.admin.catalog.infrastructure.services.impl.GoogleCloudStorageService;
 import org.fullcycle.admin.catalog.infrastructure.services.local.InMemoryStorageService;
