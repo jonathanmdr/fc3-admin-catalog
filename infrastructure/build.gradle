@@ -19,9 +19,13 @@ plugins {
 group "org.fullcycle.admin.catalog.infrastructure"
 version "1.0-SNAPSHOT"
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+}
+
 bootJar {
     archiveFileName = "application.jar"
-    destinationDirectory.set(file("${rootProject.buildDir}/libs"))
+    destinationDirectory.set(file("${rootProject.layout.buildDirectory}/libs"))
 }
 
 repositories {

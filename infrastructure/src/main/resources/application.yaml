@@ -44,6 +44,9 @@ spring:
             "[hibernate.dialect]": org.hibernate.dialect.MariaDBDialect
             "[hibernate.generate_statistics]": false
             "[hibernate.connection.provider_disables_autocommit]": true
+    threads:
+        virtual:
+            enabled: true
 
 springdoc:
     swagger-ui:
