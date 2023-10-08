@@ -2,8 +2,8 @@ package org.fullcycle.admin.catalog.infrastructure.video.persistence;
 
 import org.fullcycle.admin.catalog.domain.video.Rating;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import java.util.Optional;
 
 @Converter(autoApply = true)

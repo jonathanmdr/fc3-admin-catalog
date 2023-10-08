@@ -21,7 +21,7 @@ class CastMemberRepositoryTest {
     @Test
     void givenAnInvalidNullName_whenCallsSave_thenReturnError() {
         final var expectedPropertyName = "name";
-        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.castmember.persistence.CastMemberJpaEntity.name; nested exception is org.hibernate.PropertyValueException: not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.castmember.persistence.CastMemberJpaEntity.name";
+        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.castmember.persistence.CastMemberJpaEntity.name";
 
         final var castMember = CastMember.newMember("Vin Diesel", CastMemberType.ACTOR);
         final var entity = CastMemberJpaEntity.from(castMember);
@@ -37,7 +37,7 @@ class CastMemberRepositoryTest {
     @Test
     void givenAnInvalidNullCreatedAt_whenCallSave_thenReturnError() {
         final var expectedPropertyName = "createdAt";
-        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.castmember.persistence.CastMemberJpaEntity.createdAt; nested exception is org.hibernate.PropertyValueException: not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.castmember.persistence.CastMemberJpaEntity.createdAt";
+        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.castmember.persistence.CastMemberJpaEntity.createdAt";
 
         final var castMember = CastMember.newMember("Vin Diesel", CastMemberType.ACTOR);
         final var entity = CastMemberJpaEntity.from(castMember);
@@ -53,7 +53,7 @@ class CastMemberRepositoryTest {
     @Test
     void givenAnInvalidNullUpdatedAt_whenCallSave_thenReturnError() {
         final var expectedPropertyName = "updatedAt";
-        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.castmember.persistence.CastMemberJpaEntity.updatedAt; nested exception is org.hibernate.PropertyValueException: not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.castmember.persistence.CastMemberJpaEntity.updatedAt";
+        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.castmember.persistence.CastMemberJpaEntity.updatedAt";
 
         final var castMember = CastMember.newMember("Vin Diesel", CastMemberType.ACTOR);
         final var entity = CastMemberJpaEntity.from(castMember);

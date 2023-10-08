@@ -3,10 +3,10 @@ package org.fullcycle.admin.catalog.infrastructure.category.persistence;
 import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.Instant;
 
 @Entity(name = "Category")

@@ -20,7 +20,7 @@ class GenreRepositoryTest {
     @Test
     void givenAnInvalidNullName_whenCallsSave_thenReturnError() {
         final var expectedPropertyName = "name";
-        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity.name; nested exception is org.hibernate.PropertyValueException: not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity.name";
+        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity.name";
 
         final var genre = Genre.newGenre("Action", true);
         final var entity = GenreJpaEntity.from(genre);
@@ -36,7 +36,7 @@ class GenreRepositoryTest {
     @Test
     void givenAnInvalidNullCreatedAt_whenCallSave_thenReturnError() {
         final var expectedPropertyName = "createdAt";
-        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity.createdAt; nested exception is org.hibernate.PropertyValueException: not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity.createdAt";
+        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity.createdAt";
 
         final var genre = Genre.newGenre("Action", true);
         final var entity = GenreJpaEntity.from(genre);
@@ -52,7 +52,7 @@ class GenreRepositoryTest {
     @Test
     void givenAnInvalidNullUpdatedAt_whenCallSave_thenReturnError() {
         final var expectedPropertyName = "updatedAt";
-        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity.updatedAt; nested exception is org.hibernate.PropertyValueException: not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity.updatedAt";
+        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity.updatedAt";
 
         final var genre = Genre.newGenre("Action", true);
         final var entity = GenreJpaEntity.from(genre);

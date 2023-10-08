@@ -11,7 +11,7 @@ buildscript {
 plugins {
     id "java"
     id "application"
-    id "org.springframework.boot" version "2.7.0"
+    id "org.springframework.boot" version "3.1.4"
     id "io.spring.dependency-management" version "1.0.11.RELEASE"
     id "org.flywaydb.flyway" version "8.5.12"
 }
@@ -40,13 +40,13 @@ dependencies {
     }
     implementation("org.springframework.boot:spring-boot-starter-undertow")
 
-    implementation("org.springdoc:springdoc-openapi-webmvc-core:1.6.9")
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.9")
+    implementation('org.springdoc:springdoc-openapi-webmvc-core:1.6.15')
+    implementation('org.springdoc:springdoc-openapi-ui:1.6.15')
 
-    implementation("com.fasterxml.jackson.module:jackson-module-afterburner")
+    implementation('com.fasterxml.jackson.module:jackson-module-afterburner:2.14.2')
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    runtimeOnly("mysql:mysql-connector-java")
+    runtimeOnly("com.mysql:mysql-connector-j")
 
     implementation("org.flywaydb:flyway-mysql:8.5.12")
 

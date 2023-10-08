@@ -20,7 +20,7 @@ class CategoryRepositoryTest {
     @Test
     void givenAnInvalidNullName_whenCallSave_thenReturnError() {
         final var expectedPropertyName = "name";
-        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity.name; nested exception is org.hibernate.PropertyValueException: not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity.name";
+        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity.name";
 
         final var category = Category.newCategory("Filmes", "A categoria mais assistida", true);
         final var entity = CategoryJpaEntity.from(category);
@@ -36,7 +36,7 @@ class CategoryRepositoryTest {
     @Test
     void givenAnInvalidNullCreatedAt_whenCallSave_thenReturnError() {
         final var expectedPropertyName = "createdAt";
-        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity.createdAt; nested exception is org.hibernate.PropertyValueException: not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity.createdAt";
+        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity.createdAt";
 
         final var category = Category.newCategory("Filmes", "A categoria mais assistida", true);
         final var entity = CategoryJpaEntity.from(category);
@@ -52,7 +52,7 @@ class CategoryRepositoryTest {
     @Test
     void givenAnInvalidNullUpdatedAt_whenCallSave_thenReturnError() {
         final var expectedPropertyName = "updatedAt";
-        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity.updatedAt; nested exception is org.hibernate.PropertyValueException: not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity.updatedAt";
+        final var expectedMessageError = "not-null property references a null or transient value : org.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity.updatedAt";
 
         final var category = Category.newCategory("Filmes", "A categoria mais assistida", true);
         final var entity = CategoryJpaEntity.from(category);
