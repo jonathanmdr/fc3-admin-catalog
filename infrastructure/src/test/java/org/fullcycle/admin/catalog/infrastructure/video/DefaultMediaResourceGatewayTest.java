@@ -34,11 +34,13 @@ class DefaultMediaResourceGatewayTest {
 
     @Test
     void assertInjection() {
-        assertThat(storageService).isNotNull();
-        assertThat(storageService).isInstanceOf(InMemoryStorageService.class);
+        assertThat(storageService)
+            .isNotNull()
+            .isInstanceOf(InMemoryStorageService.class);
 
-        assertThat(gateway).isNotNull();
-        assertThat(gateway).isInstanceOf(DefaultMediaResourceGateway.class);
+        assertThat(gateway)
+            .isNotNull()
+            .isInstanceOf(DefaultMediaResourceGateway.class);
     }
 
     @Test
@@ -63,8 +65,9 @@ class DefaultMediaResourceGatewayTest {
 
         final var storedResource = this.storageService.get(expectedLocation);
 
-        assertThat(storedResource).isPresent();
-        assertThat(storedResource.get()).isEqualTo(expectedResource);
+        assertThat(storedResource)
+            .isPresent()
+            .contains(expectedResource);
     }
 
     @Test
@@ -85,8 +88,46 @@ class DefaultMediaResourceGatewayTest {
 
         final var storedResource = this.storageService.get(expectedLocation);
 
-        assertThat(storedResource).isPresent();
-        assertThat(storedResource.get()).isEqualTo(expectedResource);
+        assertThat(storedResource)
+            .isPresent()
+            .contains(expectedResource);
+    }
+
+    @Test
+    void givenAValidResource_whenCallsGetResource_thenReturnResource() {
+        final var expectedVideoId = VideoID.unique();
+        final var expectedType = MediaType.BANNER;
+        final var expectedResource = resource(expectedType);
+        final var expectedLocation = "videoId-%s/type-%s".formatted(expectedVideoId.getValue(), expectedType.name().toLowerCase());
+
+        this.storageService.store(
+            expectedLocation,
+            expectedResource
+        );
+
+        final var actual = this.gateway.getResource(expectedVideoId, expectedType);
+
+        assertThat(actual).isPresent();
+        assertThat(actual.get().content()).isNotNull();
+        assertThat(actual.get().name()).isEqualTo(expectedResource.name());
+        assertThat(actual.get().checksum()).isEqualTo(expectedResource.checksum());
+    }
+
+    @Test
+    void givenAnInvalidResource_whenCallsGetResource_thenReturnEmpty() {
+        final var expectedVideoId = VideoID.unique();
+        final var expectedType = MediaType.BANNER;
+        final var expectedResource = resource(expectedType);
+        final var expectedLocation = "videoId-%s/type-%s".formatted(expectedVideoId.getValue(), expectedType.name().toLowerCase());
+
+        this.storageService.store(
+            expectedLocation,
+            expectedResource
+        );
+
+        final var actual = this.gateway.getResource(VideoID.unique(), expectedType);
+
+        assertThat(actual).isEmpty();
     }
 
     @Test
@@ -106,11 +147,11 @@ class DefaultMediaResourceGatewayTest {
         expectedResources.forEach(id -> this.storageService.store(id, resource(mediaType())));
 
         final var inMemoryStorage = ((InMemoryStorageService) this.storageService);
-        assertThat(inMemoryStorage.storage().size()).isEqualTo(5);
+        assertThat(inMemoryStorage.storage()).hasSize(5);
 
         this.gateway.clearResources(videoToDelete);
 
-        assertThat(inMemoryStorage.storage().size()).isEqualTo(expectedResources.size());
+        assertThat(inMemoryStorage.storage()).hasSize(expectedResources.size());
         assertThat(inMemoryStorage.storage().keySet()).containsAll(expectedResources);
     }
 

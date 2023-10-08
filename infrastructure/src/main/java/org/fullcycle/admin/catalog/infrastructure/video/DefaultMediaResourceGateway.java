@@ -1,5 +1,6 @@
 package org.fullcycle.admin.catalog.infrastructure.video;
 
+import org.fullcycle.admin.catalog.domain.resource.Resource;
 import org.fullcycle.admin.catalog.domain.video.AudioVideoMedia;
 import org.fullcycle.admin.catalog.domain.video.ImageMedia;
 import org.fullcycle.admin.catalog.domain.video.MediaResourceGateway;
@@ -11,6 +12,7 @@ import org.fullcycle.admin.catalog.infrastructure.services.StorageService;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class DefaultMediaResourceGateway implements MediaResourceGateway {
@@ -30,7 +32,7 @@ public class DefaultMediaResourceGateway implements MediaResourceGateway {
 
     @Override
     public AudioVideoMedia storeAudioVideo(final VideoID videoId, final VideoResource videoResource) {
-        final var filePath = filePath(videoId, videoResource);
+        final var filePath = filePath(videoId, videoResource.type());
         final var resource = videoResource.resource();
 
         this.storageService.store(filePath, resource);
@@ -44,7 +46,7 @@ public class DefaultMediaResourceGateway implements MediaResourceGateway {
 
     @Override
     public ImageMedia storeImage(final VideoID videoId, final VideoResource videoResource) {
-        final var filePath = filePath(videoId, videoResource);
+        final var filePath = filePath(videoId, videoResource.type());
         final var resource = videoResource.resource();
 
         this.storageService.store(filePath, resource);
@@ -54,6 +56,11 @@ public class DefaultMediaResourceGateway implements MediaResourceGateway {
             resource.checksum(),
             filePath
         );
+    }
+
+    @Override
+    public Optional<Resource> getResource(final VideoID videoID, final MediaType mediaType) {
+        return this.storageService.get(filePath(videoID, mediaType));
     }
 
     @Override
@@ -70,10 +77,10 @@ public class DefaultMediaResourceGateway implements MediaResourceGateway {
         return locationPattern.replace("{videoId}", videoID.getValue());
     }
 
-    private String filePath(final VideoID videoID, final VideoResource videoResource) {
+    private String filePath(final VideoID videoID, final MediaType mediaType) {
         return folder(videoID)
             .concat("/")
-            .concat(fileName(videoResource.type()));
+            .concat(fileName(mediaType));
     }
 
 }
