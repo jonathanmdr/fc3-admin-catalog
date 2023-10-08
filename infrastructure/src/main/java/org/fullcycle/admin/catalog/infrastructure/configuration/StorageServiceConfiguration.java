@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import static org.fullcycle.admin.catalog.infrastructure.utils.ProfileUtils.DEVELOPMENT;
 import static org.fullcycle.admin.catalog.infrastructure.utils.ProfileUtils.PRODUCTION;
 
 @Configuration
@@ -19,12 +18,7 @@ public class StorageServiceConfiguration {
     private static final String STORAGE_SERVICE_BEAN_NAME = "storageService";
 
     @Bean(STORAGE_SERVICE_BEAN_NAME)
-    @Profile(
-        value = {
-            DEVELOPMENT,
-            PRODUCTION
-        }
-    )
+    @Profile(PRODUCTION)
     public StorageService googleCloudStorageService(
         final GoogleCloudStorageProperties googleCloudStorageProperties,
         final Storage storage

@@ -18,16 +18,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Base64;
 
-import static org.fullcycle.admin.catalog.infrastructure.utils.ProfileUtils.DEVELOPMENT;
 import static org.fullcycle.admin.catalog.infrastructure.utils.ProfileUtils.PRODUCTION;
 
 @Configuration
-@Profile(
-    value = {
-        DEVELOPMENT,
-        PRODUCTION
-    }
-)
+@Profile(PRODUCTION)
 public class GoogleCloudConfiguration {
 
     @Bean
