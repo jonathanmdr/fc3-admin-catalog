@@ -30,7 +30,7 @@ public abstract class Entity<ID extends Identifier> {
         return Collections.unmodifiableList(domainEvents);
     }
 
-    public void publishDomainEvents(final DomainEventPublisher domainEventPublisher) {
+    public void publishDomainEvents(final DomainEventPublisher<DomainEvent> domainEventPublisher) {
         if (domainEventPublisher != null) {
             getDomainEvents().forEach(domainEventPublisher::publish);
             this.domainEvents.clear();
