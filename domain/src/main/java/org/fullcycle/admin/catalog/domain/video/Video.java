@@ -329,29 +329,56 @@ public class Video extends AggregateRoot<VideoID> {
         return Objects.isNull(castMembers) ? Collections.emptySet() : Collections.unmodifiableSet(castMembers);
     }
 
-    public void setBanner(final ImageMedia banner) {
+    public Video setBanner(final ImageMedia banner) {
         this.banner = banner;
         this.updatedAt = Instant.now();
+        return with(this);
     }
 
-    public void setThumbnail(final ImageMedia thumbnail) {
+    public Video setThumbnail(final ImageMedia thumbnail) {
         this.thumbnail = thumbnail;
         this.updatedAt = Instant.now();
+        return with(this);
     }
 
-    public void setThumbnailHalf(final ImageMedia thumbnailHalf) {
+    public Video setThumbnailHalf(final ImageMedia thumbnailHalf) {
         this.thumbnailHalf = thumbnailHalf;
         this.updatedAt = Instant.now();
+        return with(this);
     }
 
-    public void setTrailer(final AudioVideoMedia trailer) {
+    public Video setTrailer(final AudioVideoMedia trailer) {
         this.trailer = trailer;
         this.updatedAt = Instant.now();
+        return with(this);
     }
 
-    public void setVideo(final AudioVideoMedia video) {
+    public Video setVideo(final AudioVideoMedia video) {
         this.video = video;
         this.updatedAt = Instant.now();
+        return with(this);
+    }
+
+    public Video processing(final MediaType mediaType) {
+        if (MediaType.VIDEO == mediaType) {
+            getVideo().ifPresent(audioVideoMedia -> this.setVideo(audioVideoMedia.processing()));
+        }
+
+        if (MediaType.TRAILER == mediaType) {
+            getTrailer().ifPresent(audioVideoMedia -> this.setTrailer(audioVideoMedia.processing()));
+        }
+        return with(this);
+    }
+
+    public Video completed(final MediaType mediaType, final String encodedPath) {
+        if (MediaType.VIDEO == mediaType) {
+            getVideo().ifPresent(audioVideoMedia -> this.setVideo(audioVideoMedia.completed(encodedPath)));
+        }
+
+        if (MediaType.TRAILER == mediaType) {
+            getTrailer().ifPresent(audioVideoMedia -> this.setTrailer(audioVideoMedia.completed(encodedPath)));
+        }
+        return with(this);
     }
 
 }

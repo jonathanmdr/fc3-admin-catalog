@@ -116,4 +116,26 @@ public class AudioVideoMedia extends ValueObject {
         return Objects.hash(checksum, rawLocation);
     }
 
+    public AudioVideoMedia processing() {
+        return AudioVideoMedia.with(
+            id(),
+            name(),
+            checksum(),
+            rawLocation(),
+            encodedLocation(),
+            MediaStatus.PROCESSING
+        );
+    }
+
+    public AudioVideoMedia completed(final String encodedPath) {
+        return AudioVideoMedia.with(
+            id(),
+            name(),
+            checksum(),
+            rawLocation(),
+            encodedPath,
+            MediaStatus.COMPLETED
+        );
+    }
+
 }
