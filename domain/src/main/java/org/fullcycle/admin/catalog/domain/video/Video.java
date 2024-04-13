@@ -3,6 +3,7 @@ package org.fullcycle.admin.catalog.domain.video;
 import org.fullcycle.admin.catalog.domain.AggregateRoot;
 import org.fullcycle.admin.catalog.domain.castmember.CastMemberID;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
+import org.fullcycle.admin.catalog.domain.events.DomainEvent;
 import org.fullcycle.admin.catalog.domain.genre.GenreID;
 import org.fullcycle.admin.catalog.domain.validation.ValidationHandler;
 
@@ -10,6 +11,7 @@ import java.time.Instant;
 import java.time.Year;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -57,9 +59,10 @@ public class Video extends AggregateRoot<VideoID> {
         final AudioVideoMedia video,
         final Set<CategoryID> categories,
         final Set<GenreID> genres,
-        final Set<CastMemberID> castMembers
+        final Set<CastMemberID> castMembers,
+        final List<DomainEvent> domainEvents
     ) {
-        super(id);
+        super(id, domainEvents);
         this.title = title;
         this.description = description;
         this.launchedAt = launchedAt;
@@ -111,7 +114,8 @@ public class Video extends AggregateRoot<VideoID> {
             null,
             categories,
             genres,
-            castMembers
+            castMembers,
+            null
         );
     }
 
@@ -153,12 +157,13 @@ public class Video extends AggregateRoot<VideoID> {
             video,
             categories,
             genres,
-            castMembers
+            castMembers,
+            null
         );
     }
 
     public static Video with(final Video video) {
-        return with(
+        return new Video(
             video.getId(),
             video.getTitle(),
             video.getDescription(),
@@ -176,7 +181,8 @@ public class Video extends AggregateRoot<VideoID> {
             video.getVideo().orElse(null),
             video.getCategories(),
             video.getGenres(),
-            video.getCastMembers()
+            video.getCastMembers(),
+            video.getDomainEvents()
         );
     }
 
