@@ -11,8 +11,8 @@ spring:
         properties:
             "[hibernate.format_sql]": true
 
-mariadb:
+mysql:
     url: localhost:3306
     schema: admin_catalog_videos
     username: root
-    password: 123456
+    password: root

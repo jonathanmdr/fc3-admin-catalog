@@ -1,5 +1,5 @@
-mariadb:
-    url: ${DATABASE_MARIADB_URL:localhost:3306}
+mysql:
+    url: ${DATABASE_MYSQL_URL:localhost:3306}
     schema: admin_catalog_videos
-    username: ${DATABASE_MARIADB_USERNAME:root}
-    password: ${DATABASE_MARIADB_PASSWORD:123456}
+    username: ${DATABASE_MYSQL_USERNAME:root}
+    password: ${DATABASE_MYSQL_PASSWORD:root}

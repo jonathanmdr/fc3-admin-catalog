@@ -4,16 +4,16 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.flywaydb:flyway-mysql:8.5.12")
+        classpath("org.flywaydb:flyway-mysql:10.11.0")
     }
 }
 
 plugins {
     id "java"
     id "application"
-    id "org.springframework.boot" version "3.1.4"
-    id "io.spring.dependency-management" version "1.0.11.RELEASE"
-    id "org.flywaydb.flyway" version "8.5.12"
+    id "org.springframework.boot" version "3.2.4"
+    id "io.spring.dependency-management" version "1.1.4"
+    id "org.flywaydb.flyway" version "10.11.0"
 }
 
 group "org.fullcycle.admin.catalog.infrastructure"
@@ -46,26 +46,25 @@ dependencies {
     }
     implementation("org.springframework.boot:spring-boot-starter-undertow")
 
-    implementation('org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0')
-
-    implementation('com.fasterxml.jackson.module:jackson-module-afterburner:2.14.2')
+    implementation('org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0')
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("com.mysql:mysql-connector-j")
 
-    implementation("org.flywaydb:flyway-mysql:8.5.12")
+    implementation("org.flywaydb:flyway-core:10.11.0")
+    implementation("org.flywaydb:flyway-mysql:10.11.0")
 
-    implementation 'com.google.cloud:google-cloud-storage:2.22.1'
-    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'com.google.cloud:google-cloud-storage:2.36.1'
+    implementation 'com.google.guava:guava:33.1.0-jre'
 
     testImplementation(project(path: ':domain', configuration: 'testClasses'))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.flywaydb:flyway-core")
 
-    testImplementation("org.testcontainers:testcontainers:1.17.2")
-    testImplementation("org.testcontainers:mysql:1.17.2")
-    testImplementation("org.testcontainers:junit-jupiter:1.17.2")
+    testImplementation("org.testcontainers:testcontainers:1.19.7")
+    testImplementation("org.testcontainers:mysql:1.19.7")
+    testImplementation("org.testcontainers:junit-jupiter:1.19.7")
 
     testRuntimeOnly("com.h2database:h2")
 }
@@ -73,7 +72,7 @@ dependencies {
 flyway {
     url = System.getenv("FLYWAY_DB") ?: "jdbc:mysql://localhost:3306/admin_catalog_videos"
     user = System.getenv("FLYWAY_USER") ?: "root"
-    password = System.getenv("FLYWAY_PASS") ?: "123456"
+    password = System.getenv("FLYWAY_PASS") ?: "root"
 }
 
 test {

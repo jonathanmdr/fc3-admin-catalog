@@ -1,21 +1,27 @@
-version: "3.7"
+version: "3.8"
 
 services:
-    mariadb:
-        container_name: admin-catalog-videos-mariadb
-        image: mariadb:10.5.16
+    mysql:
+        image: docker.io/bitnami/mysql:8.0
+        container_name: admin-catalog-videos-mysql
+        hostname: mysql
         restart: "no"
         environment:
-            - MYSQL_ROOT_PASSWORD=123456
-            - MYSQL_DATABASE=admin_catalog_videos
-        security_opt:
-            - seccomp:unconfined
+            MYSQL_USER: admin
+            MYSQL_DATABASE: admin_catalog_videos
+            ALLOW_EMPTY_PASSWORD: yes
+            MYSQL_ROOT_PASSWORD: root
         ports:
             - "3306:3306"
         volumes:
-            - admin-videos-volume:/var/lib/mysql
+            - admin-videos-volume:/bitnami/mysql/data
         networks:
             - admin-videos-network
+        healthcheck:
+            test: [ "CMD", "/opt/bitnami/scripts/mysql/healthcheck.sh" ]
+            interval: 15s
+            timeout: 5s
+            retries: 6
 
 volumes:
     admin-videos-volume:

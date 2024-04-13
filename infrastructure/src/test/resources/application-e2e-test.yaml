@@ -2,8 +2,8 @@ logging:
     level:
         ROOT: info
 
-mariadb:
-    url: localhost:${mariadb.port}
+mysql:
+    url: localhost:${mysql.port}
     schema: admin_catalog_videos
     username: root
-    password: 123456
+    password: root

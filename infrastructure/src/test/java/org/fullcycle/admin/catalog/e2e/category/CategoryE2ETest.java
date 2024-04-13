@@ -36,14 +36,14 @@ class CategoryE2ETest extends CategoryMockMvcDsl {
     private static final MySQLContainer MYSQL_CONTAINER = new MySQLContainer("mysql:latest")
         .withDatabaseName("admin_catalog_videos")
         .withUsername("root")
-        .withPassword("123456");
+        .withPassword("root");
 
     @DynamicPropertySource
     public static void setDataSourceProperties(final DynamicPropertyRegistry registry) {
         final var privatePort = 3306;
         final var exposedPort = MYSQL_CONTAINER.getMappedPort(privatePort);
-        System.out.printf("MariaDB container is running on port %s\n", exposedPort);
-        registry.add("mariadb.port", () -> exposedPort);
+        System.out.printf("MySQL container is running on port %s\n", exposedPort);
+        registry.add("mysql.port", () -> exposedPort);
     }
 
     @Override

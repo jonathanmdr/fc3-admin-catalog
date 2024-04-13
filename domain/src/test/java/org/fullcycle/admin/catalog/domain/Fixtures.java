@@ -7,6 +7,8 @@ import org.fullcycle.admin.catalog.domain.category.Category;
 import org.fullcycle.admin.catalog.domain.genre.Genre;
 import org.fullcycle.admin.catalog.domain.resource.Resource;
 import org.fullcycle.admin.catalog.domain.utils.IdentifierUtils;
+import org.fullcycle.admin.catalog.domain.video.AudioVideoMedia;
+import org.fullcycle.admin.catalog.domain.video.ImageMedia;
 import org.fullcycle.admin.catalog.domain.video.MediaType;
 import org.fullcycle.admin.catalog.domain.video.Rating;
 import org.fullcycle.admin.catalog.domain.video.Video;
@@ -164,6 +166,32 @@ public final class Fixtures {
                 VIDEO.getCreatedAt(),
                 VIDEO.getUpdatedAt()
             );
+        }
+
+    }
+
+    public static final class AudioVideoMediaFixture {
+
+        public static AudioVideoMedia audioVideo(final MediaType type) {
+            final var checksum = checksum();
+            return AudioVideoMedia.newAudioVideoMedia(
+                checksum,
+                type.name().toLowerCase(),
+                "/videos/" + checksum
+            );
+        }
+
+        public static ImageMedia image(final MediaType type) {
+            final var checksum = checksum();
+            return ImageMedia.newImageMedia(
+                checksum,
+                type.name().toLowerCase(),
+                "/images/" + checksum
+            );
+        }
+
+        public static String checksum() {
+            return "03fe62de";
         }
 
     }

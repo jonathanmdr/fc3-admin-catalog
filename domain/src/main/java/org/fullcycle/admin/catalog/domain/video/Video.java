@@ -329,4 +329,29 @@ public class Video extends AggregateRoot<VideoID> {
         return Objects.isNull(castMembers) ? Collections.emptySet() : Collections.unmodifiableSet(castMembers);
     }
 
+    public void setBanner(final ImageMedia banner) {
+        this.banner = banner;
+        this.updatedAt = Instant.now();
+    }
+
+    public void setThumbnail(final ImageMedia thumbnail) {
+        this.thumbnail = thumbnail;
+        this.updatedAt = Instant.now();
+    }
+
+    public void setThumbnailHalf(final ImageMedia thumbnailHalf) {
+        this.thumbnailHalf = thumbnailHalf;
+        this.updatedAt = Instant.now();
+    }
+
+    public void setTrailer(final AudioVideoMedia trailer) {
+        this.trailer = trailer;
+        this.updatedAt = Instant.now();
+    }
+
+    public void setVideo(final AudioVideoMedia video) {
+        this.video = video;
+        this.updatedAt = Instant.now();
+    }
+
 }
