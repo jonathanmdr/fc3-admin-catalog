@@ -16,3 +16,11 @@ mysql:
     schema: admin_catalog_videos
     username: root
     password: root
+
+amqp:
+    admin:
+        auto-create: true
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin

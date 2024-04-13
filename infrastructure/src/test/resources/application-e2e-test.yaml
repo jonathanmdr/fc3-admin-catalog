@@ -7,3 +7,14 @@ mysql:
     schema: admin_catalog_videos
     username: root
     password: root
+
+amqp:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+
+spring:
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration

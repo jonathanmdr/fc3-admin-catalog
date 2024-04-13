@@ -14,7 +14,7 @@ services:
         ports:
             - "3306:3306"
         volumes:
-            - admin-videos-volume:/bitnami/mysql/data
+            - admin-videos-mysql-data:/bitnami/mysql/data
         networks:
             - admin-videos-network
         healthcheck:
@@ -23,8 +23,28 @@ services:
             timeout: 5s
             retries: 6
 
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: admin-catalog-videos-rabbitmq
+        hostname: rabbitmq
+        restart: "no"
+        environment:
+            RABBITMQ_ERLANG_COOKIE: SWQOKODSQALRPCLNMEQG
+            RABBITMQ_DEFAULT_USER: admin
+            RABBITMQ_DEFAULT_PASS: admin
+            RABBITMQ_DEFAULT_VHOST: /
+        ports:
+            - "15672:15672"
+            - "5672:5672"
+        volumes:
+            - admin-videos-rabbitmq-data:/var/lib/rabbitmq
+        networks:
+            - admin-videos-network
+
 volumes:
-    admin-videos-volume:
+    admin-videos-mysql-data:
+        driver: local
+    admin-videos-rabbitmq-data:
         driver: local
 
 networks:

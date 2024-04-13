@@ -10,3 +10,6 @@ spring:
         console:
             enabled: true
             path: /h2
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration

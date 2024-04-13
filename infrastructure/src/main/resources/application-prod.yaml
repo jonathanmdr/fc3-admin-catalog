@@ -3,3 +3,9 @@ mysql:
     schema: admin_catalog_videos
     username: ${DATABASE_MYSQL_USERNAME:root}
     password: ${DATABASE_MYSQL_PASSWORD:root}
+
+amqp:
+    host: ${AMQP_RABBITMQ_HOST:localhost}
+    port: ${AMQP_RABBITMQ_PORT:5672}
+    username: ${AMQP_RABBITMQ_USERNAME:admin}
+    password: ${AMQP_RABBITMQ_PASSWORD:admin}
