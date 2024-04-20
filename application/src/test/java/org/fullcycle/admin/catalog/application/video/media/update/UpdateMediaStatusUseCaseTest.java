@@ -44,7 +44,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final var expectedFileName = "video.mp4";
         final var expectedMediaType = MediaType.VIDEO;
         final var expectedAudioVideoMedia = Fixtures.AudioVideoMediaFixture.audioVideo(expectedMediaType);
-        final var video = Fixtures.VideoFixture.video().setVideo(expectedAudioVideoMedia);
+        final var video = Fixtures.VideoFixture.video().updateVideoMedia(expectedAudioVideoMedia);
         final var expectedVideoId = video.getId();
 
         when(this.videoGateway.findById(any())).thenReturn(Optional.of(video));
@@ -84,7 +84,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final String expectedFileName = null;
         final var expectedMediaType = MediaType.VIDEO;
         final var expectedAudioVideoMedia = Fixtures.AudioVideoMediaFixture.audioVideo(expectedMediaType);
-        final var video = Fixtures.VideoFixture.video().setVideo(expectedAudioVideoMedia);
+        final var video = Fixtures.VideoFixture.video().updateVideoMedia(expectedAudioVideoMedia);
         final var expectedVideoId = video.getId();
 
         when(this.videoGateway.findById(any())).thenReturn(Optional.of(video));
@@ -124,7 +124,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final var expectedFileName = "video.mp4";
         final var expectedMediaType = MediaType.TRAILER;
         final var expectedAudioVideoMedia = Fixtures.AudioVideoMediaFixture.audioVideo(expectedMediaType);
-        final var video = Fixtures.VideoFixture.video().setTrailer(expectedAudioVideoMedia);
+        final var video = Fixtures.VideoFixture.video().updateTrailerMedia(expectedAudioVideoMedia);
         final var expectedVideoId = video.getId();
 
         when(this.videoGateway.findById(any())).thenReturn(Optional.of(video));
@@ -164,7 +164,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final String expectedFileName = null;
         final var expectedMediaType = MediaType.TRAILER;
         final var expectedAudioVideoMedia = Fixtures.AudioVideoMediaFixture.audioVideo(expectedMediaType);
-        final var video = Fixtures.VideoFixture.video().setTrailer(expectedAudioVideoMedia);
+        final var video = Fixtures.VideoFixture.video().updateTrailerMedia(expectedAudioVideoMedia);
         final var expectedVideoId = video.getId();
 
         when(this.videoGateway.findById(any())).thenReturn(Optional.of(video));
@@ -204,7 +204,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final var expectedFileName = "video.mp4";
         final var expectedMediaType = MediaType.VIDEO;
         final var expectedAudioVideoMedia = Fixtures.AudioVideoMediaFixture.audioVideo(expectedMediaType);
-        final var video = Fixtures.VideoFixture.video().setVideo(expectedAudioVideoMedia);
+        final var video = Fixtures.VideoFixture.video().updateVideoMedia(expectedAudioVideoMedia);
         final var expectedVideoId = video.getId();
 
         when(this.videoGateway.findById(any())).thenReturn(Optional.empty());

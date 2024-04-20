@@ -12,19 +12,40 @@ import org.fullcycle.admin.catalog.domain.exception.NotificationException;
 import org.fullcycle.admin.catalog.domain.genre.GenreGateway;
 import org.fullcycle.admin.catalog.domain.genre.GenreID;
 import org.fullcycle.admin.catalog.domain.resource.Resource;
-import org.fullcycle.admin.catalog.domain.video.*;
+import org.fullcycle.admin.catalog.domain.video.AudioVideoMedia;
+import org.fullcycle.admin.catalog.domain.video.ImageMedia;
+import org.fullcycle.admin.catalog.domain.video.MediaResourceGateway;
+import org.fullcycle.admin.catalog.domain.video.MediaStatus;
+import org.fullcycle.admin.catalog.domain.video.MediaType;
+import org.fullcycle.admin.catalog.domain.video.Video;
+import org.fullcycle.admin.catalog.domain.video.VideoGateway;
+import org.fullcycle.admin.catalog.domain.video.VideoID;
+import org.fullcycle.admin.catalog.domain.video.VideoResource;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.time.Year;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class UpdateVideoUseCaseTest extends UseCaseTest {
 
@@ -522,11 +543,11 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
             expectedGenres,
             expectedCastMembers
         );
-        createdVideo.addAudioVideoMediaVideo(expectedVideo);
-        createdVideo.addAudioVideoMediaTrailer(expectedTrailer);
-        createdVideo.addImageMediaBanner(expectedBanner);
-        createdVideo.addImageMediaThumbnail(expectedThumbnail);
-        createdVideo.addImageMediaThumbnailHalf(expectedThumbnailHalf);
+        createdVideo.updateVideoMedia(expectedVideo);
+        createdVideo.updateTrailerMedia(expectedTrailer);
+        createdVideo.updateBannerMedia(expectedBanner);
+        createdVideo.updateThumbnailMedia(expectedThumbnail);
+        createdVideo.updateThumbnailHalfMedia(expectedThumbnailHalf);
 
         final var expectedId = createdVideo.getId();
 

@@ -90,11 +90,11 @@ class DefaultVideoGatewayTest {
             expectedGenres,
             expectedCastMembers
         );
-        video.addAudioVideoMediaVideo(expectedVideo);
-        video.addAudioVideoMediaTrailer(expectedTrailer);
-        video.addImageMediaBanner(expectedBanner);
-        video.addImageMediaThumbnail(expectedThumbnail);
-        video.addImageMediaThumbnailHalf(expectedThumbnailHalf);
+        video.updateVideoMedia(expectedVideo);
+        video.updateTrailerMedia(expectedTrailer);
+        video.updateBannerMedia(expectedBanner);
+        video.updateThumbnailMedia(expectedThumbnail);
+        video.updateThumbnailHalfMedia(expectedThumbnailHalf);
 
         final var output = this.videoGateway.create(video);
 
@@ -273,12 +273,12 @@ class DefaultVideoGatewayTest {
                 expectedCategories,
                 expectedGenres,
                 expectedCastMembers
-            );
-        updatedVideo.addAudioVideoMediaVideo(expectedVideo);
-        updatedVideo.addAudioVideoMediaTrailer(expectedTrailer);
-        updatedVideo.addImageMediaBanner(expectedBanner);
-        updatedVideo.addImageMediaThumbnail(expectedThumbnail);
-        updatedVideo.addImageMediaThumbnailHalf(expectedThumbnailHalf);
+            )
+            .updateVideoMedia(expectedVideo)
+            .updateTrailerMedia(expectedTrailer)
+            .updateBannerMedia(expectedBanner)
+            .updateThumbnailMedia(expectedThumbnail)
+            .updateThumbnailHalfMedia(expectedThumbnailHalf);
 
         final var output = this.videoGateway.update(updatedVideo);
 
@@ -336,121 +336,6 @@ class DefaultVideoGatewayTest {
     }
 
     @Test
-    @Transactional
-    void givenAValidVideo_whenCallsUpdateWithoutRelations_shouldPersistIt() {
-        final var category = this.categoryGateway.create(Fixtures.CategoryFixture.classes());
-        final var genre = this.genreGateway.create(Fixtures.GenreFixture.technology());
-        final var castMember = this.castMemberGateway.create(Fixtures.CastMemberFixture.wesley());
-
-        final var expectedTitle = Fixtures.VideoFixture.title();
-        final var expectedDescription = Fixtures.VideoFixture.description();
-        final var expectedLaunchedAt = Year.of(Fixtures.VideoFixture.year());
-        final var expectedDuration = Fixtures.VideoFixture.duration();
-        final var expectedOpened = Fixtures.VideoFixture.opened();
-        final var expectedPublished = Fixtures.VideoFixture.published();
-        final var expectedRating = Fixtures.VideoFixture.rating();
-        final var expectedCategories = Set.of(category.getId());
-        final var expectedGenres = Set.of(genre.getId());
-        final var expectedCastMembers = Set.of(castMember.getId());
-        final var expectedVideoToPersist = AudioVideoMedia.newAudioVideoMedia("video", "a1s2d3", "/media/video");
-        final var expectedTrailerToPersist = AudioVideoMedia.newAudioVideoMedia("trailer", "d3s2a1", "/media/trailer");
-        final var expectedBannerToPersist = ImageMedia.newImageMedia("banner", "q1w2e3", "/media/banner");
-        final var expectedThumbnailToPersist = ImageMedia.newImageMedia("thumbnail", "e3w2q1", "/media/thumbnail");
-        final var expectedThumbnailHalfToPersist = ImageMedia.newImageMedia("thumbnail_half", "z1x2c3", "/media/thumbnail_half");
-
-        final var createdVideo = Video.newVideo(
-            expectedTitle,
-            expectedDescription,
-            expectedLaunchedAt,
-            expectedDuration,
-            expectedRating,
-            expectedOpened,
-            expectedPublished,
-            expectedCategories,
-            expectedGenres,
-            expectedCastMembers
-        );
-        createdVideo.addAudioVideoMediaVideo(expectedVideoToPersist);
-        createdVideo.addAudioVideoMediaTrailer(expectedTrailerToPersist);
-        createdVideo.addImageMediaBanner(expectedBannerToPersist);
-        createdVideo.addImageMediaThumbnail(expectedThumbnailToPersist);
-        createdVideo.addImageMediaThumbnailHalf(expectedThumbnailHalfToPersist);
-
-        final var video = this.videoGateway.create(createdVideo);
-
-        final var updatedVideo = Video.with(video)
-            .update(
-                expectedTitle,
-                expectedDescription,
-                expectedLaunchedAt,
-                expectedDuration,
-                expectedRating,
-                expectedOpened,
-                expectedPublished,
-                Set.of(),
-                Set.of(),
-                Set.of()
-            );
-        updatedVideo.removeAudioVideoMediaVideo();
-        updatedVideo.removeAudioVideoMediaTrailer();
-        updatedVideo.removeImageMediaBanner();
-        updatedVideo.removeImageMediaThumbnail();
-        updatedVideo.removeImageMediaThumbnailHalf();
-
-        final var output = this.videoGateway.update(updatedVideo);
-
-        assertThat(output).isNotNull();
-        assertThat(output.getId()).isNotNull();
-        assertThat(output.getId()).isEqualTo(updatedVideo.getId());
-        assertThat(output.getTitle()).isEqualTo(expectedTitle);
-        assertThat(output.getDescription()).isEqualTo(expectedDescription);
-        assertThat(output.getLaunchedAt()).isEqualTo(expectedLaunchedAt);
-        assertThat(output.getDuration()).isEqualTo(expectedDuration);
-        assertThat(output.isOpened()).isEqualTo(expectedOpened);
-        assertThat(output.isPublished()).isEqualTo(expectedPublished);
-        assertThat(output.getRating()).isEqualTo(expectedRating);
-        assertThat(output.getCategories()).isEmpty();
-        assertThat(output.getGenres()).isEmpty();
-        assertThat(output.getCastMembers()).isEmpty();
-        assertThat(output.getVideo()).isEmpty();
-        assertThat(output.getTrailer()).isEmpty();
-        assertThat(output.getBanner()).isEmpty();
-        assertThat(output.getThumbnail()).isEmpty();
-        assertThat(output.getThumbnailHalf()).isEmpty();
-        assertThat(output.getCreatedAt()).isNotNull();
-        assertThat(output.getUpdatedAt()).isNotNull();
-        assertThat(output.getUpdatedAt()).isAfter(output.getCreatedAt());
-
-        final var persisted = this.videoRepository.findById(output.getId().getValue())
-            .orElseThrow(() -> new IllegalStateException("Expected video cannot be null"));
-
-        assertThat(persisted).isNotNull();
-        assertThat(persisted.getId()).isNotNull();
-        assertThat(persisted.getId()).isEqualTo(updatedVideo.getId().getValue());
-        assertThat(persisted.getTitle()).isEqualTo(expectedTitle);
-        assertThat(persisted.getDescription()).isEqualTo(expectedDescription);
-        assertThat(persisted.getYearLaunched()).isEqualTo(expectedLaunchedAt.getValue());
-        assertThat(persisted.getDuration()).isEqualTo(expectedDuration);
-        assertThat(persisted.isOpened()).isEqualTo(expectedOpened);
-        assertThat(persisted.isPublished()).isEqualTo(expectedPublished);
-        assertThat(persisted.getRating()).isEqualTo(expectedRating);
-        assertThat(persisted.getCategoryIds()).isEmpty();
-        assertThat(persisted.getCategories()).isEmpty();
-        assertThat(persisted.getGenreIds()).isEmpty();
-        assertThat(persisted.getGenres()).isEmpty();
-        assertThat(persisted.getCastMemberIds()).isEmpty();
-        assertThat(persisted.getCastMembers()).isEmpty();
-        assertThat(persisted.getVideo()).isNull();
-        assertThat(persisted.getTrailer()).isNull();
-        assertThat(persisted.getBanner()).isNull();
-        assertThat(persisted.getThumbnail()).isNull();
-        assertThat(persisted.getThumbnailHalf()).isNull();
-        assertThat(persisted.getCreatedAt()).isNotNull();
-        assertThat(persisted.getUpdatedAt()).isNotNull();
-        assertThat(persisted.getUpdatedAt()).isAfter(persisted.getCreatedAt());
-    }
-
-    @Test
     void givenAValidVideoId_whenCallsDeleteById_shouldRemoveIt() {
         final var category = this.categoryGateway.create(Fixtures.CategoryFixture.classes());
         final var genre = this.genreGateway.create(Fixtures.GenreFixture.technology());
@@ -483,12 +368,12 @@ class DefaultVideoGatewayTest {
             expectedCategories,
             expectedGenres,
             expectedCastMembers
-        );
-        video.addAudioVideoMediaVideo(expectedVideo);
-        video.addAudioVideoMediaTrailer(expectedTrailer);
-        video.addImageMediaBanner(expectedBanner);
-        video.addImageMediaThumbnail(expectedThumbnail);
-        video.addImageMediaThumbnailHalf(expectedThumbnailHalf);
+        )
+        .updateVideoMedia(expectedVideo)
+        .updateTrailerMedia(expectedTrailer)
+        .updateBannerMedia(expectedBanner)
+        .updateThumbnailMedia(expectedThumbnail)
+        .updateThumbnailHalfMedia(expectedThumbnailHalf);
 
         final var output = this.videoGateway.create(video);
 
@@ -546,12 +431,12 @@ class DefaultVideoGatewayTest {
             expectedCategories,
             expectedGenres,
             expectedCastMembers
-        );
-        video.addAudioVideoMediaVideo(expectedVideo);
-        video.addAudioVideoMediaTrailer(expectedTrailer);
-        video.addImageMediaBanner(expectedBanner);
-        video.addImageMediaThumbnail(expectedThumbnail);
-        video.addImageMediaThumbnailHalf(expectedThumbnailHalf);
+        )
+        .updateVideoMedia(expectedVideo)
+        .updateTrailerMedia(expectedTrailer)
+        .updateBannerMedia(expectedBanner)
+        .updateThumbnailMedia(expectedThumbnail)
+        .updateThumbnailHalfMedia(expectedThumbnailHalf);
 
         final var output = this.videoGateway.create(video);
 

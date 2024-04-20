@@ -144,7 +144,7 @@ class VideoTest {
     }
 
     @Test
-    void givenValidVideo_whenCallsAddImageMediaBanner_shouldUpdateBanner() {
+    void givenValidVideo_whenCallsUpdateBannerMedia_shouldUpdateBanner() {
         final var expectedTitle = "System Design Interview";
         final var expectedDescription = """
             This is a simple System Design Interview with much insights into software development and architecture
@@ -172,7 +172,7 @@ class VideoTest {
         );
 
         final var expectedImageMedia = ImageMedia.newImageMedia("banner.jpeg", "a1b2c3", "/temp/banners");
-        actual.addImageMediaBanner(expectedImageMedia);
+        actual.updateBannerMedia(expectedImageMedia);
 
         assertNotNull(actual);
         assertNotNull(actual.getId());
@@ -202,7 +202,7 @@ class VideoTest {
     }
 
     @Test
-    void givenValidVideo_whenCallsAddImageMediaThumbnail_shouldUpdateThumbnail() {
+    void givenValidVideo_whenCallsUpdateThumbnailMedia_shouldUpdateThumbnail() {
         final var expectedTitle = "System Design Interview";
         final var expectedDescription = """
             This is a simple System Design Interview with much insights into software development and architecture
@@ -230,7 +230,7 @@ class VideoTest {
         );
 
         final var expectedImageMedia = ImageMedia.newImageMedia("thumbnail.jpeg", "a1b2c3", "/temp/thumbnails");
-        actual.addImageMediaThumbnail(expectedImageMedia);
+        actual.updateThumbnailMedia(expectedImageMedia);
 
         assertNotNull(actual);
         assertNotNull(actual.getId());
@@ -260,7 +260,7 @@ class VideoTest {
     }
 
     @Test
-    void givenValidVideo_whenCallsAddImageMediaThumbnailHalf_shouldUpdateThumbnailHalf() {
+    void givenValidVideo_whenCallsUpdateThumbnailHalfMedia_shouldUpdateThumbnailHalf() {
         final var expectedTitle = "System Design Interview";
         final var expectedDescription = """
             This is a simple System Design Interview with much insights into software development and architecture
@@ -288,7 +288,7 @@ class VideoTest {
         );
 
         final var expectedImageMedia = ImageMedia.newImageMedia("thumbnail-half.jpeg", "a1b2c3", "/temp/thumbnails");
-        actual.addImageMediaThumbnailHalf(expectedImageMedia);
+        actual.updateThumbnailHalfMedia(expectedImageMedia);
 
         assertNotNull(actual);
         assertNotNull(actual.getId());
@@ -318,7 +318,7 @@ class VideoTest {
     }
 
     @Test
-    void givenValidVideo_whenCallsAddAudioVideoMediaTrailer_shouldUpdateTrailer() {
+    void givenValidVideo_whenCallsUpdateTrailerMedia_shouldUpdateTrailer() {
         final var expectedTitle = "System Design Interview";
         final var expectedDescription = """
             This is a simple System Design Interview with much insights into software development and architecture
@@ -352,7 +352,9 @@ class VideoTest {
             "/temp/videos",
             MediaStatus.PENDING
         );
-        actual.addAudioVideoMediaTrailer(expectedAudioVideoMedia);
+        actual.updateTrailerMedia(expectedAudioVideoMedia);
+
+        final var expectedEvent = VideoMediaCreated.with(actual.getId().getValue(), expectedAudioVideoMedia.rawLocation());
 
         assertNotNull(actual);
         assertNotNull(actual.getId());
@@ -375,6 +377,12 @@ class VideoTest {
         assertTrue(actual.getBanner().isEmpty());
         assertTrue(actual.getThumbnail().isEmpty());
         assertTrue(actual.getThumbnailHalf().isEmpty());
+        assertEquals(1, actual.getDomainEvents().size());
+
+        final var actualDomainEvent = (VideoMediaCreated) actual.getDomainEvents().getFirst();
+        assertEquals(expectedEvent.resourceId(), actualDomainEvent.resourceId());
+        assertEquals(expectedEvent.filePath(), actualDomainEvent.filePath());
+        assertNotNull(actualDomainEvent.occurredOn());
 
         assertDoesNotThrow(
             () -> actual.validate(ThrowsValidationHandler.create())
@@ -382,7 +390,7 @@ class VideoTest {
     }
 
     @Test
-    void givenValidVideo_whenCallsAddAudioVideoMediaVideo_shouldUpdateVideo() {
+    void givenValidVideo_whenCallsUpdateVideoMedia_shouldUpdateVideo() {
         final var expectedTitle = "System Design Interview";
         final var expectedDescription = """
             This is a simple System Design Interview with much insights into software development and architecture
@@ -416,7 +424,9 @@ class VideoTest {
             "/temp/videos",
             MediaStatus.PENDING
         );
-        actual.addAudioVideoMediaVideo(expectedAudioVideoMedia);
+        actual.updateVideoMedia(expectedAudioVideoMedia);
+
+        final var expectedEvent = VideoMediaCreated.with(actual.getId().getValue(), expectedAudioVideoMedia.rawLocation());
 
         assertNotNull(actual);
         assertNotNull(actual.getId());
@@ -439,6 +449,12 @@ class VideoTest {
         assertTrue(actual.getBanner().isEmpty());
         assertTrue(actual.getThumbnail().isEmpty());
         assertTrue(actual.getThumbnailHalf().isEmpty());
+        assertEquals(1, actual.getDomainEvents().size());
+
+        final var actualDomainEvent = (VideoMediaCreated) actual.getDomainEvents().getFirst();
+        assertEquals(expectedEvent.resourceId(), actualDomainEvent.resourceId());
+        assertEquals(expectedEvent.filePath(), actualDomainEvent.filePath());
+        assertNotNull(actualDomainEvent.occurredOn());
 
         assertDoesNotThrow(
             () -> actual.validate(ThrowsValidationHandler.create())

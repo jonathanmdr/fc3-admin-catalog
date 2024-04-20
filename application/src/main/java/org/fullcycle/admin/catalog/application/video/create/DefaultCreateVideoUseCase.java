@@ -99,11 +99,11 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
             final var thumbnailHalfMedia = command.thumbnailHalf()
                 .map(resource -> this.mediaResourceGateway.storeImage(videoId, VideoResource.with(resource, THUMBNAIL_HALF)));
 
-            videoMedia.ifPresent(video::addAudioVideoMediaVideo);
-            trailerMedia.ifPresent(video::addAudioVideoMediaTrailer);
-            bannerMedia.ifPresent(video::addImageMediaBanner);
-            thumbnailMedia.ifPresent(video::addImageMediaThumbnail);
-            thumbnailHalfMedia.ifPresent(video::addImageMediaThumbnailHalf);
+            videoMedia.ifPresent(video::updateVideoMedia);
+            trailerMedia.ifPresent(video::updateTrailerMedia);
+            bannerMedia.ifPresent(video::updateBannerMedia);
+            thumbnailMedia.ifPresent(video::updateThumbnailMedia);
+            thumbnailHalfMedia.ifPresent(video::updateThumbnailHalfMedia);
 
             return this.videoGateway.create(video);
         } catch (final Throwable throwable) {

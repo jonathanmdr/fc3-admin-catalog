@@ -73,11 +73,11 @@ class GetVideoByIdUseCaseTest extends UseCaseTest {
             expectedGenres,
             expectedCastMembers
         );
-        video.addAudioVideoMediaVideo(expectedVideo);
-        video.addAudioVideoMediaTrailer(expectedTrailer);
-        video.addImageMediaBanner(expectedBanner);
-        video.addImageMediaThumbnail(expectedThumbnail);
-        video.addImageMediaThumbnailHalf(expectedThumbnailHalf);
+        video.updateVideoMedia(expectedVideo);
+        video.updateTrailerMedia(expectedTrailer);
+        video.updateBannerMedia(expectedBanner);
+        video.updateThumbnailMedia(expectedThumbnail);
+        video.updateThumbnailHalfMedia(expectedThumbnailHalf);
 
         final var expectedId = video.getId();
 

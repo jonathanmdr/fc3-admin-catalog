@@ -27,11 +27,11 @@ public class DefaultUploadMediaUseCase extends UploadMediaUseCase {
             .orElseThrow(() -> notFoundException(videoId));
 
         switch (resource.type()) {
-            case VIDEO -> video.setVideo(this.mediaResourceGateway.storeAudioVideo(videoId, resource));
-            case TRAILER -> video.setTrailer(this.mediaResourceGateway.storeAudioVideo(videoId, resource));
-            case BANNER -> video.setBanner(this.mediaResourceGateway.storeImage(videoId, resource));
-            case THUMBNAIL -> video.setThumbnail(this.mediaResourceGateway.storeImage(videoId, resource));
-            case THUMBNAIL_HALF -> video.setThumbnailHalf(this.mediaResourceGateway.storeImage(videoId, resource));
+            case VIDEO -> video.updateVideoMedia(this.mediaResourceGateway.storeAudioVideo(videoId, resource));
+            case TRAILER -> video.updateTrailerMedia(this.mediaResourceGateway.storeAudioVideo(videoId, resource));
+            case BANNER -> video.updateBannerMedia(this.mediaResourceGateway.storeImage(videoId, resource));
+            case THUMBNAIL -> video.updateThumbnailMedia(this.mediaResourceGateway.storeImage(videoId, resource));
+            case THUMBNAIL_HALF -> video.updateThumbnailHalfMedia(this.mediaResourceGateway.storeImage(videoId, resource));
         }
 
         return UploadMediaOutput.with(this.videoGateway.update(video), resource.type());
