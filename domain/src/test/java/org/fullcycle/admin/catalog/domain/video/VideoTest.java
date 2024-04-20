@@ -6,6 +6,7 @@ import org.fullcycle.admin.catalog.domain.genre.GenreID;
 import org.fullcycle.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.time.Year;
 import java.util.Set;
 
@@ -65,6 +66,7 @@ class VideoTest {
         assertTrue(actual.getBanner().isEmpty());
         assertTrue(actual.getThumbnail().isEmpty());
         assertTrue(actual.getThumbnailHalf().isEmpty());
+        assertTrue(actual.getDomainEvents().isEmpty());
 
         assertDoesNotThrow(
             () -> actual.validate(ThrowsValidationHandler.create())
@@ -85,6 +87,7 @@ class VideoTest {
         final var expectedCategories = Set.of(CategoryID.unique());
         final var expectedGenres = Set.of(GenreID.unique());
         final var expectedCastMembers = Set.of(CastMemberID.unique());
+        final var expectedEvent = VideoMediaCreated.with("id", "file");
 
         final var video = Video.newVideo(
             "Bla",
@@ -98,6 +101,7 @@ class VideoTest {
             Set.of(),
             Set.of()
         );
+        video.registerEvent(expectedEvent);
 
         final var actual = Video.with(video).update(
             expectedTitle,
@@ -132,6 +136,7 @@ class VideoTest {
         assertTrue(actual.getBanner().isEmpty());
         assertTrue(actual.getThumbnail().isEmpty());
         assertTrue(actual.getThumbnailHalf().isEmpty());
+        assertTrue(actual.getDomainEvents().contains(expectedEvent));
 
         assertDoesNotThrow(
             () -> actual.validate(ThrowsValidationHandler.create())
@@ -438,6 +443,33 @@ class VideoTest {
         assertDoesNotThrow(
             () -> actual.validate(ThrowsValidationHandler.create())
         );
+    }
+
+    @Test
+    void givenValidParams_whenCallsWith_shouldCreateWithoutEvents() {
+        final var actual = Video.with(
+            VideoID.unique(),
+            "System Design Interview",
+            "This is a simple System Design Interview with much insights into software development and architecture",
+            Year.of(2023),
+            120.10,
+            Rating.L,
+            false,
+            false,
+            Instant.now(),
+            Instant.now(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            Set.of(CategoryID.unique()),
+            Set.of(GenreID.unique()),
+            Set.of(CastMemberID.unique())
+        );
+
+        assertNotNull(actual.getDomainEvents());
+        assertTrue(actual.getDomainEvents().isEmpty());
     }
 
 }

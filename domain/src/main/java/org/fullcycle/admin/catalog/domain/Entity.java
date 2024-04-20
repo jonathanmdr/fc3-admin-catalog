@@ -9,12 +9,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Entity<ID extends Identifier> {
+public abstract class Entity<T extends Identifier> {
 
-    protected final ID id;
+    protected final T id;
     private final List<DomainEvent> domainEvents;
 
-    protected Entity(final ID id, final List<DomainEvent> domainEvents) {
+    protected Entity(final T id, final List<DomainEvent> domainEvents) {
         Objects.requireNonNull(id, "'id' should not be null");
         this.id = id;
         this.domainEvents = new ArrayList<>(domainEvents == null ? Collections.emptyList() : domainEvents);
@@ -22,7 +22,7 @@ public abstract class Entity<ID extends Identifier> {
 
     public abstract void validate(final ValidationHandler handler);
 
-    public ID getId() {
+    public T getId() {
         return id;
     }
 
@@ -30,7 +30,7 @@ public abstract class Entity<ID extends Identifier> {
         return Collections.unmodifiableList(domainEvents);
     }
 
-    public void publishDomainEvents(final DomainEventPublisher<DomainEvent> domainEventPublisher) {
+    public void publishDomainEvents(final DomainEventPublisher domainEventPublisher) {
         if (domainEventPublisher != null) {
             getDomainEvents().forEach(domainEventPublisher::publish);
             this.domainEvents.clear();

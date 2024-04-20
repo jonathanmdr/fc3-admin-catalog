@@ -1,8 +1,8 @@
 package org.fullcycle.admin.catalog.domain.events;
 
 @FunctionalInterface
-public interface DomainEventPublisher<T extends DomainEvent> {
+public interface DomainEventPublisher {
 
-    void publish(final T event);
+    void publish(final DomainEvent event);
 
 }
