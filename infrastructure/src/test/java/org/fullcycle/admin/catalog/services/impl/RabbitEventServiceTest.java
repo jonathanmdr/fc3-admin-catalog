@@ -36,7 +36,7 @@ class RabbitEventServiceTest {
 
         this.subject.send(notification);
 
-        final var actual = this.harness.getNextInvocationDataFor(VIDEO_CREATED_LISTENER, 3, TimeUnit.SECONDS);
+        final var actual = this.harness.getNextInvocationDataFor(VIDEO_CREATED_LISTENER, 1, TimeUnit.SECONDS);
 
         assertThat(actual)
             .isNotNull()
