@@ -1,8 +1,7 @@
-package org.fullcycle.admin.catalog.infrastructure.models.castmember;
+package org.fullcycle.admin.catalog.infrastructure.castmember.models;
 
 import org.fullcycle.admin.catalog.JacksonTest;
 import org.fullcycle.admin.catalog.domain.castmember.CastMemberID;
-import org.fullcycle.admin.catalog.infrastructure.castmember.models.GetCastMemberResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
@@ -12,10 +11,10 @@ import java.time.Instant;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JacksonTest
-class GetCastMemberResponseTest {
+class ListCastMembersResponseTest {
 
     @Autowired
-    private JacksonTester<GetCastMemberResponse> jacksonTester;
+    private JacksonTester<ListCastMembersResponse> jacksonTester;
 
     @Test
     void testMarshall() throws Exception {
@@ -23,14 +22,12 @@ class GetCastMemberResponseTest {
         final var expectedName = "Vin Diesel";
         final var expectedType = "ACTOR";
         final var expectedCreatedAt = Instant.now();
-        final var expectedUpdatedAt = Instant.now();
 
-        final var response = new GetCastMemberResponse(
+        final var response = new ListCastMembersResponse(
             expectedId,
             expectedName,
             expectedType,
-            expectedCreatedAt,
-            expectedUpdatedAt
+            expectedCreatedAt
         );
 
         final var actual = this.jacksonTester.write(response);
@@ -39,8 +36,7 @@ class GetCastMemberResponseTest {
             .hasJsonPath("$.id", expectedId)
             .hasJsonPath("$.name", expectedName)
             .hasJsonPath("$.type", expectedType)
-            .hasJsonPath("$.created_at", expectedCreatedAt.toString())
-            .hasJsonPath("$.updated_at", expectedUpdatedAt.toString());
+            .hasJsonPath("$.created_at", expectedCreatedAt.toString());
     }
 
     @Test
@@ -49,23 +45,20 @@ class GetCastMemberResponseTest {
         final var expectedName = "Vin Diesel";
         final var expectedType = "ACTOR";
         final var expectedCreatedAt = Instant.now();
-        final var expectedUpdatedAt = Instant.now();
 
         final var json = """
             {
               "id": "%s",
               "name": "%s",
               "type": "%s",
-              "created_at": "%s",
-              "updated_at": "%s"
+              "created_at": "%s"
             }
             """
             .formatted(
                 expectedId,
                 expectedName,
                 expectedType,
-                expectedCreatedAt.toString(),
-                expectedUpdatedAt.toString()
+                expectedCreatedAt.toString()
             );
 
         final var actual = this.jacksonTester.parse(json);
@@ -74,8 +67,7 @@ class GetCastMemberResponseTest {
             .hasFieldOrPropertyWithValue("id", expectedId)
             .hasFieldOrPropertyWithValue("name", expectedName)
             .hasFieldOrPropertyWithValue("type", expectedType)
-            .hasFieldOrPropertyWithValue("createdAt", expectedCreatedAt)
-            .hasFieldOrPropertyWithValue("updatedAt", expectedUpdatedAt);
+            .hasFieldOrPropertyWithValue("createdAt", expectedCreatedAt);
     }
 
 }

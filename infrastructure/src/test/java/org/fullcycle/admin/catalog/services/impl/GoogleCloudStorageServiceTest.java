@@ -130,7 +130,7 @@ class GoogleCloudStorageServiceTest {
         doReturn(List.of(expectedTrailerBlob, expectedBannerBlob))
             .when(expectedPage).iterateAll();
 
-        final var expected = List.of(MediaType.TRAILER.name().toLowerCase(), MediaType.BANNER.name().toLowerCase());
+        final var expected = List.of(MediaType.TRAILER.name(), MediaType.BANNER.name());
         final var actual = this.service.findAll("er");
 
         assertThat(actual).isNotEmpty();

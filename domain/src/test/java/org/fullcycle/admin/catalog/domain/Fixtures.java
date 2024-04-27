@@ -32,9 +32,14 @@ public final class Fixtures {
     public static final class CategoryFixture {
 
         private static final Category CLASSES = Category.newCategory("Classes", "Technology classes", true);
+        private static final Category LIVES = Category.newCategory("Lives", "Technology lives", true);
 
         public static Category classes() {
             return Category.with(CLASSES);
+        }
+
+        public static Category lives() {
+            return Category.with(LIVES);
         }
 
     }
@@ -42,9 +47,14 @@ public final class Fixtures {
     public static final class GenreFixture {
 
         private static final Genre TECHNOLOGY = Genre.newGenre("Technology", true);
+        private static final Genre BUSINESS = Genre.newGenre("Business", true);
 
         public static Genre technology() {
             return Genre.with(TECHNOLOGY);
+        }
+
+        public static Genre business() {
+            return Genre.with(BUSINESS);
         }
 
     }
@@ -149,7 +159,7 @@ public final class Fixtures {
                     IdentifierUtils.unique(),
                     content,
                     contentType,
-                    mediaType.name().toLowerCase()
+                    mediaType.name()
             );
         }
 

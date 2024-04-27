@@ -1,8 +1,7 @@
-package org.fullcycle.admin.catalog.infrastructure.models.castmember;
+package org.fullcycle.admin.catalog.infrastructure.castmember.models;
 
 import org.fullcycle.admin.catalog.JacksonTest;
 import org.fullcycle.admin.catalog.domain.castmember.CastMemberID;
-import org.fullcycle.admin.catalog.infrastructure.castmember.models.UpdateCastMemberResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
@@ -10,16 +9,16 @@ import org.springframework.boot.test.json.JacksonTester;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JacksonTest
-class UpdateCastMemberResponseTest {
+class CreateCastMemberResponseTest {
 
     @Autowired
-    private JacksonTester<UpdateCastMemberResponse> jacksonTester;
+    private JacksonTester<CreateCastMemberResponse> jacksonTester;
 
     @Test
     void testMarshall() throws Exception {
         final var expectedId = CastMemberID.unique().getValue();
 
-        final var response = new UpdateCastMemberResponse(expectedId);
+        final var response = new CreateCastMemberResponse(expectedId);
 
         final var actual = this.jacksonTester.write(response);
 

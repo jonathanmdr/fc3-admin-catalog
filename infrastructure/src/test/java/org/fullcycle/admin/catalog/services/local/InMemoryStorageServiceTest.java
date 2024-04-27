@@ -26,7 +26,7 @@ class InMemoryStorageServiceTest {
     void givenAValidParams_whenCallsStore_shouldBeSaveIt() {
         final var resource = Fixtures.ResourceFixture.resource(MediaType.TRAILER);
 
-        assertThat(this.service.storage().size()).isZero();
+        assertThat(this.service.storage()).hasSize(0);
 
         this.service.store(resource.name(), resource);
 
@@ -91,10 +91,10 @@ class InMemoryStorageServiceTest {
         this.service.store(banner.name(), banner);
         this.service.store(thumbnail.name(), thumbnail);
 
-        assertThat(this.service.storage().size()).isEqualTo(3);
+        assertThat(this.service.storage()).hasSize(3);
 
-        final var expected = List.of(MediaType.TRAILER.name().toLowerCase());
-        final var actual = this.service.findAll("tra");
+        final var expected = List.of(MediaType.TRAILER.name());
+        final var actual = this.service.findAll("TRA");
 
         assertThat(actual).isNotEmpty();
         assertThat(actual.size()).isOne();
@@ -112,11 +112,9 @@ class InMemoryStorageServiceTest {
         this.service.store(banner.name(), banner);
         this.service.store(thumbnail.name(), thumbnail);
 
-        final var expected = List.of();
         final var actual = this.service.findAll("foo");
 
         assertThat(actual).isEmpty();
-        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -129,16 +127,13 @@ class InMemoryStorageServiceTest {
         this.service.store(banner.name(), banner);
         this.service.store(thumbnail.name(), thumbnail);
 
-        final var expected = List.of();
         var actual = this.service.findAll(null);
 
         assertThat(actual).isEmpty();
-        assertThat(actual).isEqualTo(expected);
 
         actual = this.service.findAll("  ");
 
         assertThat(actual).isEmpty();
-        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -151,7 +146,7 @@ class InMemoryStorageServiceTest {
         this.service.store(banner.name(), banner);
         this.service.store(thumbnail.name(), thumbnail);
 
-        assertThat(this.service.storage().size()).isEqualTo(3);
+        assertThat(this.service.storage()).hasSize(3);
 
         this.service.deleteAll(List.of(trailer.name(), banner.name()));
 
@@ -159,7 +154,7 @@ class InMemoryStorageServiceTest {
 
         assertThat(actual).isNotEmpty();
         assertThat(actual.size()).isOne();
-        assertThat(actual.get(thumbnail.name())).isEqualTo(thumbnail);
+        assertThat(actual).containsEntry(thumbnail.name(), thumbnail);
     }
 
     @Test
@@ -172,7 +167,7 @@ class InMemoryStorageServiceTest {
         this.service.store(banner.name(), banner);
         this.service.store(thumbnail.name(), thumbnail);
 
-        assertThat(this.service.storage().size()).isEqualTo(3);
+        assertThat(this.service.storage()).hasSize(3);
 
         this.service.deleteAll(List.of("bla", "foo"));
 
@@ -184,9 +179,10 @@ class InMemoryStorageServiceTest {
             thumbnail.name(), thumbnail
         );
 
-        assertThat(actual).isNotEmpty();
-        assertThat(actual.size()).isEqualTo(3);
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual)
+            .isNotEmpty()
+            .hasSize(3)
+            .isEqualTo(expected);
     }
 
     @Test
@@ -199,7 +195,7 @@ class InMemoryStorageServiceTest {
         this.service.store(banner.name(), banner);
         this.service.store(thumbnail.name(), thumbnail);
 
-        assertThat(this.service.storage().size()).isEqualTo(3);
+        assertThat(this.service.storage()).hasSize(3);
 
         this.service.deleteAll(List.of());
 
@@ -211,9 +207,10 @@ class InMemoryStorageServiceTest {
             thumbnail.name(), thumbnail
         );
 
-        assertThat(actual).isNotEmpty();
-        assertThat(actual.size()).isEqualTo(3);
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual)
+            .isNotEmpty()
+            .hasSize(3)
+            .isEqualTo(expected);
     }
 
 }

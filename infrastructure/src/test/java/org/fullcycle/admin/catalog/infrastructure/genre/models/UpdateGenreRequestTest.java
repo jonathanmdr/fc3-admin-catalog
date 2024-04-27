@@ -1,28 +1,33 @@
-package org.fullcycle.admin.catalog.infrastructure.models.category;
+package org.fullcycle.admin.catalog.infrastructure.genre.models;
 
 import org.fullcycle.admin.catalog.JacksonTest;
-import org.fullcycle.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
+import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JacksonTest
-class UpdateCategoryRequestTest {
+class UpdateGenreRequestTest {
 
     @Autowired
-    private JacksonTester<UpdateCategoryRequest> jacksonTester;
+    private JacksonTester<UpdateGenreRequest> jacksonTester;
 
     @Test
     void testMarshall() throws Exception {
-        final var expectedName = "Filmes";
-        final var expectedDescription = "A categoria mais assistida";
+        final var expectedName = "Movies";
+        final var expectedCategories = List.of(
+            CategoryID.unique().getValue(),
+            CategoryID.unique().getValue()
+        );
         final var expectedIsActive = true;
 
-        final var response = new UpdateCategoryRequest(
+        final var response = new UpdateGenreRequest(
             expectedName,
-            expectedDescription,
+            expectedCategories,
             expectedIsActive
         );
 
@@ -30,26 +35,30 @@ class UpdateCategoryRequestTest {
 
         assertThat(actual)
             .hasJsonPath("$.name", expectedName)
-            .hasJsonPath("$.description", expectedDescription)
+            .hasJsonPath("$.categories_ids", expectedCategories)
             .hasJsonPath("$.is_active", expectedIsActive);
     }
 
     @Test
     void testUnmarshall() throws Exception {
-        final var expectedName = "Filmes";
-        final var expectedDescription = "A categoria mais assistida";
+        final var expectedName = "Movies";
+        final var expectedCategories = List.of(
+            CategoryID.unique().getValue(),
+            CategoryID.unique().getValue()
+        );
         final var expectedIsActive = true;
 
         final var json = """
             {
               "name": "%s",
-              "description": "%s",
+              "categories_ids": ["%s", "%s"],
               "is_active": %s
             }
             """
             .formatted(
                 expectedName,
-                expectedDescription,
+                expectedCategories.get(0),
+                expectedCategories.get(1),
                 expectedIsActive
             );
 
@@ -57,7 +66,7 @@ class UpdateCategoryRequestTest {
 
         assertThat(actual)
             .hasFieldOrPropertyWithValue("name", expectedName)
-            .hasFieldOrPropertyWithValue("description", expectedDescription)
+            .hasFieldOrPropertyWithValue("categories", expectedCategories)
             .hasFieldOrPropertyWithValue("active", expectedIsActive);
     }
 

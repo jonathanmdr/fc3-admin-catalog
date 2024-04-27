@@ -6,6 +6,8 @@ import org.fullcycle.admin.catalog.infrastructure.configuration.annotations.Vide
 import org.fullcycle.admin.catalog.infrastructure.configuration.json.Json;
 import org.fullcycle.admin.catalog.infrastructure.services.EventService;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.test.RabbitListenerTestHarness;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +47,11 @@ class RabbitEventServiceTest {
     @Component
     static class VideoCreatedNewsListener {
 
+        private static final Logger LOGGER = LoggerFactory.getLogger(VideoCreatedNewsListener.class);
+
         @RabbitListener(id = VIDEO_CREATED_LISTENER, queues = "${amqp.queues.video-created.routing-key}")
         public void onVideoCreated(@Payload String message) {
-            System.out.println("Message received: " + message);
+            LOGGER.info("Received message: {}", message);
         }
 
     }

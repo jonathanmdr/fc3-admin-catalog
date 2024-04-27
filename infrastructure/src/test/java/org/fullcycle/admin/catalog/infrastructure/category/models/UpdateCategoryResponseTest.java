@@ -1,8 +1,7 @@
-package org.fullcycle.admin.catalog.infrastructure.models.genre;
+package org.fullcycle.admin.catalog.infrastructure.category.models;
 
 import org.fullcycle.admin.catalog.JacksonTest;
-import org.fullcycle.admin.catalog.domain.genre.GenreID;
-import org.fullcycle.admin.catalog.infrastructure.genre.models.CreateGenreResponse;
+import org.fullcycle.admin.catalog.domain.category.CategoryID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
@@ -10,16 +9,16 @@ import org.springframework.boot.test.json.JacksonTester;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JacksonTest
-class CreateGenreResponseTest {
+class UpdateCategoryResponseTest {
 
     @Autowired
-    private JacksonTester<CreateGenreResponse> jacksonTester;
+    private JacksonTester<UpdateCategoryResponse> jacksonTester;
 
     @Test
     void testMarshall() throws Exception {
-        final var expectedId = GenreID.unique().getValue();
+        final var expectedId = CategoryID.unique().getValue();
 
-        final var response = new CreateGenreResponse(expectedId);
+        final var response = new UpdateCategoryResponse(expectedId);
 
         final var actual = this.jacksonTester.write(response);
 
@@ -29,7 +28,7 @@ class CreateGenreResponseTest {
 
     @Test
     void testUnmarshall() throws Exception {
-        final var expectedId = GenreID.unique().getValue();
+        final var expectedId = CategoryID.unique().getValue();
 
         final var json = """
             {

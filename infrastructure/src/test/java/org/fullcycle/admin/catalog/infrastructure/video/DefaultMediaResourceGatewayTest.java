@@ -1,6 +1,7 @@
 package org.fullcycle.admin.catalog.infrastructure.video;
 
 import org.fullcycle.admin.catalog.IntegrationTest;
+import org.fullcycle.admin.catalog.domain.Fixtures;
 import org.fullcycle.admin.catalog.domain.video.MediaResourceGateway;
 import org.fullcycle.admin.catalog.domain.video.MediaStatus;
 import org.fullcycle.admin.catalog.domain.video.MediaType;
@@ -8,151 +9,162 @@ import org.fullcycle.admin.catalog.domain.video.VideoID;
 import org.fullcycle.admin.catalog.domain.video.VideoResource;
 import org.fullcycle.admin.catalog.infrastructure.services.StorageService;
 import org.fullcycle.admin.catalog.infrastructure.services.local.InMemoryStorageService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.fullcycle.admin.catalog.domain.Fixtures.ResourceFixture.resource;
-import static org.fullcycle.admin.catalog.domain.Fixtures.VideoFixture.mediaType;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @IntegrationTest
 class DefaultMediaResourceGatewayTest {
 
     @Autowired
-    private StorageService storageService;
+    private MediaResourceGateway mediaResourceGateway;
 
     @Autowired
-    private MediaResourceGateway gateway;
+    private StorageService storageService;
 
     @BeforeEach
-    void setup() {
-        ((InMemoryStorageService) storageService).reset();
+    void setUp() {
+        storageService().reset();
     }
 
     @Test
-    void assertInjection() {
-        assertThat(storageService)
-            .isNotNull()
-            .isInstanceOf(InMemoryStorageService.class);
+    void testInjection() {
+        assertNotNull(mediaResourceGateway);
+        assertInstanceOf(DefaultMediaResourceGateway.class, mediaResourceGateway);
 
-        assertThat(gateway)
-            .isNotNull()
-            .isInstanceOf(DefaultMediaResourceGateway.class);
+        assertNotNull(storageService);
+        assertInstanceOf(InMemoryStorageService.class, storageService);
     }
 
     @Test
-    void givenAValidResource_whenCallsStorageAudioVideo_shouldStoreIt() {
+    void givenValidResource_whenCallsStorageAudioVideo_shouldStoreIt() {
+        // given
         final var expectedVideoId = VideoID.unique();
         final var expectedType = MediaType.VIDEO;
-        final var expectedResource = resource(expectedType);
-        final var expectedLocation = "videoId-%s/type-%s".formatted(expectedVideoId.getValue(), expectedType.name().toLowerCase());
+        final var expectedResource = Fixtures.ResourceFixture.resource(expectedType);
+        final var expectedLocation = "videoId-%s/type-%s".formatted(expectedVideoId.getValue(), expectedType.name());
         final var expectedStatus = MediaStatus.PENDING;
+        final var expectedEncodedLocation = "";
 
-        final var actual = this.gateway.storeAudioVideo(
-            expectedVideoId,
-            VideoResource.with(expectedResource, expectedType)
-        );
+        // when
+        final var actualMedia = this.mediaResourceGateway.storeAudioVideo(expectedVideoId, VideoResource.with(expectedResource, expectedType));
 
-        assertThat(actual.id()).isNotNull();
-        assertThat(actual.name()).isEqualTo(expectedResource.name());
-        assertThat(actual.checksum()).isEqualTo(expectedResource.checksum());
-        assertThat(actual.rawLocation()).isEqualTo(expectedLocation);
-        assertThat(actual.status()).isEqualTo(expectedStatus);
-        assertThat(actual.encodedLocation()).isEmpty();
+        // then
+        assertNotNull(actualMedia.id());
+        Assertions.assertEquals(expectedLocation, actualMedia.rawLocation());
+        Assertions.assertEquals(expectedResource.name(), actualMedia.name());
+        Assertions.assertEquals(expectedResource.checksum(), actualMedia.checksum());
+        Assertions.assertEquals(expectedStatus, actualMedia.status());
+        Assertions.assertEquals(expectedEncodedLocation, actualMedia.encodedLocation());
 
-        final var storedResource = this.storageService.get(expectedLocation);
+        final var actualStored = storageService().storage().get(expectedLocation);
 
-        assertThat(storedResource)
-            .isPresent()
-            .contains(expectedResource);
+        Assertions.assertEquals(expectedResource, actualStored);
     }
 
     @Test
-    void givenAValidResource_whenCallsStorageImage_shouldStoreIt() {
+    void givenValidResource_whenCallsStorageImage_shouldStoreIt() {
+        // given
         final var expectedVideoId = VideoID.unique();
         final var expectedType = MediaType.BANNER;
-        final var expectedResource = resource(expectedType);
-        final var expectedLocation = "videoId-%s/type-%s".formatted(expectedVideoId.getValue(), expectedType.name().toLowerCase());
+        final var expectedResource = Fixtures.ResourceFixture.resource(expectedType);
+        final var expectedLocation = "videoId-%s/type-%s".formatted(expectedVideoId.getValue(), expectedType.name());
 
-        final var actual = this.gateway.storeImage(
-            expectedVideoId,
-            VideoResource.with(expectedResource, expectedType)
-        );
+        // when
+        final var actualMedia = this.mediaResourceGateway.storeImage(expectedVideoId, VideoResource.with(expectedResource, expectedType));
 
-        assertThat(actual.id()).isNotNull();
-        assertThat(actual.name()).isEqualTo(expectedResource.name());
-        assertThat(actual.checksum()).isEqualTo(expectedResource.checksum());
+        // then
+        assertNotNull(actualMedia.id());
+        Assertions.assertEquals(expectedLocation, actualMedia.location());
+        Assertions.assertEquals(expectedResource.name(), actualMedia.name());
+        Assertions.assertEquals(expectedResource.checksum(), actualMedia.checksum());
 
-        final var storedResource = this.storageService.get(expectedLocation);
+        final var actualStored = storageService().storage().get(expectedLocation);
 
-        assertThat(storedResource)
-            .isPresent()
-            .contains(expectedResource);
+        Assertions.assertEquals(expectedResource, actualStored);
     }
 
     @Test
-    void givenAValidResource_whenCallsGetResource_thenReturnResource() {
-        final var expectedVideoId = VideoID.unique();
-        final var expectedType = MediaType.BANNER;
-        final var expectedResource = resource(expectedType);
-        final var expectedLocation = "videoId-%s/type-%s".formatted(expectedVideoId.getValue(), expectedType.name().toLowerCase());
+    void givenValidVideoId_whenCallsGetResource_shouldReturnIt() {
+        // given
+        final var videoOne = VideoID.unique();
+        final var expectedType = MediaType.VIDEO;
+        final var expectedResource = Fixtures.ResourceFixture.resource(expectedType);
 
-        this.storageService.store(
-            expectedLocation,
-            expectedResource
-        );
+        storageService().store("videoId-%s/type-%s".formatted(videoOne.getValue(), expectedType), expectedResource);
+        storageService().store("videoId-%s/type-%s".formatted(videoOne.getValue(), MediaType.TRAILER.name()), Fixtures.ResourceFixture.resource(Fixtures.VideoFixture.mediaType()));
+        storageService().store("videoId-%s/type-%s".formatted(videoOne.getValue(), MediaType.BANNER.name()), Fixtures.ResourceFixture.resource(Fixtures.VideoFixture.mediaType()));
 
-        final var actual = this.gateway.getResource(expectedVideoId, expectedType);
+        Assertions.assertEquals(3, storageService().storage().size());
 
-        assertThat(actual).isPresent();
-        assertThat(actual.get().content()).isNotNull();
-        assertThat(actual.get().name()).isEqualTo(expectedResource.name());
-        assertThat(actual.get().checksum()).isEqualTo(expectedResource.checksum());
+        // when
+        final var actualResult = this.mediaResourceGateway.getResource(videoOne, expectedType).get();
+
+        // then
+        Assertions.assertEquals(expectedResource, actualResult);
     }
 
     @Test
-    void givenAnInvalidResource_whenCallsGetResource_thenReturnEmpty() {
-        final var expectedVideoId = VideoID.unique();
-        final var expectedType = MediaType.BANNER;
-        final var expectedResource = resource(expectedType);
-        final var expectedLocation = "videoId-%s/type-%s".formatted(expectedVideoId.getValue(), expectedType.name().toLowerCase());
+    void givenInvalidType_whenCallsGetResource_shouldReturnEmpty() {
+        // given
+        final var videoOne = VideoID.unique();
+        final var expectedType = MediaType.THUMBNAIL;
 
-        this.storageService.store(
-            expectedLocation,
-            expectedResource
-        );
+        storageService().store("videoId-%s/type-%s".formatted(videoOne.getValue(), MediaType.VIDEO.name()), Fixtures.ResourceFixture.resource(Fixtures.VideoFixture.mediaType()));
+        storageService().store("videoId-%s/type-%s".formatted(videoOne.getValue(), MediaType.TRAILER.name()), Fixtures.ResourceFixture.resource(Fixtures.VideoFixture.mediaType()));
+        storageService().store("videoId-%s/type-%s".formatted(videoOne.getValue(), MediaType.BANNER.name()), Fixtures.ResourceFixture.resource(Fixtures.VideoFixture.mediaType()));
 
-        final var actual = this.gateway.getResource(VideoID.unique(), expectedType);
+        Assertions.assertEquals(3, storageService().storage().size());
 
-        assertThat(actual).isEmpty();
+        // when
+        final var actualResult = this.mediaResourceGateway.getResource(videoOne, expectedType);
+
+        // then
+        Assertions.assertTrue(actualResult.isEmpty());
     }
 
     @Test
-    void givenAValidVideoId_whenCallsClearResources_shouldDeleteAll() {
-        final var videoToDelete = VideoID.unique();
-        final var toBeDelete = new ArrayList<String>();
-        toBeDelete.add("videoId-%s/type-%s".formatted(videoToDelete.getValue(), MediaType.VIDEO.name().toLowerCase()));
-        toBeDelete.add("videoId-%s/type-%s".formatted(videoToDelete.getValue(), MediaType.TRAILER.name().toLowerCase()));
-        toBeDelete.add("videoId-%s/type-%s".formatted(videoToDelete.getValue(), MediaType.BANNER.name().toLowerCase()));
+    void givenValidVideoId_whenCallsClearResources_shouldDeleteAll() {
+        // given
+        final var videoOne = VideoID.unique();
+        final var videoTwo = VideoID.unique();
 
-        final var expectedVideo = VideoID.unique();
-        final var expectedResources = new ArrayList<String>();
-        expectedResources.add("videoId-%s/type-%s".formatted(expectedVideo.getValue(), MediaType.VIDEO.name().toLowerCase()));
-        expectedResources.add("videoId-%s/type-%s".formatted(expectedVideo.getValue(), MediaType.BANNER.name().toLowerCase()));
+        final var toBeDeleted = new ArrayList<String>();
+        toBeDeleted.add("videoId-%s/type-%s".formatted(videoOne.getValue(), MediaType.VIDEO.name()));
+        toBeDeleted.add("videoId-%s/type-%s".formatted(videoOne.getValue(), MediaType.TRAILER.name()));
+        toBeDeleted.add("videoId-%s/type-%s".formatted(videoOne.getValue(), MediaType.BANNER.name()));
 
-        toBeDelete.forEach(id -> this.storageService.store(id, resource(mediaType())));
-        expectedResources.forEach(id -> this.storageService.store(id, resource(mediaType())));
+        final var expectedValues = new ArrayList<String>();
+        expectedValues.add("videoId-%s/type-%s".formatted(videoTwo.getValue(), MediaType.VIDEO.name()));
+        expectedValues.add("videoId-%s/type-%s".formatted(videoTwo.getValue(), MediaType.BANNER.name()));
 
-        final var inMemoryStorage = ((InMemoryStorageService) this.storageService);
-        assertThat(inMemoryStorage.storage()).hasSize(5);
+        toBeDeleted.forEach(id -> storageService().store(id, Fixtures.ResourceFixture.resource(Fixtures.VideoFixture.mediaType())));
+        expectedValues.forEach(id -> storageService().store(id, Fixtures.ResourceFixture.resource(Fixtures.VideoFixture.mediaType())));
 
-        this.gateway.clearResources(videoToDelete);
+        Assertions.assertEquals(5, storageService().storage().size());
 
-        assertThat(inMemoryStorage.storage()).hasSize(expectedResources.size());
-        assertThat(inMemoryStorage.storage().keySet()).containsAll(expectedResources);
+        // when
+        this.mediaResourceGateway.clearResources(videoOne);
+
+        // then
+        Assertions.assertEquals(2, storageService().storage().size());
+
+        final var actualKeys = storageService().storage().keySet();
+
+        Assertions.assertTrue(
+            expectedValues.size() == actualKeys.size()
+                && actualKeys.containsAll(expectedValues)
+        );
+    }
+
+    private InMemoryStorageService storageService() {
+        return (InMemoryStorageService) storageService;
     }
 
 }

@@ -70,7 +70,7 @@ public class DefaultMediaResourceGateway implements MediaResourceGateway {
     }
 
     private String fileName(final MediaType mediaType) {
-        return fileNamePattern.replace("{type}", mediaType.name().toLowerCase());
+        return fileNamePattern.replace("{type}", mediaType.name());
     }
 
     private String folder(final VideoID videoID) {

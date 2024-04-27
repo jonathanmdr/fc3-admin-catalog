@@ -122,9 +122,9 @@ public class VideoJpaEntity {
         this.banner = banner;
         this.thumbnail = thumbnail;
         this.thumbnailHalf = thumbnailHalf;
-        this.categories = new HashSet<>(3);
-        this.genres = new HashSet<>(3);
-        this.castMembers = new HashSet<>(3);
+        this.categories = HashSet.newHashSet(3);
+        this.genres = HashSet.newHashSet(3);
+        this.castMembers = HashSet.newHashSet(3);
     }
 
     public static VideoJpaEntity from(final Video video) {
@@ -208,21 +208,21 @@ public class VideoJpaEntity {
     public Set<CategoryID> getCategoryIds() {
         return CollectionUtils.mapTo(
             this.categories,
-            (it) -> CategoryID.from(it.getId().getCategoryId())
+            it -> CategoryID.from(it.getId().getCategoryId())
         );
     }
 
     public Set<GenreID> getGenreIds() {
         return CollectionUtils.mapTo(
             this.genres,
-            (it) -> GenreID.from(it.getId().getGenreId())
+            it -> GenreID.from(it.getId().getGenreId())
         );
     }
 
     public Set<CastMemberID> getCastMemberIds() {
         return CollectionUtils.mapTo(
             this.castMembers,
-            (it) -> CastMemberID.from(it.getId().getCastMemberId())
+            it -> CastMemberID.from(it.getId().getCastMemberId())
         );
     }
 

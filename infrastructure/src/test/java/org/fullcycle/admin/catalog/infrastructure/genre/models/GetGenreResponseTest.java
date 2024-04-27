@@ -1,36 +1,40 @@
-package org.fullcycle.admin.catalog.infrastructure.models.category;
+package org.fullcycle.admin.catalog.infrastructure.genre.models;
 
 import org.fullcycle.admin.catalog.JacksonTest;
 import org.fullcycle.admin.catalog.domain.category.CategoryID;
-import org.fullcycle.admin.catalog.infrastructure.category.models.GetCategoryResponse;
+import org.fullcycle.admin.catalog.domain.genre.GenreID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
 
 import java.time.Instant;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JacksonTest
-class GetCategoryResponseTest {
+class GetGenreResponseTest {
 
     @Autowired
-    private JacksonTester<GetCategoryResponse> jacksonTester;
+    private JacksonTester<GetGenreResponse> jacksonTester;
 
     @Test
     void testMarshall() throws Exception {
-        final var expectedId = CategoryID.unique().getValue();
-        final var expectedName = "Filmes";
-        final var expectedDescription = "A categoria mais assistida";
+        final var expectedId = GenreID.unique().getValue();
+        final var expectedName = "Movies";
+        final var expectedCategories = List.of(
+            CategoryID.unique().getValue(),
+            CategoryID.unique().getValue()
+        );
         final var expectedIsActive = false;
         final var expectedCreatedAt = Instant.now();
         final var expectedUpdatedAt = Instant.now();
         final var expectedDeletedAt = Instant.now();
 
-        final var response = new GetCategoryResponse(
+        final var response = new GetGenreResponse(
             expectedId,
             expectedName,
-            expectedDescription,
+            expectedCategories,
             expectedIsActive,
             expectedCreatedAt,
             expectedUpdatedAt,
@@ -42,7 +46,7 @@ class GetCategoryResponseTest {
         assertThat(actual)
             .hasJsonPath("$.id", expectedId)
             .hasJsonPath("$.name", expectedName)
-            .hasJsonPath("$.description", expectedDescription)
+            .hasJsonPath("$.categories_ids", expectedCategories)
             .hasJsonPath("$.is_active", expectedIsActive)
             .hasJsonPath("$.created_at", expectedCreatedAt.toString())
             .hasJsonPath("$.updated_at", expectedUpdatedAt.toString())
@@ -52,8 +56,11 @@ class GetCategoryResponseTest {
     @Test
     void testUnmarshall() throws Exception {
         final var expectedId = CategoryID.unique().getValue();
-        final var expectedName = "Filmes";
-        final var expectedDescription = "A categoria mais assistida";
+        final var expectedName = "Movies";
+        final var expectedCategories = List.of(
+            CategoryID.unique().getValue(),
+            CategoryID.unique().getValue()
+        );
         final var expectedIsActive = false;
         final var expectedCreatedAt = Instant.now();
         final var expectedUpdatedAt = Instant.now();
@@ -63,7 +70,7 @@ class GetCategoryResponseTest {
             {
               "id": "%s",
               "name": "%s",
-              "description": "%s",
+              "categories_ids": ["%s","%s"],
               "is_active": %s,
               "created_at": "%s",
               "updated_at": "%s",
@@ -73,7 +80,8 @@ class GetCategoryResponseTest {
             .formatted(
                 expectedId,
                 expectedName,
-                expectedDescription,
+                expectedCategories.get(0),
+                expectedCategories.get(1),
                 expectedIsActive,
                 expectedCreatedAt.toString(),
                 expectedUpdatedAt.toString(),
@@ -85,7 +93,7 @@ class GetCategoryResponseTest {
         assertThat(actual)
             .hasFieldOrPropertyWithValue("id", expectedId)
             .hasFieldOrPropertyWithValue("name", expectedName)
-            .hasFieldOrPropertyWithValue("description", expectedDescription)
+            .hasFieldOrPropertyWithValue("categories", expectedCategories)
             .hasFieldOrPropertyWithValue("active", expectedIsActive)
             .hasFieldOrPropertyWithValue("createdAt", expectedCreatedAt)
             .hasFieldOrPropertyWithValue("updatedAt", expectedUpdatedAt)
